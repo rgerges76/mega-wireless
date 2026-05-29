@@ -1,0 +1,512 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width,initial-scale=1">
+<title>Mega Wireless — Admin Panel</title>
+<link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&display=swap" rel="stylesheet">
+<style>
+*{margin:0;padding:0;box-sizing:border-box}
+body{font-family:Inter,system-ui,sans-serif;background:#f2f2f7;color:#1c1c1e;min-height:100vh}
+/* AUTH */
+#auth{position:fixed;inset:0;background:#f2f2f7;display:flex;align-items:center;justify-content:center;z-index:999}
+.acard{background:#fff;border-radius:18px;padding:40px 36px;width:360px;box-shadow:0 8px 32px rgba(0,0,0,.1);text-align:center}
+.alogo{font-size:22px;font-weight:800;margin-bottom:4px}
+.alogo span{color:#ff3b30}
+.asub{font-size:12px;color:#8e8e93;margin-bottom:28px}
+.ainp{width:100%;background:#f2f2f7;border:1.5px solid #e5e5ea;border-radius:11px;padding:12px 14px;font-size:15px;font-family:inherit;outline:none;text-align:center;transition:border .2s;margin-bottom:10px}
+.ainp:focus{border-color:#ff3b30}
+.abtn{width:100%;padding:13px;background:#ff3b30;color:#fff;border:none;border-radius:11px;font-size:14px;font-weight:700;cursor:pointer;font-family:inherit;transition:all .2s}
+.abtn:hover{background:#e0321f}
+.aerr{color:#ff3b30;font-size:12px;height:16px;margin-bottom:8px}
+/* ADMIN */
+#admin{display:none}
+.topbar{background:#fff;border-bottom:1px solid #e5e5ea;padding:0 24px;height:52px;display:flex;align-items:center;justify-content:space-between;position:sticky;top:0;z-index:100}
+.tlogo{font-size:16px;font-weight:800}
+.tlogo span{color:#ff3b30}
+.tbadge{font-size:11px;color:#8e8e93;background:#f2f2f7;padding:4px 10px;border-radius:20px}
+.sout{background:transparent;border:1px solid #e5e5ea;color:#8e8e93;padding:5px 12px;border-radius:8px;cursor:pointer;font-size:11px;font-family:inherit}
+.sout:hover{border-color:#ff3b30;color:#ff3b30}
+.page{max-width:900px;margin:0 auto;padding:24px 20px}
+.section{background:#fff;border-radius:16px;padding:24px;margin-bottom:16px;border:1px solid #e5e5ea}
+.section h2{font-size:15px;font-weight:700;margin-bottom:18px;display:flex;align-items:center;gap:8px}
+/* PROMO */
+.promo-toggle{display:flex;align-items:center;gap:12px;padding:14px;background:#f2f2f7;border-radius:11px;margin-bottom:14px}
+.psw{position:relative;width:44px;height:24px;display:inline-block;cursor:pointer;flex-shrink:0}
+.psw input{opacity:0;width:0;height:0;position:absolute}
+.psl{position:absolute;inset:0;background:#c7c7cc;border-radius:12px;transition:.3s}
+.psl:before{content:"";position:absolute;width:20px;height:20px;bottom:2px;left:2px;background:#fff;border-radius:50%;transition:.3s;box-shadow:0 1px 3px rgba(0,0,0,.2)}
+.psw input:checked+.psl{background:#34c759}
+.psw input:checked+.psl:before{left:22px}
+.ptxt{font-size:13px;font-weight:500}
+.psub{font-size:11px;color:#8e8e93;margin-top:1px}
+.fi{width:100%;background:#f2f2f7;border:1.5px solid #e5e5ea;border-radius:11px;padding:11px 14px;font-size:13px;font-family:inherit;outline:none;color:#1c1c1e;transition:border .2s}
+.fi:focus{border-color:#ff3b30}
+.flbl{font-size:11px;font-weight:600;color:#8e8e93;text-transform:uppercase;letter-spacing:.04em;margin-bottom:5px;display:block;margin-top:12px}
+/* PRICES */
+.price-grid{display:grid;grid-template-columns:repeat(auto-fit,minmax(200px,1fr));gap:12px}
+.price-item{background:#f2f2f7;border-radius:11px;padding:14px}
+.pi-label{font-size:11px;font-weight:600;color:#8e8e93;margin-bottom:6px}
+.pi-input{width:100%;background:#fff;border:1.5px solid #e5e5ea;border-radius:8px;padding:9px 12px;font-size:15px;font-weight:700;font-family:inherit;outline:none;color:#1c1c1e;transition:border .2s;text-align:center}
+.pi-input:focus{border-color:#ff3b30}
+.pi-note{font-size:10px;color:#aaa;margin-top:4px;text-align:center}
+/* PLANS */
+.plans-grid{display:grid;grid-template-columns:repeat(auto-fit,minmax(160px,1fr));gap:10px}
+.plan-item{background:#f2f2f7;border-radius:11px;padding:14px}
+.plan-label{font-size:11px;font-weight:600;color:#8e8e93;margin-bottom:6px}
+.plan-inp{width:100%;background:#fff;border:1.5px solid #e5e5ea;border-radius:8px;padding:9px 12px;font-size:15px;font-weight:700;font-family:inherit;outline:none;color:#1c1c1e;transition:border .2s;text-align:center}
+.plan-inp:focus{border-color:#0a84ff}
+/* HOURS */
+.hours-grid{display:grid;grid-template-columns:1fr 1fr;gap:12px}
+/* SAVE BTN */
+.savebtn{width:100%;padding:14px;background:#ff3b30;color:#fff;border:none;border-radius:12px;font-size:14px;font-weight:700;cursor:pointer;font-family:inherit;transition:all .2s;margin-top:8px;display:flex;align-items:center;justify-content:center;gap:8px}
+.savebtn:hover{background:#e0321f}
+.savebtn.saved{background:#34c759}
+/* PREVIEW */
+.preview-bar{background:linear-gradient(90deg,#ff3b30,#ff6b35);padding:12px 20px;border-radius:11px;margin-bottom:16px;display:flex;align-items:center;justify-content:space-between;gap:12px}
+.pb-text{color:#fff;font-size:13px;font-weight:600}
+.pb-link{color:rgba(255,255,255,.8);font-size:12px;text-decoration:none;background:rgba(255,255,255,.2);padding:5px 12px;border-radius:20px}
+.pb-link:hover{background:rgba(255,255,255,.3);color:#fff}
+/* OFFERS */
+.offer-list{display:flex;flex-direction:column;gap:10px;margin-bottom:14px}
+.offer-item{display:flex;align-items:center;gap:10px;padding:12px 14px;background:#f2f2f7;border-radius:11px;border:1px solid #e5e5ea}
+.oi-emoji{font-size:20px;flex-shrink:0}
+.oi-info{flex:1}
+.oi-title{font-size:13px;font-weight:600}
+.oi-desc{font-size:11px;color:#8e8e93;margin-top:1px}
+.oi-del{color:#c7c7cc;cursor:pointer;font-size:16px;padding:4px;transition:color .2s}
+.oi-del:hover{color:#ff3b30}
+.add-offer-form{background:#f2f2f7;border-radius:11px;padding:16px;display:none}
+.add-offer-form.show{display:block}
+.addbtn{width:100%;padding:10px;background:transparent;border:1.5px dashed #ff3b30;border-radius:10px;color:#ff3b30;font-size:13px;font-weight:600;cursor:pointer;font-family:inherit;transition:all .2s}
+.addbtn:hover{background:rgba(255,59,48,.05)}
+.form-row{display:flex;gap:10px}
+.form-row .fg{flex:1}
+.fg{margin-bottom:10px}
+/* TOAST */
+.toast{position:fixed;bottom:20px;left:50%;transform:translateX(-50%) translateY(12px);background:#1c1c1e;color:#fff;border-radius:10px;padding:10px 20px;font-size:13px;font-weight:500;z-index:999;opacity:0;transition:all .3s;pointer-events:none;box-shadow:0 4px 16px rgba(0,0,0,.2)}
+.toast.on{opacity:1;transform:translateX(-50%) translateY(0)}
+.toast.ok{background:#34c759}
+.toast.err{background:#ff3b30}
+</style>
+</head>
+<body>
+<div class="toast" id="toast"></div>
+
+<!-- AUTH -->
+<div id="auth">
+  <div class="acard">
+    <div class="alogo">MEGA <span>WIRELESS</span></div>
+    <div class="asub">Website Admin Panel</div>
+    <div class="aerr" id="aerr"></div>
+    <input type="password" class="ainp" id="apass" placeholder="Enter admin password" onkeydown="if(event.key==='Enter')login()">
+    <button class="abtn" onclick="login()">Sign In</button>
+  </div>
+</div>
+
+<!-- ADMIN -->
+<div id="admin">
+  <div class="topbar">
+    <div class="tlogo">MEGA <span>WIRELESS</span> <span style="font-size:12px;color:#8e8e93;font-weight:500">Admin</span></div>
+    <div style="display:flex;align-items:center;gap:10px">
+      <span class="tbadge">megawirelessusa.com</span>
+      <button class="sout" onclick="signout()">Sign Out</button>
+    </div>
+  </div>
+
+  <div class="page">
+
+    <!-- PREVIEW LINK -->
+    <div class="preview-bar">
+      <div class="pb-text">🌐 Your live website</div>
+      <a href="https://megawirelessusa.com" target="_blank" class="pb-link">Open Website →</a>
+    </div>
+
+    <!-- PROMO BANNER -->
+    <div class="section">
+      <h2>🎯 Promo Banner</h2>
+      <div class="promo-toggle">
+        <label class="psw"><input type="checkbox" id="promo-on" onchange="previewPromo()"><span class="psl"></span></label>
+        <div>
+          <div class="ptxt">Show Promo Banner on Website</div>
+          <div class="psub">Appears at top of every page</div>
+        </div>
+      </div>
+      <label class="flbl">Banner Text</label>
+      <input type="text" class="fi" id="promo-text" placeholder="e.g. 🔥 Special: iPhone 14 Pro Max screen repair $99 this week only!" maxlength="120" oninput="previewPromo()">
+      <div style="font-size:11px;color:#aaa;margin-top:5px"><span id="promo-chars">0</span>/120 characters</div>
+      <div id="promo-preview" style="display:none;margin-top:12px;background:linear-gradient(90deg,#ff3b30,#ff6b35);border-radius:11px;padding:12px 16px;text-align:center">
+        <span style="color:#fff;font-size:13px;font-weight:600" id="promo-preview-text"></span>
+      </div>
+    </div>
+
+    <!-- SPECIAL OFFERS -->
+    <div class="section">
+      <h2>🏷️ Special Offers</h2>
+      <div class="offer-list" id="offer-list"></div>
+      <button class="addbtn" onclick="toggleAddOffer()">+ Add New Offer</button>
+      <div class="add-offer-form" id="add-offer-form">
+        <div class="form-row">
+          <div class="fg">
+            <label class="flbl" style="margin-top:0">Emoji</label>
+            <input type="text" class="fi" id="off-emoji" placeholder="🔥" maxlength="2" style="text-align:center;font-size:20px">
+          </div>
+          <div class="fg" style="flex:3">
+            <label class="flbl" style="margin-top:0">Offer Title</label>
+            <input type="text" class="fi" id="off-title" placeholder="Screen Repair Special">
+          </div>
+        </div>
+        <label class="flbl" style="margin-top:0">Description (optional)</label>
+        <input type="text" class="fi" id="off-desc" placeholder="iPhone 11-13 screens — limited time offer">
+        <div style="display:flex;gap:8px;margin-top:12px">
+          <button onclick="addOffer()" style="flex:1;padding:10px;background:#ff3b30;color:#fff;border:none;border-radius:10px;font-size:13px;font-weight:700;cursor:pointer;font-family:inherit">Add Offer</button>
+          <button onclick="toggleAddOffer()" style="flex:1;padding:10px;background:#f2f2f7;border:1px solid #e5e5ea;color:#8e8e93;border-radius:10px;font-size:13px;cursor:pointer;font-family:inherit">Cancel</button>
+        </div>
+      </div>
+    </div>
+
+    <!-- REPAIR PRICES -->
+    <div class="section">
+      <h2>🔧 Repair Prices</h2>
+      <div style="font-size:12px;color:#8e8e93;margin-bottom:16px">Update prices shown on your website. Enter numbers only (no $ sign).</div>
+      
+      <div style="font-size:12px;font-weight:600;color:#ff3b30;text-transform:uppercase;letter-spacing:.05em;margin-bottom:10px">iPhone Screen Repair</div>
+      <div class="price-grid">
+        <div class="price-item">
+          <div class="pi-label">iPhone 11</div>
+          <div style="display:flex;align-items:center;gap:4px"><span style="font-size:16px;font-weight:700;color:#8e8e93">$</span><input type="number" class="pi-input" id="p-iphone11" value="45" min="0"></div>
+        </div>
+        <div class="price-item">
+          <div class="pi-label">iPhone 12</div>
+          <div style="display:flex;align-items:center;gap:4px"><span style="font-size:16px;font-weight:700;color:#8e8e93">$</span><input type="number" class="pi-input" id="p-iphone12" value="55" min="0"></div>
+        </div>
+        <div class="price-item">
+          <div class="pi-label">iPhone 13</div>
+          <div style="display:flex;align-items:center;gap:4px"><span style="font-size:16px;font-weight:700;color:#8e8e93">$</span><input type="number" class="pi-input" id="p-iphone13" value="65" min="0"></div>
+        </div>
+        <div class="price-item">
+          <div class="pi-label">iPhone 12 Pro Max</div>
+          <div style="display:flex;align-items:center;gap:4px"><span style="font-size:16px;font-weight:700;color:#8e8e93">$</span><input type="number" class="pi-input" id="p-iphone12pm" value="80" min="0"></div>
+        </div>
+        <div class="price-item">
+          <div class="pi-label">iPhone 14 Pro Max</div>
+          <div style="display:flex;align-items:center;gap:4px"><span style="font-size:16px;font-weight:700;color:#8e8e93">$</span><input type="number" class="pi-input" id="p-iphone14pm" value="110" min="0"></div>
+        </div>
+      </div>
+
+      <div style="font-size:12px;font-weight:600;color:#ff3b30;text-transform:uppercase;letter-spacing:.05em;margin:16px 0 10px">Other Repairs (Starting From)</div>
+      <div class="price-grid">
+        <div class="price-item">
+          <div class="pi-label">Battery Replacement</div>
+          <div style="display:flex;align-items:center;gap:4px"><span style="font-size:16px;font-weight:700;color:#8e8e93">$</span><input type="number" class="pi-input" id="p-battery" value="29" min="0"></div>
+          <div class="pi-note">from $X</div>
+        </div>
+        <div class="price-item">
+          <div class="pi-label">Samsung Screen</div>
+          <div style="display:flex;align-items:center;gap:4px"><span style="font-size:16px;font-weight:700;color:#8e8e93">$</span><input type="number" class="pi-input" id="p-samsung" value="45" min="0"></div>
+          <div class="pi-note">from $X</div>
+        </div>
+        <div class="price-item">
+          <div class="pi-label">iPad Screen</div>
+          <div style="display:flex;align-items:center;gap:4px"><span style="font-size:16px;font-weight:700;color:#8e8e93">$</span><input type="number" class="pi-input" id="p-ipad" value="55" min="0"></div>
+          <div class="pi-note">from $X</div>
+        </div>
+        <div class="price-item">
+          <div class="pi-label">Charging Port</div>
+          <div style="display:flex;align-items:center;gap:4px"><span style="font-size:16px;font-weight:700;color:#8e8e93">$</span><input type="number" class="pi-input" id="p-port" value="35" min="0"></div>
+          <div class="pi-note">from $X</div>
+        </div>
+      </div>
+    </div>
+
+    <!-- WIRELESS PLANS -->
+    <div class="section">
+      <h2>📱 Wireless Plans</h2>
+      <div style="font-size:12px;color:#8e8e93;margin-bottom:16px">Update plan prices shown on the website.</div>
+
+      <div style="font-size:12px;font-weight:600;color:#af52de;text-transform:uppercase;letter-spacing:.05em;margin-bottom:10px">Ultra Mobile Plans</div>
+      <div class="plans-grid">
+        <div class="plan-item">
+          <div class="plan-label">4GB Plan</div>
+          <div style="display:flex;align-items:center;gap:4px"><span style="font-weight:700;color:#8e8e93">$</span><input type="number" class="plan-inp" id="ul-4gb" value="19" min="0"></div>
+        </div>
+        <div class="plan-item">
+          <div class="plan-label">8GB Plan</div>
+          <div style="display:flex;align-items:center;gap:4px"><span style="font-weight:700;color:#8e8e93">$</span><input type="number" class="plan-inp" id="ul-8gb" value="24" min="0"></div>
+        </div>
+        <div class="plan-item">
+          <div class="plan-label">12GB Plan</div>
+          <div style="display:flex;align-items:center;gap:4px"><span style="font-weight:700;color:#8e8e93">$</span><input type="number" class="plan-inp" id="ul-12gb" value="29" min="0"></div>
+        </div>
+        <div class="plan-item">
+          <div class="plan-label">24GB Plan</div>
+          <div style="display:flex;align-items:center;gap:4px"><span style="font-weight:700;color:#8e8e93">$</span><input type="number" class="plan-inp" id="ul-24gb" value="39" min="0"></div>
+        </div>
+        <div class="plan-item">
+          <div class="plan-label">Unlimited</div>
+          <div style="display:flex;align-items:center;gap:4px"><span style="font-weight:700;color:#8e8e93">$</span><input type="number" class="plan-inp" id="ul-unl" value="49" min="0"></div>
+        </div>
+        <div class="plan-item">
+          <div class="plan-label">Unlimited+</div>
+          <div style="display:flex;align-items:center;gap:4px"><span style="font-weight:700;color:#8e8e93">$</span><input type="number" class="plan-inp" id="ul-unlp" value="59" min="0"></div>
+        </div>
+      </div>
+
+      <div style="font-size:12px;font-weight:600;color:#34c759;text-transform:uppercase;letter-spacing:.05em;margin:16px 0 10px">Simple Mobile Plans</div>
+      <div class="plans-grid">
+        <div class="plan-item">
+          <div class="plan-label">5GB Plan</div>
+          <div style="display:flex;align-items:center;gap:4px"><span style="font-weight:700;color:#8e8e93">$</span><input type="number" class="plan-inp" id="sm-5gb" value="25" min="0"></div>
+        </div>
+        <div class="plan-item">
+          <div class="plan-label">10GB Plan</div>
+          <div style="display:flex;align-items:center;gap:4px"><span style="font-weight:700;color:#8e8e93">$</span><input type="number" class="plan-inp" id="sm-10gb" value="30" min="0"></div>
+        </div>
+        <div class="plan-item">
+          <div class="plan-label">15GB Plan</div>
+          <div style="display:flex;align-items:center;gap:4px"><span style="font-weight:700;color:#8e8e93">$</span><input type="number" class="plan-inp" id="sm-15gb" value="40" min="0"></div>
+        </div>
+        <div class="plan-item">
+          <div class="plan-label">Unlimited</div>
+          <div style="display:flex;align-items:center;gap:4px"><span style="font-weight:700;color:#8e8e93">$</span><input type="number" class="plan-inp" id="sm-unl" value="50" min="0"></div>
+        </div>
+      </div>
+    </div>
+
+    <!-- STORE INFO -->
+    <div class="section">
+      <h2>🏪 Store Info</h2>
+      <div style="display:grid;grid-template-columns:1fr 1fr;gap:12px">
+        <div>
+          <label class="flbl" style="margin-top:0">Phone Number</label>
+          <input type="tel" class="fi" id="s-phone" value="(615) 678-5849">
+        </div>
+        <div>
+          <label class="flbl" style="margin-top:0">Hours</label>
+          <input type="text" class="fi" id="s-hours" value="Daily · 10:00 AM – 7:00 PM">
+        </div>
+        <div>
+          <label class="flbl" style="margin-top:0">Address</label>
+          <input type="text" class="fi" id="s-addr" value="4717 Nolensville Pike, Nashville TN 37211">
+        </div>
+        <div>
+          <label class="flbl" style="margin-top:0">Instagram Handle</label>
+          <input type="text" class="fi" id="s-ig" value="megawirelessharding">
+        </div>
+      </div>
+    </div>
+
+    <!-- SAVE BUTTON -->
+    <button class="savebtn" id="savebtn" onclick="saveAll()">
+      <span>💾</span> Save & Publish Changes
+    </button>
+
+    <div style="text-align:center;font-size:11px;color:#aaa;margin-top:12px;padding-bottom:32px">
+      Changes are saved locally. Open your website to see them update automatically.
+    </div>
+
+  </div>
+</div>
+
+<script>
+var ADMIN_PASS = 'Maryam@2019';
+var offers = [];
+
+// AUTH
+function login(){
+  var p = document.getElementById('apass').value;
+  if(p === ADMIN_PASS){
+    document.getElementById('auth').style.display = 'none';
+    document.getElementById('admin').style.display = 'block';
+    loadData();
+  } else {
+    document.getElementById('aerr').textContent = 'Wrong password. Try again.';
+    document.getElementById('apass').value = '';
+  }
+}
+
+document.getElementById('apass').addEventListener('keydown', function(e){
+  if(e.key === 'Enter') login();
+});
+
+function signout(){
+  document.getElementById('admin').style.display = 'none';
+  document.getElementById('auth').style.display = 'flex';
+  document.getElementById('apass').value = '';
+}
+
+// PROMO
+function previewPromo(){
+  var txt = document.getElementById('promo-text').value;
+  var on = document.getElementById('promo-on').checked;
+  document.getElementById('promo-chars').textContent = txt.length;
+  var prev = document.getElementById('promo-preview');
+  if(txt && on){
+    prev.style.display = 'block';
+    document.getElementById('promo-preview-text').textContent = txt;
+  } else {
+    prev.style.display = 'none';
+  }
+}
+
+// OFFERS
+function toggleAddOffer(){
+  var f = document.getElementById('add-offer-form');
+  f.className = f.className.includes('show') ? 'add-offer-form' : 'add-offer-form show';
+  if(f.className.includes('show')){
+    document.getElementById('off-emoji').value = '🔥';
+    document.getElementById('off-title').value = '';
+    document.getElementById('off-desc').value = '';
+    setTimeout(function(){document.getElementById('off-title').focus();}, 100);
+  }
+}
+
+function addOffer(){
+  var emoji = document.getElementById('off-emoji').value.trim() || '🔥';
+  var title = document.getElementById('off-title').value.trim();
+  var desc = document.getElementById('off-desc').value.trim();
+  if(!title){toast('Enter offer title', 'err'); return;}
+  offers.push({emoji: emoji, title: title, desc: desc, id: Date.now()});
+  renderOffers();
+  toggleAddOffer();
+  toast('Offer added!', 'ok');
+}
+
+function delOffer(id){
+  offers = offers.filter(function(o){ return o.id !== id; });
+  renderOffers();
+  toast('Offer removed', 'ok');
+}
+
+function renderOffers(){
+  var list = document.getElementById('offer-list');
+  if(!offers.length){
+    list.innerHTML = '<div style="text-align:center;color:#aaa;padding:14px;font-size:12px;background:#f2f2f7;border-radius:10px">No offers yet. Add one below!</div>';
+    return;
+  }
+  var h = '';
+  for(var i = 0; i < offers.length; i++){
+    var o = offers[i];
+    h += '<div class="offer-item">'+
+      '<div class="oi-emoji">'+o.emoji+'</div>'+
+      '<div class="oi-info"><div class="oi-title">'+o.title+'</div>'+(o.desc?'<div class="oi-desc">'+o.desc+'</div>':'')+'</div>'+
+      '<span class="oi-del" onclick="delOffer('+o.id+')">✕</span>'+
+      '</div>';
+  }
+  list.innerHTML = h;
+}
+
+// SAVE & LOAD
+function saveAll(){
+  var data = {
+    promo: {
+      active: document.getElementById('promo-on').checked,
+      text: document.getElementById('promo-text').value.trim()
+    },
+    offers: offers,
+    prices: {
+      iphone11: parseFloat(document.getElementById('p-iphone11').value) || 45,
+      iphone12: parseFloat(document.getElementById('p-iphone12').value) || 55,
+      iphone13: parseFloat(document.getElementById('p-iphone13').value) || 65,
+      iphone12pm: parseFloat(document.getElementById('p-iphone12pm').value) || 80,
+      iphone14pm: parseFloat(document.getElementById('p-iphone14pm').value) || 110,
+      battery: parseFloat(document.getElementById('p-battery').value) || 29,
+      samsung: parseFloat(document.getElementById('p-samsung').value) || 45,
+      ipad: parseFloat(document.getElementById('p-ipad').value) || 55,
+      port: parseFloat(document.getElementById('p-port').value) || 35
+    },
+    ultra: {
+      gb4: parseFloat(document.getElementById('ul-4gb').value) || 19,
+      gb8: parseFloat(document.getElementById('ul-8gb').value) || 24,
+      gb12: parseFloat(document.getElementById('ul-12gb').value) || 29,
+      gb24: parseFloat(document.getElementById('ul-24gb').value) || 39,
+      unl: parseFloat(document.getElementById('ul-unl').value) || 49,
+      unlp: parseFloat(document.getElementById('ul-unlp').value) || 59
+    },
+    simple: {
+      gb5: parseFloat(document.getElementById('sm-5gb').value) || 25,
+      gb10: parseFloat(document.getElementById('sm-10gb').value) || 30,
+      gb15: parseFloat(document.getElementById('sm-15gb').value) || 40,
+      unl: parseFloat(document.getElementById('sm-unl').value) || 50
+    },
+    store: {
+      phone: document.getElementById('s-phone').value,
+      hours: document.getElementById('s-hours').value,
+      addr: document.getElementById('s-addr').value,
+      ig: document.getElementById('s-ig').value
+    },
+    updated: new Date().toISOString()
+  };
+
+  try {
+    localStorage.setItem('mw_site_data', JSON.stringify(data));
+    var btn = document.getElementById('savebtn');
+    btn.className = 'savebtn saved';
+    btn.innerHTML = '<span>✓</span> Changes Saved!';
+    setTimeout(function(){
+      btn.className = 'savebtn';
+      btn.innerHTML = '<span>💾</span> Save & Publish Changes';
+    }, 3000);
+    toast('✅ Changes saved! Open your website to see them.', 'ok');
+  } catch(e) {
+    toast('Error saving. Try again.', 'err');
+  }
+}
+
+function loadData(){
+  try {
+    var raw = localStorage.getItem('mw_site_data');
+    if(!raw){ renderOffers(); return; }
+    var d = JSON.parse(raw);
+
+    if(d.promo){
+      document.getElementById('promo-on').checked = d.promo.active || false;
+      document.getElementById('promo-text').value = d.promo.text || '';
+      previewPromo();
+    }
+
+    if(d.offers) offers = d.offers;
+    renderOffers();
+
+    if(d.prices){
+      var p = d.prices;
+      setVal('p-iphone11', p.iphone11);setVal('p-iphone12', p.iphone12);
+      setVal('p-iphone13', p.iphone13);setVal('p-iphone12pm', p.iphone12pm);
+      setVal('p-iphone14pm', p.iphone14pm);setVal('p-battery', p.battery);
+      setVal('p-samsung', p.samsung);setVal('p-ipad', p.ipad);setVal('p-port', p.port);
+    }
+
+    if(d.ultra){
+      setVal('ul-4gb', d.ultra.gb4);setVal('ul-8gb', d.ultra.gb8);
+      setVal('ul-12gb', d.ultra.gb12);setVal('ul-24gb', d.ultra.gb24);
+      setVal('ul-unl', d.ultra.unl);setVal('ul-unlp', d.ultra.unlp);
+    }
+
+    if(d.simple){
+      setVal('sm-5gb', d.simple.gb5);setVal('sm-10gb', d.simple.gb10);
+      setVal('sm-15gb', d.simple.gb15);setVal('sm-unl', d.simple.unl);
+    }
+
+    if(d.store){
+      setVal('s-phone', d.store.phone);setVal('s-hours', d.store.hours);
+      setVal('s-addr', d.store.addr);setVal('s-ig', d.store.ig);
+    }
+
+    if(d.updated){
+      var t = new Date(d.updated);
+      toast('Last saved: '+t.toLocaleString('en-US',{month:'short',day:'numeric',hour:'2-digit',minute:'2-digit'}), '');
+    }
+  } catch(e) { renderOffers(); }
+}
+
+function setVal(id, val){ var el = document.getElementById(id); if(el && val !== undefined) el.value = val; }
+
+var toastT;
+function toast(msg, type){
+  var el = document.getElementById('toast');
+  el.textContent = msg; el.className = 'toast on '+(type||'');
+  clearTimeout(toastT); toastT = setTimeout(function(){ el.className = 'toast'; }, 3000);
+}
+</script>
+</body>
+</html>
