@@ -1,0 +1,13 @@
+{
+  "storeName": "Mega Wireless Nashville",
+  "phone": "615-678-5849",
+  "email": "megawireless4717@gmail.com",
+  "address": "4717 Nolensville Pike, Nashville, TN 37211",
+  "taxRate": 0.0925,
+  "adminPin": "1234",
+  "hours": {
+    "Mon-Fri": "10:00 AM \u2013 9:00 PM",
+    "Saturday": "10:00 AM \u2013 10:00 PM",
+    "Sunday": "10:00 AM \u2013 9:00 PM"
+  }
+}
