@@ -1,25 +1,18 @@
 {
-  "phones": [
-    {"id":"ip15pro256","brand":"Apple","model":"iPhone 15 Pro","storage":"256GB","unlock":"Unlocked","price":449.99,"stock":3,"img":"https://images.unsplash.com/photo-1695048133142-1a20484d2569?auto=format&fit=crop&w=900&q=80"},
-    {"id":"ip15128","brand":"Apple","model":"iPhone 15","storage":"128GB","unlock":"Unlocked","price":349.99,"stock":5,"img":"https://images.unsplash.com/photo-1695578130391-929bdfff0f77?auto=format&fit=crop&w=900&q=80"},
-    {"id":"ip15plus256","brand":"Apple","model":"iPhone 15 Plus","storage":"256GB","unlock":"Unlocked","price":399.99,"stock":2,"img":"https://images.unsplash.com/photo-1695048133142-1a20484d2569?auto=format&fit=crop&w=900&q=80"},
-    {"id":"ip14plus128","brand":"Apple","model":"iPhone 14 Plus","storage":"128GB","unlock":"Unlocked","price":349.99,"stock":4,"img":"https://images.unsplash.com/photo-1663499482523-1c0c1bae4ce1?auto=format&fit=crop&w=900&q=80"},
-    {"id":"ip13pm256","brand":"Apple","model":"iPhone 13 Pro Max","storage":"256GB","unlock":"Unlocked","price":399.99,"stock":3,"img":"https://images.unsplash.com/photo-1632633173522-3b4fa7ee8e94?auto=format&fit=crop&w=900&q=80"},
-    {"id":"s23u","brand":"Samsung","model":"Samsung S23 Ultra","storage":"256GB","unlock":"Unlocked","price":449.99,"stock":2,"img":"https://images.unsplash.com/photo-1678911820864-e2c567c655d7?auto=format&fit=crop&w=900&q=80"}
-  ],
-  "plans": [
-    {"carrier":"Gen Mobile","price":"$10+","desc":"Talk & text plans. 8GB plan available at $20/mo.","img":"assets/img/gen-plans.jpeg"},
-    {"carrier":"Simple Mobile","price":"$10+","desc":"Prepaid wireless. No contract. Ask in store for current promos.","img":"assets/img/fix-phones-banner.jpeg"},
-    {"carrier":"Ultra Mobile","price":"$25+","desc":"International calling promos and prepaid activations.","img":"assets/img/ultra-promo.jpeg"},
-    {"carrier":"AT&T Prepaid","price":"$35+","desc":"Unlimited data options, no annual contract.","img":"assets/img/att-prepaid.jpeg"}
-  ],
-  "inventory":[
-    {"sku":"CASE-001","name":"iPhone Case","category":"Accessories","cost":4,"price":15,"minimum":10,"qty":18},
-    {"sku":"GLASS-001","name":"Tempered Glass Screen Protector","category":"Accessories","cost":1.5,"price":10,"minimum":5,"qty":40},
-    {"sku":"CABLE-C-3FT","name":"3 ft Type-C Cable","category":"Accessories","cost":2,"price":10,"minimum":7,"qty":99},
-    {"sku":"CHARGER-20W","name":"20W USB-C Charger","category":"Accessories","cost":5,"price":20,"minimum":15,"qty":22},
-    {"sku":"AIRPODS-CHINA","name":"AirPods 3rd Gen China","category":"Accessories","cost":18,"price":40,"minimum":30,"qty":8},
-    {"sku":"IP15PRO256","name":"iPhone 15 Pro 256GB Unlocked","category":"Phones","cost":380,"price":449.99,"minimum":430,"qty":3},
-    {"sku":"S23U","name":"Samsung S23 Ultra Unlocked","category":"Phones","cost":380,"price":449.99,"minimum":420,"qty":2}
-  ]
+"phones":[
+ {"name":"iPhone 15 Pro","storage":"256GB","condition":"Unlocked","price":449.99,"tag":"Best deal","brand":"Apple","color":"Natural Titanium"},
+ {"name":"iPhone 15","storage":"128GB","condition":"Unlocked","price":349.99,"tag":"Hot price","brand":"Apple","color":"Black"},
+ {"name":"iPhone 15 Plus","storage":"256GB","condition":"Unlocked","price":399.99,"tag":"Large display","brand":"Apple","color":"Blue"},
+ {"name":"iPhone 14 Plus","storage":"128GB","condition":"Unlocked","price":349.99,"tag":"Customer favorite","brand":"Apple","color":"Midnight"},
+ {"name":"iPhone 13 Pro Max","storage":"256GB","condition":"Unlocked","price":399.99,"tag":"Pro Max value","brand":"Apple","color":"Sierra Blue"},
+ {"name":"Samsung S23 Ultra","storage":"256GB","condition":"Unlocked","price":449.99,"tag":"Android flagship","brand":"Samsung","color":"Phantom Black"}
+],
+"carriers":[
+ {"name":"Gen Mobile","from":"$10+","note":"Talk, text, international options","img":"assets/img/gen-plans-v4.jpeg"},
+ {"name":"Simple Mobile","from":"$10+","note":"Prepaid activation • no contract","img":null},
+ {"name":"Ultra Mobile","from":"$25+","note":"International calling promos and prepaid activations","img":"assets/img/ultra-activate-v4.jpeg"},
+ {"name":"AT&T Prepaid","from":"$35+","note":"Unlimited data options, no annual contract","img":"assets/img/att-prepaid-v4.jpeg"},
+ {"name":"H2O Wireless","from":"Available","note":"Bring your number or get a new one","img":null},
+ {"name":"Lyca Mobile","from":"Available","note":"International prepaid wireless","img":null}
+]
 }
