@@ -1,20 +1,30 @@
-# Mega Wireless Bomb V1
+# Mega Wireless Bomb V2
 
-Upload all files/folders to GitHub repository root:
+Upload all files to GitHub root:
 - index.html
-- pos.html
 - admin.html
+- pos.html
 - assets/
 - data/
 
-URLs:
+Routes:
 - Website: /
-- POS: /pos.html
 - Admin: /admin.html
+- POS: /pos.html
 
-Admin/POS default PIN:
+PINs:
 - Admin: 1234
 - Cashier test: 0000
 
-Important:
-This is a strong static prototype. Admin edits are stored in browser localStorage. For true multi-device sync, backend database phase is required next.
+New in V2:
+- Correct hero owner image
+- Bluetooth speaker showroom
+- Carrier plan image cards
+- Admin Repair Management for screen repair prices
+- Store hours editor
+- Website phone editor
+- POS minimum price override with Admin PIN
+- Employee manager
+- Receipt print
+
+Important: this version uses browser localStorage. For real multi-device sync and global Admin changes, next step is Supabase/PostgreSQL backend.
