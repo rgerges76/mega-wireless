@@ -1,44 +1,19 @@
-const form = document.getElementById("dealForm");
-const box = document.getElementById("adminDeals");
 
-function getDeals() {
-  return JSON.parse(localStorage.getItem("megaDeals") || "[]");
-}
-
-function saveDeals(deals) {
-  localStorage.setItem("megaDeals", JSON.stringify(deals));
-}
-
-function render() {
-  const deals = getDeals();
-  box.innerHTML = deals.length ? deals.map((d, i) => `
-    <div class="admin-deal">
-      <strong>${d.title}</strong><br>
-      ${d.price}<br>
-      ${d.note}<br>
-      <button onclick="removeDeal(${i})">Remove</button>
-    </div>
-  `).join("") : "<p>No custom deals yet.</p>";
-}
-
-window.removeDeal = function(index) {
-  const deals = getDeals();
-  deals.splice(index, 1);
-  saveDeals(deals);
-  render();
-}
-
-form.addEventListener("submit", (event) => {
-  event.preventDefault();
-  const deals = getDeals();
-  deals.push({
-    title: document.getElementById("dealTitle").value,
-    price: document.getElementById("dealPrice").value,
-    note: document.getElementById("dealNote").value
-  });
-  saveDeals(deals);
-  form.reset();
-  render();
-});
-
-render();
+let sec='dash'; seed().then(()=>{let u=currentUser(); if(!u) return login(); init()});
+function login(){document.body.innerHTML=`<div class="login"><div class="loginbox"><h2>Mega Admin</h2><p class="muted">Admin PIN is 1234</p><input class="input" id="pin" type="password" placeholder="Admin PIN"><br><br><button class="btn primary" onclick="adminLogin()">Login</button></div></div>`}
+function adminLogin(){let e=employees().find(x=>x.role=='admin'&&x.pin==pin.value); if(!e)return alert('Wrong admin PIN'); write('mw_user',e); location.reload()}
+function init(){let u=currentUser(); if(!u.perms.includes('settings'))return login(); renderNav(); show(location.hash.replace('#','')||'dash')}
+function logout(){localStorage.removeItem('mw_user');location.reload()}
+function renderNav(){nav.innerHTML=['dash','inventory','reports','employees','website'].map(x=>`<button class="tab" onclick="show('${x}')">${x.toUpperCase()}</button>`).join('')}
+function show(x){sec=x; if(x=='dash')dash(); if(x=='inventory')inventory(); if(x=='reports')reports(); if(x=='employees')emps(); if(x=='website')website();}
+function dash(){let ss=sales(), d=ss.filter(s=>s.date==today()), m=ss.filter(s=>s.month==month()); let low=products().filter(p=>(+p.qty||0)<=((+p.minQty)||5)); main.innerHTML=`<h1>Dashboard</h1><div class="grid" style="grid-template-columns:repeat(auto-fit,minmax(180px,1fr))"><div class="card"><div class="muted">Today Sales</div><div class="kpi">${money(d.reduce((a,s)=>a+s.total,0))}</div></div><div class="card"><div class="muted">Today Profit</div><div class="kpi">${money(d.reduce((a,s)=>a+s.total-s.tax-s.cost,0))}</div></div><div class="card"><div class="muted">Month Profit</div><div class="kpi">${money(m.reduce((a,s)=>a+s.total-s.tax-s.cost,0))}</div></div><div class="card"><div class="muted">Low Stock</div><div class="kpi">${low.length}</div></div></div><div class="notice">Receipt printing is enabled from POS after every checkout.</div>`}
+function inventory(){let ps=products(); main.innerHTML=`<h1>Inventory</h1><div class="toolbar"><input class="input" id="q" oninput="inventory()" value="${document.getElementById('q')?.value||''}" placeholder="Search"><button class="btn primary" onclick="addProduct()">Add Product</button><button class="btn" onclick="exportProducts()">Export JSON</button></div><div class="card" style="overflow:auto"><table><thead><tr><th>Name</th><th>Cat</th><th>Cost</th><th>Price</th><th>Qty</th><th>Min</th><th>Website</th><th></th></tr></thead><tbody>${ps.filter(p=>(!q?.value)||p.name.toLowerCase().includes(q.value.toLowerCase())).slice(0,600).map(p=>`<tr><td>${p.name}</td><td>${p.category}</td><td>${money(p.cost)}</td><td>${money(p.price)}</td><td>${p.qty}</td><td>${p.minQty}</td><td>${p.showOnWebsite?'Yes':'No'}</td><td><button class="btn" onclick="editProduct('${p.id}')">Edit</button></td></tr>`).join('')}</tbody></table></div>`}
+function addProduct(){let ps=products(); let name=prompt('Product name'); if(!name)return; ps.unshift({id:'P'+Date.now(),sku:'',barcode:'',name,category:prompt('Category','Accessories')||'Accessories',brand:'',cost:+prompt('Cost',0)||0,price:+prompt('Selling price',0)||0,qty:+prompt('Quantity',1)||0,minQty:5,trackImei:false,showOnWebsite:confirm('Show on website?')}); saveProducts(ps); inventory()}
+function editProduct(id){let ps=products(), p=ps.find(x=>x.id==id); p.name=prompt('Name',p.name)||p.name; p.cost=+prompt('Cost',p.cost)||0; p.price=+prompt('Price',p.price)||0; p.qty=+prompt('Qty',p.qty)||0; p.minQty=+prompt('Low stock warning at',p.minQty)||5; p.showOnWebsite=confirm('Show on website? OK=yes Cancel=no'); saveProducts(ps); inventory()}
+function reports(){let ss=sales(); let d=ss.filter(s=>s.date==today()), m=ss.filter(s=>s.month==month()); function block(list,label){let rev=list.reduce((a,s)=>a+s.total,0), tax=list.reduce((a,s)=>a+s.tax,0), cost=list.reduce((a,s)=>a+s.cost,0), profit=rev-tax-cost; return `<div class="card"><h2>${label}</h2><p>Revenue: <b>${money(rev)}</b></p><p>Cost: <b>${money(cost)}</b></p><p>Tax: <b>${money(tax)}</b></p><p>Profit: <b>${money(profit)}</b></p><p>Transactions: ${list.length}</p></div>`} main.innerHTML=`<h1>Reports</h1><button class="btn primary" onclick="emailReport()">Prepare Email Report</button><div class="grid" style="grid-template-columns:1fr 1fr">${block(d,'Daily Profit / Loss')}${block(m,'Monthly Profit / Loss')}</div><div class="card"><h2>Sales Log</h2><table><thead><tr><th>Date</th><th>Total</th><th>Cost</th><th>Profit</th><th>Payment</th><th>Employee</th></tr></thead><tbody>${ss.slice().reverse().map(s=>`<tr><td>${new Date(s.time).toLocaleString()}</td><td>${money(s.total)}</td><td>${money(s.cost)}</td><td>${money(s.total-s.tax-s.cost)}</td><td>${s.payment} ${s.last4||''}</td><td>${s.employee}</td></tr>`).join('')}</tbody></table></div>`}
+function emailReport(){let ss=sales().filter(s=>s.date==today()); let rev=ss.reduce((a,s)=>a+s.total,0), cost=ss.reduce((a,s)=>a+s.cost,0), tax=ss.reduce((a,s)=>a+s.tax,0), profit=rev-tax-cost; location.href=`mailto:megawireless4717@gmail.com?subject=Daily Report ${today()}&body=Revenue: ${money(rev)}%0ACost: ${money(cost)}%0ATax: ${money(tax)}%0AProfit: ${money(profit)}%0ATransactions: ${ss.length}`}
+function emps(){let es=employees(); main.innerHTML=`<h1>Employees & Permissions</h1><button class="btn primary" onclick="addEmp()">Add Employee</button><div class="card"><table><thead><tr><th>Name</th><th>Role</th><th>PIN</th><th>Permissions</th><th></th></tr></thead><tbody>${es.map(e=>`<tr><td>${e.name}</td><td>${e.role}</td><td>${e.pin}</td><td>${e.perms.join(', ')}</td><td><button class="btn" onclick="editEmp('${e.id}')">Edit</button></td></tr>`).join('')}</tbody></table></div><div class="notice">Admin password is set to 1234. Admin has all permissions.</div>`}
+function addEmp(){let es=employees(); let name=prompt('Employee name'); if(!name)return; let pin=prompt('PIN','1111')||'1111'; let perms=prompt('Permissions comma separated','pos')||'pos'; es.push({id:'E'+Date.now(),name,pin,role:'cashier',perms:perms.split(',').map(x=>x.trim())}); saveEmployees(es); emps()}
+function editEmp(id){let es=employees(), e=es.find(x=>x.id==id); e.name=prompt('Name',e.name)||e.name; e.pin=prompt('PIN',e.pin)||e.pin; e.perms=(prompt('Permissions comma separated',e.perms.join(','))||e.perms.join(',')).split(',').map(x=>x.trim()); saveEmployees(es); emps()}
+function website(){main.innerHTML=`<h1>Website Control</h1><div class="card"><p>Products with <b>Show on website</b> appear on the website deals/products section.</p><p>Use Inventory → Edit → Show on website.</p></div>`}
+function exportProducts(){let blob=new Blob([JSON.stringify(products(),null,2)],{type:'application/json'});let a=document.createElement('a');a.href=URL.createObjectURL(blob);a.download='mega-products.json';a.click()}
