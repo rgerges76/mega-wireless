@@ -15,12 +15,12 @@ window.MEGA_DEFAULTS = {
     {name:'AT&T Prepaid',price:'$35+',note:'Unlimited data options. No annual contract.',img:'assets/img/gen-poster.jpg'}
   ],
   speakers:[
-    {id:'sp1',name:'MaxPower Ultra Pro V2',price:19.99,tag:'Portable RGB',img:'assets/img/speaker-white.jpg'},
-    {id:'sp2',name:'H&A RGB Party Speaker',price:39.99,tag:'Party Sound',img:'assets/img/speaker-pair.jpg'},
-    {id:'sp3',name:'Big Boss Speaker',price:49.99,tag:'Deep Bass',img:'assets/img/speaker-big.jpg'},
-    {id:'sp4',name:'18,000W Party Tower',price:89.99,tag:'Store Favorite',img:'assets/img/speaker-red.jpg'},
-    {id:'sp5',name:'LED Party Tower',price:79.99,tag:'RGB Lights',img:'assets/img/speaker-purple.jpg'},
-    {id:'sp6',name:'Mega Party Speaker',price:99.99,tag:'Loudest Pick',img:'assets/img/speaker-party.jpg'}
+    {id:'sp1',name:'MaxPower Ultra Pro V2',price:19.99,tag:'Portable RGB',img:'assets/img/speaker-white-card.jpg'},
+    {id:'sp2',name:'H&A RGB Party Speaker',price:39.99,tag:'Party Sound',img:'assets/img/speaker-pair-card.jpg'},
+    {id:'sp3',name:'Big Boss Speaker',price:49.99,tag:'Deep Bass',img:'assets/img/speaker-big-card.jpg'},
+    {id:'sp4',name:'18,000W Party Tower',price:89.99,tag:'Store Favorite',img:'assets/img/speaker-red-card.jpg'},
+    {id:'sp5',name:'LED Party Tower',price:79.99,tag:'RGB Lights',img:'assets/img/speaker-purple-card.jpg'},
+    {id:'sp6',name:'Mega Party Speaker',price:99.99,tag:'Loudest Pick',img:'assets/img/speaker-party-card.jpg'}
   ],
   repairs:[
     {brand:'Apple',model:'iPhone 11',service:'Screen Repair',price:60,cost:28,time:'25 min',warranty:'30 days',visible:true},
