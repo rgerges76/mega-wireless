@@ -1,6 +1,5 @@
 {
   "store": {
-    "name": "Mega Wireless Nashville",
     "phone": "615-678-5849",
     "email": "megawireless4717@gmail.com",
     "address": "4717 Nolensville Pike, Nashville, TN 37211",
@@ -14,6 +13,13 @@
       "Sunday": "10:00 AM \u2013 9:00 PM"
     }
   },
+  "ticker": [
+    "Screen Repair From $29",
+    "Plans Starting From $10/Month",
+    "Bluetooth Speakers From $19.99",
+    "Same-Day Repair",
+    "Open 7 Days"
+  ],
   "phones": [
     {
       "id": "p1",
@@ -21,9 +27,8 @@
       "storage": "256GB",
       "price": 449.99,
       "oldPrice": 599.99,
-      "stock": 3,
-      "image": "assets/img/phone-placeholder.svg",
-      "featured": true
+      "image": "assets/iphone15pro.svg",
+      "visible": true
     },
     {
       "id": "p2",
@@ -31,168 +36,203 @@
       "storage": "128GB",
       "price": 349.99,
       "oldPrice": 449.99,
-      "stock": 5,
-      "image": "assets/img/phone-placeholder.svg",
-      "featured": true
+      "image": "assets/iphone15.svg",
+      "visible": true
     },
     {
       "id": "p3",
-      "name": "iPhone 15 Plus",
-      "storage": "256GB",
-      "price": 399.99,
-      "oldPrice": 529.99,
-      "stock": 2,
-      "image": "assets/img/phone-placeholder.svg",
-      "featured": true
-    },
-    {
-      "id": "p4",
-      "name": "iPhone 14 Plus",
-      "storage": "128GB",
-      "price": 349.99,
-      "oldPrice": 459.99,
-      "stock": 4,
-      "image": "assets/img/phone-placeholder.svg",
-      "featured": true
-    },
-    {
-      "id": "p5",
-      "name": "iPhone 13 Pro Max",
-      "storage": "256GB",
-      "price": 399.99,
-      "oldPrice": 549.99,
-      "stock": 2,
-      "image": "assets/img/phone-placeholder.svg",
-      "featured": true
-    },
-    {
-      "id": "p6",
       "name": "Samsung S23 Ultra",
       "storage": "256GB",
       "price": 449.99,
       "oldPrice": 649.99,
-      "stock": 3,
-      "image": "assets/img/phone-placeholder.svg",
-      "featured": true
+      "image": "assets/s23ultra.svg",
+      "visible": true
+    },
+    {
+      "id": "p4",
+      "name": "iPhone 15 Plus",
+      "storage": "256GB",
+      "price": 399.99,
+      "oldPrice": 529.99,
+      "image": "assets/iphone15plus.svg",
+      "visible": true
+    },
+    {
+      "id": "p5",
+      "name": "iPhone 14 Plus",
+      "storage": "128GB",
+      "price": 349.99,
+      "oldPrice": 459.99,
+      "image": "assets/iphone14plus.svg",
+      "visible": true
     }
   ],
-  "speakers": [
+  "offers": [
     {
-      "id": "s1",
-      "name": "Ultra Pro M2",
-      "price": 49.99,
-      "stock": 8,
-      "image": "assets/img/speaker1.jpg"
+      "id": "o1",
+      "title": "Largest Selection of Speakers",
+      "subtitle": "Prices starting from $19.99",
+      "image": "assets/speaker-approved.jpg",
+      "visible": true
     },
     {
-      "id": "s2",
-      "name": "RGB Party Speaker",
-      "price": 59.99,
-      "stock": 5,
-      "image": "assets/img/speaker2.jpg"
-    },
-    {
-      "id": "s3",
-      "name": "H&A Party Tower",
-      "price": 89.99,
-      "stock": 4,
-      "image": "assets/img/speaker3.jpg"
-    },
-    {
-      "id": "s4",
-      "name": "LED Party Tower",
-      "price": 79.99,
-      "stock": 6,
-      "image": "assets/img/speaker4.jpg"
+      "id": "o2",
+      "title": "All Carrier Activations",
+      "subtitle": "New line or upgrade \u2014 fast & easy",
+      "image": "assets/activation-approved.jpg",
+      "visible": true
     }
   ],
   "carriers": [
     {
       "id": "c1",
       "name": "Gen Mobile",
-      "starting": 10,
-      "image": "assets/img/genmobile.jpg"
+      "price": "Plans from $10/mo",
+      "brandClass": "gen",
+      "visible": true
     },
     {
       "id": "c2",
       "name": "Ultra Mobile",
-      "starting": 19,
-      "image": "assets/img/ultra.jpg"
+      "price": "Plans from $19/mo",
+      "brandClass": "ultra",
+      "visible": true
     },
     {
       "id": "c3",
       "name": "MobileX",
-      "starting": 10,
-      "image": "assets/img/mobilex.jpg"
+      "price": "Plans from $10/mo",
+      "brandClass": "mobilex",
+      "visible": true
     },
     {
       "id": "c4",
       "name": "Simple Mobile",
-      "starting": 25,
-      "image": ""
+      "price": "Prepaid \u00b7 No Contract",
+      "brandClass": "simple",
+      "visible": true
+    },
+    {
+      "id": "c5",
+      "name": "AT&T Prepaid",
+      "price": "Unlimited from $35/mo",
+      "brandClass": "att",
+      "visible": true
+    },
+    {
+      "id": "c6",
+      "name": "Cricket Wireless",
+      "price": "Prepaid plans available",
+      "brandClass": "cricket",
+      "visible": true
+    },
+    {
+      "id": "c7",
+      "name": "Boost Mobile",
+      "price": "New lines and upgrades",
+      "brandClass": "boost",
+      "visible": true
+    },
+    {
+      "id": "c8",
+      "name": "H2O Wireless",
+      "price": "No-contract prepaid",
+      "brandClass": "h2o",
+      "visible": true
     }
   ],
   "repairs": [
     {
       "id": "r1",
-      "brand": "Apple",
-      "model": "iPhone 15",
+      "device": "iPhone 11",
       "service": "Screen Repair",
-      "price": 129.99,
-      "cost": 55,
-      "time": "45 min",
-      "warranty": "90 days"
+      "price": 49.99,
+      "time": "30\u201345 min",
+      "warranty": "90 days",
+      "visible": true
+    },
+    {
+      "id": "r2",
+      "device": "iPhone 13",
+      "service": "Screen Repair",
+      "price": 79.99,
+      "time": "30\u201345 min",
+      "warranty": "90 days",
+      "visible": true
+    },
+    {
+      "id": "r3",
+      "device": "iPhone 14",
+      "service": "Screen Repair",
+      "price": 99.99,
+      "time": "45\u201360 min",
+      "warranty": "90 days",
+      "visible": true
+    },
+    {
+      "id": "r4",
+      "device": "Most iPhones",
+      "service": "Battery Replacement",
+      "price": 59.99,
+      "time": "30\u201345 min",
+      "warranty": "90 days",
+      "visible": true
+    },
+    {
+      "id": "r5",
+      "device": "Phones & Tablets",
+      "service": "Charging Port Repair",
+      "price": 69.99,
+      "time": "Same day in most cases",
+      "warranty": "90 days",
+      "visible": true
+    },
+    {
+      "id": "r6",
+      "device": "All Devices",
+      "service": "Free Diagnostics",
+      "price": 0,
+      "time": "Fast inspection",
+      "warranty": "No obligation",
+      "visible": true
     }
   ],
-  "employees": [
+  "adminAuth": {
+    "email": "ramyook@gmail.com",
+    "passwordHash": "5475c29a4fc94402e689f201ca79067c56cb62696a9f5765863d4b3a9401aa81"
+  },
+  "speakers": [
     {
-      "id": "e1",
-      "name": "Admin",
-      "pin": "1234",
-      "role": "admin",
-      "permissions": [
-        "all"
-      ]
+      "id": "s1",
+      "name": "Ultra Pro V2",
+      "price": 49.99,
+      "oldPrice": 69.99,
+      "image": "assets/speaker-1.jpg",
+      "visible": true
     },
     {
-      "id": "e2",
-      "name": "Cashier",
-      "pin": "0000",
-      "role": "cashier",
-      "permissions": [
-        "sale",
-        "price_override_to_min",
-        "print_receipt"
-      ]
-    }
-  ],
-  "products": [
-    {
-      "id": "x1",
-      "name": "USB-C Cable",
-      "barcode": "10001",
-      "cost": 3,
-      "price": 10,
-      "minimum": 7,
-      "qty": 30
+      "id": "s2",
+      "name": "RGB Party Speaker",
+      "price": 59.99,
+      "oldPrice": 79.99,
+      "image": "assets/speaker-2.jpg",
+      "visible": true
     },
     {
-      "id": "x2",
-      "name": "iPhone Case",
-      "barcode": "10002",
-      "cost": 4,
-      "price": 15,
-      "minimum": 10,
-      "qty": 25
+      "id": "s3",
+      "name": "H&A Party Tower",
+      "price": 89.99,
+      "oldPrice": 119.99,
+      "image": "assets/speaker-3.jpg",
+      "visible": true
     },
     {
-      "id": "x3",
-      "name": "Tempered Glass",
-      "barcode": "10003",
-      "cost": 1.5,
-      "price": 10,
-      "minimum": 5,
-      "qty": 50
+      "id": "s4",
+      "name": "LED Party Tower",
+      "price": 79.99,
+      "oldPrice": 99.99,
+      "image": "assets/speaker-4.jpg",
+      "visible": true
     }
   ]
 }

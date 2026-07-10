@@ -1,14 +1,72 @@
 
-const translations={
-en:{home:"Home",services:"Services",phones:"Phones",speakers:"Speakers",activations:"Activations",rewards:"Rewards",contact:"Contact",tick1:"Screen Repair From $29",tick2:"Plans Starting From $10/Month",tick3:"Bluetooth Speakers From $19.99",tick4:"Same-Day Repair",tick5:"Open 7 Days",screenRepair:"Screen Repair",screenSub:"Cracked screen? We fix it fast.",battery:"Battery Replacement",batterySub:"More power. More life.",water:"Water Damage",waterSub:"We save your device.",unlock:"Carrier Unlock",unlockSub:"Unlock eligible phones.",computer:"Computer Repair",computerSub:"Laptops and desktops repaired.",activationSub:"New line or upgrade.",topDeals:"TOP DEALS. BEST PRICES.",unlockedReady:"Unlocked phones ready for activation.",viewPhones:"View All Phones →",prepaidTitle:"PREPAID PLANS — NO CONTRACT",prepaidSub:"Plans starting from $10/month. Easy activation. No annual contract.",why:"WHY CHOOSE MEGA WIRELESS?",whySub:"Quality repairs, competitive prices and personal service.",years:"Years Experience",repaired:"Devices Repaired",warranty:"Warranty on Repairs",sameDay:"Same Day",mostCases:"Service in Most Cases",reviewsTitle:"WHAT OUR CUSTOMERS SAY",rewardsText:"Earn points on repairs, purchases and activations. Redeem for discounts, accessories and eligible free-phone rewards.",hours:"STORE HOURS",visit:"VISIT US",walkins:"WALK-INS WELCOME!",open7:"Open 7 days a week.",callNow:"Call Now"},
-es:{home:"Inicio",services:"Servicios",phones:"Teléfonos",speakers:"Bocinas",activations:"Activaciones",rewards:"Recompensas",contact:"Contacto",tick1:"Reparación de pantalla desde $29",tick2:"Planes desde $10 al mes",tick3:"Bocinas Bluetooth desde $19.99",tick4:"Reparación el mismo día",tick5:"Abierto 7 días",screenRepair:"Reparación de Pantalla",screenSub:"¿Pantalla rota? La reparamos rápido.",battery:"Cambio de Batería",batterySub:"Más energía. Más duración.",water:"Daño por Agua",waterSub:"Intentamos salvar tu equipo.",unlock:"Desbloqueo",unlockSub:"Desbloqueo de equipos elegibles.",computer:"Reparación de Computadoras",computerSub:"Laptops y computadoras.",activationSub:"Línea nueva o actualización.",topDeals:"MEJORES OFERTAS. MEJORES PRECIOS.",unlockedReady:"Teléfonos desbloqueados listos para activar.",viewPhones:"Ver teléfonos →",prepaidTitle:"PLANES PREPAGADOS — SIN CONTRATO",prepaidSub:"Planes desde $10 al mes. Activación fácil. Sin contrato anual.",why:"¿POR QUÉ MEGA WIRELESS?",whySub:"Reparaciones de calidad, buenos precios y servicio personal.",years:"Años de experiencia",repaired:"Equipos reparados",warranty:"Garantía en reparaciones",sameDay:"Mismo día",mostCases:"Servicio en la mayoría de casos",reviewsTitle:"LO QUE DICEN NUESTROS CLIENTES",rewardsText:"Gana puntos en reparaciones, compras y activaciones. Canjéalos por descuentos, accesorios y teléfonos elegibles.",hours:"HORARIO",visit:"VISÍTANOS",walkins:"¡SIN CITA!",open7:"Abierto 7 días a la semana.",callNow:"Llamar Ahora"},
-ar:{home:"الرئيسية",services:"الخدمات",phones:"الهواتف",speakers:"السماعات",activations:"تفعيل الخطوط",rewards:"المكافآت",contact:"اتصل بنا",tick1:"إصلاح الشاشات يبدأ من 29 دولار",tick2:"خطوط تبدأ من 10 دولار شهريًا",tick3:"سماعات بلوتوث تبدأ من 19.99 دولار",tick4:"إصلاح في نفس اليوم",tick5:"مفتوح 7 أيام",screenRepair:"إصلاح الشاشات",screenSub:"شاشتك مكسورة؟ نصلحها بسرعة.",battery:"تغيير البطارية",batterySub:"طاقة أكبر وعمر أطول.",water:"أضرار المياه",waterSub:"نفحص ونحاول إنقاذ الجهاز.",unlock:"فتح الشبكة",unlockSub:"فتح الأجهزة المؤهلة.",computer:"إصلاح الكمبيوتر",computerSub:"لابتوب وكمبيوتر مكتبي.",activationSub:"خط جديد أو ترقية.",topDeals:"أفضل العروض وأفضل الأسعار",unlockedReady:"هواتف مفتوحة الشبكة وجاهزة للتفعيل.",viewPhones:"عرض كل الهواتف ←",prepaidTitle:"خطوط مسبقة الدفع بدون عقود",prepaidSub:"خطوط تبدأ من 10 دولار شهريًا، تفعيل سهل وبدون عقد سنوي.",why:"لماذا تختار ميجا وايرليس؟",whySub:"إصلاحات عالية الجودة وأسعار منافسة وخدمة شخصية.",years:"سنوات خبرة",repaired:"جهاز تم إصلاحه",warranty:"ضمان على الإصلاحات",sameDay:"نفس اليوم",mostCases:"في أغلب الحالات",reviewsTitle:"ماذا يقول عملاؤنا",rewardsText:"اجمع نقاطًا من الإصلاحات والمشتريات وتفعيل الخطوط واستبدلها بخصومات وإكسسوارات وهواتف مؤهلة مجانًا.",hours:"مواعيد العمل",visit:"زورونا",walkins:"نستقبل بدون موعد",open7:"مفتوح 7 أيام في الأسبوع.",callNow:"اتصل الآن"}
-};
+const KEY='mw-approved-v3';
+let siteData;
+async function loadData(){
+ const saved=localStorage.getItem(KEY);
+ if(saved){siteData=JSON.parse(saved);return siteData}
+ const r=await fetch('data.json');siteData=await r.json();localStorage.setItem(KEY,JSON.stringify(siteData));return siteData;
+}
+function saveData(){localStorage.setItem(KEY,JSON.stringify(siteData))}
+function money(v){return '$'+Number(v||0).toFixed(2)}
+async function init(){
+ await loadData();renderTicker();renderPhones();renderRepairs();renderSpeakers();renderOffers();renderCarriers();renderHours();wireStoreLinks();
+ const tr=await (await fetch('translations.json')).json();window.TR=tr;setLang(localStorage.getItem('mw-lang')||'en');
+}
+function renderTicker(){
+ const content=[...siteData.ticker,...siteData.ticker].map((x,i)=>`<span>${x}</span>${i<siteData.ticker.length*2-1?'<span>•</span>':''}`).join('');
+ document.querySelector('.ticker-track').innerHTML=content;
+}
+function renderPhones(){
+ document.getElementById('phoneGrid').innerHTML=siteData.phones.filter(x=>x.visible).map(x=>`<article class="card product">
+ <img src="${x.image}" alt="${x.name}"><h3>${x.name}</h3><div class="meta">${x.storage} · Unlocked</div>
+ <div><span class="price">${money(x.price)}</span><span class="old">${money(x.oldPrice)}</span></div>
+ <a class="buy store-call" href="#">Buy Now</a></article>`).join('');
+}
+
+function renderRepairs(){
+ const el=document.getElementById('repairGrid'); if(!el)return;
+ el.innerHTML=siteData.repairs.filter(x=>x.visible).map(x=>`<article class="card repair-card">
+   <div class="repair-icon">${x.service.includes('Screen')?'📱':x.service.includes('Battery')?'🔋':x.service.includes('Charging')?'⚡':'🛠️'}</div>
+   <div class="repair-device">${x.device}</div>
+   <h3>${x.service}</h3>
+   <div class="repair-price">${Number(x.price)===0?'FREE':money(x.price)}</div>
+   <p>${x.time||''}</p><span>${x.warranty||''}</span>
+   <a class="buy store-call" href="#">Book Repair</a>
+ </article>`).join('');
+}
+function renderSpeakers(){
+ const el=document.getElementById('speakerGrid'); if(!el)return;
+ el.innerHTML=(siteData.speakers||[]).filter(x=>x.visible).map(x=>`<article class="card speaker-card">
+   <img src="${x.image}" alt="${x.name}">
+   <h3>${x.name}</h3>
+   <div><span class="price">${money(x.price)}</span><span class="old">${money(x.oldPrice)}</span></div>
+   <a class="buy store-call" href="#">Check Availability</a>
+ </article>`).join('');
+}
+function renderOffers(){
+ document.getElementById('offerGrid').innerHTML=siteData.offers.filter(x=>x.visible).map(x=>`<article class="promo">
+ <img src="${x.image}" alt="${x.title}"><div class="promo-overlay"><h3>${x.title}</h3><strong>${x.subtitle}</strong><a class="button store-call" href="#">Learn More</a></div></article>`).join('');
+}
+function renderCarriers(){
+ document.getElementById('carrierGrid').innerHTML=siteData.carriers.filter(x=>x.visible).map(x=>`<article class="card carrier">
+   <div class="carrier-brand ${x.brandClass||''}"><span>${x.name}</span></div>
+   <h3>${x.name}</h3><strong>${x.price}</strong>
+   <a class="buy store-call" href="#">Activate Today</a>
+ </article>`).join('');
+}
+function renderHours(){document.getElementById('hoursBody').innerHTML=Object.entries(siteData.store.hours).map(([d,h])=>`<tr class="${d==='Saturday'?'sat':''}"><td>${d}</td><td>${h}</td></tr>`).join('')}
+function wireStoreLinks(){
+ const phone=siteData.store.phone.replace(/\D/g,'');document.querySelectorAll('.store-call').forEach(a=>a.href='tel:'+phone);
+ document.querySelectorAll('.phone-text').forEach(e=>e.textContent=siteData.store.phone);
+ document.querySelectorAll('.address-text').forEach(e=>e.textContent=siteData.store.address);
+ document.querySelectorAll('.email-text').forEach(e=>e.textContent=siteData.store.email);
+ document.getElementById('wa').href='https://wa.me/1'+phone;
+}
 function setLang(lang){
  document.documentElement.lang=lang;document.documentElement.dir=lang==='ar'?'rtl':'ltr';
- document.querySelectorAll('[data-i18n]').forEach(el=>{const k=el.dataset.i18n;if(translations[lang][k])el.textContent=translations[lang][k]});
+ document.querySelectorAll('[data-i18n]').forEach(el=>{const k=el.dataset.i18n;if(TR[lang][k])el.textContent=TR[lang][k]});
  document.querySelectorAll('.langs button').forEach(b=>b.classList.toggle('active',b.dataset.lang===lang));
  localStorage.setItem('mw-lang',lang);
 }
-document.querySelectorAll('.langs button').forEach(b=>b.addEventListener('click',()=>setLang(b.dataset.lang)));
-setLang(localStorage.getItem('mw-lang')||'en');
+document.addEventListener('click',e=>{const b=e.target.closest('[data-lang]');if(b)setLang(b.dataset.lang)});
+init();
