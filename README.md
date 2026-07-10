@@ -1,2 +1,4 @@
-Mega Wireless Live Admin V1
-Upload all files and folders to GitHub root. Admin: /admin.html. POS: /pos.html. Default admin PIN: 1234. Edits save in browser localStorage for this prototype.
+Mega Wireless Pro Phase 1
+Admin PIN 1234
+Cashier PIN 0000
+Upload all contents to repository root. Use Export Backup regularly.
