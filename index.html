@@ -1,92 +1,107 @@
 <!doctype html>
-<html lang="en">
+<html lang="en" dir="ltr">
 <head>
-<meta charset="utf-8">
-<meta name="viewport" content="width=device-width,initial-scale=1">
+<meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1">
 <title>Mega Wireless Nashville</title>
-<meta name="description" content="Phone repair, unlocked phones, prepaid activations, Bluetooth speakers and accessories in Nashville.">
-<style>
-:root{--bg:#020816;--panel:#07152c;--panel2:#0a1b3b;--blue:#1268ff;--cyan:#54d9ff;--gold:#ffbd35;--text:#f8fbff;--muted:#9fb1cd;--line:#173668}
-*{box-sizing:border-box}html{scroll-behavior:smooth}body{margin:0;background:linear-gradient(180deg,#010711,#020a18 48%,#01040a);color:var(--text);font-family:Arial,Helvetica,sans-serif}
-a{text-decoration:none;color:inherit}.wrap{width:min(1180px,94%);margin:auto}
-.top{background:#02040a;border-bottom:1px solid #15243f;color:#f4d281;font-size:13px}.top .wrap{display:flex;justify-content:center;gap:34px;flex-wrap:wrap;padding:8px}
-nav{position:sticky;top:0;z-index:30;background:rgba(2,8,22,.92);backdrop-filter:blur(14px);border-bottom:1px solid #16315b}
-nav .wrap{display:flex;justify-content:space-between;align-items:center;padding:16px 0}.logo{font-size:21px;font-weight:900;letter-spacing:4px}.logo small{display:block;color:#68d9ff;font-size:9px;letter-spacing:5px;margin-top:3px}
-.links{display:flex;gap:25px;align-items:center;font-size:14px;font-weight:800}.call{padding:13px 19px;border-radius:14px;background:linear-gradient(135deg,#0648c9,#1e85ff);box-shadow:0 0 25px #1466ff66}
-.hero{min-height:515px;position:relative;overflow:hidden;border-bottom:1px solid #17315c;background:radial-gradient(circle at 75% 10%,#0c3d83 0,#05132f 38%,#010711 77%)}
-.hero:after{content:"";position:absolute;inset:0;background:linear-gradient(90deg,#010711 0%,rgba(1,7,17,.92) 42%,rgba(1,7,17,.05) 78%)}
-.hero-art{position:absolute;right:0;top:0;width:61%;height:100%;background:url('assets/hero-owner.jpg') center/cover no-repeat;filter:saturate(1.05) contrast(1.05)}
-.hero .wrap{position:relative;z-index:2;padding:68px 0 45px}.eyebrow{display:inline-block;padding:7px 14px;border-radius:999px;background:#0b2452;border:1px solid #245ca4;color:#d7e9ff;font-weight:800;font-size:13px}
-h1{font-size:65px;line-height:.95;margin:18px 0 15px;letter-spacing:-3px}h1 span{background:linear-gradient(180deg,#fff,#4dd7ff);-webkit-background-clip:text;color:transparent}
-.hero p{max-width:580px;color:#d2def1;font-size:19px;line-height:1.55}.actions{display:flex;gap:14px;flex-wrap:wrap;margin:23px 0}
-.btn{display:inline-flex;align-items:center;justify-content:center;padding:14px 20px;border-radius:12px;border:1px solid #31568c;background:#07142c;font-weight:900}.btn.blue{background:linear-gradient(135deg,#0a4fd8,#229aff)}.btn.gold{background:linear-gradient(135deg,#e99611,#ffd45d);color:#161008;border:0}
-.badges{display:flex;gap:11px;flex-wrap:wrap}.badge{padding:8px 12px;border-radius:999px;border:1px solid #214679;background:#071328;color:#dbeaff;font-size:13px}
-.section{padding:58px 0}.section-title{display:flex;justify-content:space-between;align-items:end;margin-bottom:21px}.section h2{font-size:34px;margin:0}.lead{color:var(--muted);margin:7px 0 0}
-.services{display:grid;grid-template-columns:repeat(6,1fr);gap:12px}.service,.card{background:linear-gradient(180deg,#0a1d40,#061126);border:1px solid #1d4a89;border-radius:16px;box-shadow:0 10px 35px #0007}.service{padding:18px 12px;text-align:center;min-height:145px}.ico{font-size:34px;color:var(--gold);margin-bottom:10px}.service b{display:block;margin-bottom:7px}.service span{color:var(--muted);font-size:13px;line-height:1.4}
-.products{display:grid;grid-template-columns:repeat(5,1fr);gap:14px}.product{padding:13px;text-align:center}.product img{width:100%;height:175px;object-fit:contain;background:#071126;border-radius:12px}.product h3{font-size:15px;margin:10px 0 3px}.from{font-size:12px;color:#9eafc9}.price{font-size:23px;font-weight:900}.buy{display:block;margin-top:10px;padding:8px;border-radius:999px;background:linear-gradient(135deg,#063cb8,#167aff);font-weight:900}
-.promo-row{display:grid;grid-template-columns:1.15fr .85fr;gap:16px}.promo{min-height:265px;border:1px solid #1b467f;border-radius:18px;overflow:hidden;position:relative;background:#071328}.promo img{width:100%;height:100%;object-fit:cover}.promo .shade{position:absolute;inset:0;background:linear-gradient(90deg,#020713eb,#02071345);padding:28px;display:flex;flex-direction:column;justify-content:flex-end}.promo h3{font-size:31px;margin:0 0 8px}.promo strong{color:var(--gold);font-size:30px}
-.why{display:grid;grid-template-columns:1.15fr repeat(4,1fr);gap:14px}.why .card{padding:20px}.why .stat{text-align:center}.stat .big{font-size:28px;color:var(--gold);font-weight:900}.reviews{display:grid;grid-template-columns:1fr 1fr;gap:18px}.review{padding:23px}.stars{color:var(--gold);font-size:23px}
-.inside{display:grid;grid-template-columns:1fr 1fr 1.1fr 1fr;gap:14px}.inside .card{padding:20px}.inside table{width:100%;font-size:13px}.inside td{padding:5px}.map{width:100%;height:100%;min-height:210px;border-radius:12px;object-fit:cover}.walk{display:flex;flex-direction:column;justify-content:center;text-align:center}.walk .store{font-size:58px;color:#3db4ff}
-footer{border-top:1px solid #16315a;padding:30px 0 40px;color:#9db0ca}.footer-grid{display:grid;grid-template-columns:1.4fr 1fr 1fr 1fr;gap:20px}.footer-grid b{color:#fff}
-.float{position:fixed;right:16px;bottom:25px;display:grid;gap:10px;z-index:40}.float a{width:52px;height:52px;border-radius:50%;display:grid;place-items:center;background:#0b66ff;border:2px solid #69d7ff;box-shadow:0 8px 25px #005eff77;font-weight:900}
-@media(max-width:900px){.links{display:none}.hero-art{width:100%;opacity:.38}.hero:after{background:rgba(1,7,17,.72)}h1{font-size:48px}.services{grid-template-columns:repeat(2,1fr)}.products{grid-template-columns:repeat(2,1fr)}.promo-row,.why,.reviews,.inside,.footer-grid{grid-template-columns:1fr}.hero .wrap{padding-top:50px}}
-</style>
+<link rel="stylesheet" href="assets/style.css">
 </head>
 <body>
-<div class="top"><div class="wrap"><span>★★★★★ 5-Star Service</span><span>◷ Same-Day Repair</span><span>◉ Free Diagnostics</span><span>◷ Open 7 Days</span><span>◷ 10+ Years Experience</span></div></div>
-<nav><div class="wrap"><div class="logo">MEGA WIRELESS<small>NASHVILLE</small></div><div class="links"><a href="#">Home</a><a href="#services">Services</a><a href="#phones">Phones</a><a href="#speakers">Accessories</a><a href="#activations">Activations</a><a href="#about">About Us</a><a href="#contact">Contact</a><a class="call" href="tel:6156785849">☎ 615-678-5849</a></div></div></nav>
+<div class="ticker" aria-label="Current promotions">
+  <div class="ticker-track">
+    <span data-i18n="tick1">Screen Repair From $29</span><span>•</span>
+    <span data-i18n="tick2">Plans Starting From $10/Month</span><span>•</span>
+    <span data-i18n="tick3">Bluetooth Speakers From $19.99</span><span>•</span>
+    <span data-i18n="tick4">Same-Day Repair</span><span>•</span>
+    <span data-i18n="tick5">Open 7 Days</span><span>•</span>
+    <span data-i18n="tick1">Screen Repair From $29</span><span>•</span>
+    <span data-i18n="tick2">Plans Starting From $10/Month</span>
+  </div>
+</div>
 
-<header class="hero"><div class="hero-art"></div><div class="wrap">
-<span class="eyebrow">NASHVILLE'S MOST TRUSTED</span>
-<h1>Phone Repair<br><span>Experts</span></h1>
-<p>Fast repairs. Premium devices. Easy activations. All in one place.</p>
-<div class="actions"><a class="btn blue" href="tel:6156785849">☎ Call Now<br>615-678-5849</a><a class="btn" href="https://www.google.com/maps/search/?api=1&query=4717+Nolensville+Pike+Nashville+TN+37211">⌖ Get Directions</a><a class="btn gold" href="#phones">▣ Shop Phones</a></div>
-<div class="badges"><span class="badge">◷ Same-Day Service</span><span class="badge">♢ 90-Day Warranty</span><span class="badge">◇ Premium Parts</span><span class="badge">⚙ Expert Technicians</span></div>
-</div></header>
+<nav>
+<div class="container navrow">
+ <div class="brand"><span class="mark">M</span><div>MEGA WIRELESS<small>NASHVILLE</small></div></div>
+ <div class="links">
+   <a href="#home" data-i18n="home">Home</a><a href="#services" data-i18n="services">Services</a>
+   <a href="#phones" data-i18n="phones">Phones</a><a href="#speakers" data-i18n="speakers">Speakers</a>
+   <a href="#activations" data-i18n="activations">Activations</a><a href="#rewards" data-i18n="rewards">Rewards</a>
+   <a href="#contact" data-i18n="contact">Contact</a>
+ </div>
+ <div class="rightnav"><div class="langs"><button data-lang="en" class="active">EN</button><button data-lang="es">ES</button><button data-lang="ar">AR</button></div><a class="call" href="tel:6156785849">615-678-5849</a></div>
+</div>
+</nav>
 
-<section id="services" class="section"><div class="wrap"><div class="services">
-<div class="service"><div class="ico">▣</div><b>Screen Repair</b><span>Cracked screen? We fix it fast.</span></div>
-<div class="service"><div class="ico">▥</div><b>Battery Replacement</b><span>More power. More life.</span></div>
-<div class="service"><div class="ico">◉</div><b>Water Damage</b><span>We save your device.</span></div>
-<div class="service"><div class="ico">▢</div><b>Carrier Unlock</b><span>Unlock any eligible phone.</span></div>
-<div class="service"><div class="ico">▭</div><b>Computer Repair</b><span>Laptops and desktops repaired.</span></div>
-<div class="service"><div class="ico">◔</div><b>Activations</b><span>New line or upgrade.</span></div>
-</div></div></section>
+<header id="home" class="approved-hero">
+  <img src="assets/hero-approved.jpg" alt="Mega Wireless phone repair experts">
+  <div class="hero-hotspots">
+    <a class="hot call-hot" href="tel:6156785849" aria-label="Call Mega Wireless"></a>
+    <a class="hot map-hot" href="https://www.google.com/maps/search/?api=1&query=4717+Nolensville+Pike+Nashville+TN+37211" aria-label="Directions"></a>
+    <a class="hot shop-hot" href="#phones" aria-label="Shop phones"></a>
+  </div>
+</header>
 
-<section id="phones" class="section"><div class="wrap"><div class="section-title"><div><h2>TOP DEALS. BEST PRICES.</h2><p class="lead">Unlocked phones ready for activation.</p></div><a href="tel:6156785849">View All Phones →</a></div>
-<div class="products">
-<div class="card product"><img src="assets/iphone15pro.svg"><h3>iPhone 15 Pro</h3><div class="from">256GB · Unlocked</div><div class="price">$449.99</div><a class="buy" href="tel:6156785849">Buy Now</a></div>
-<div class="card product"><img src="assets/iphone15.svg"><h3>iPhone 15</h3><div class="from">128GB · Unlocked</div><div class="price">$349.99</div><a class="buy" href="tel:6156785849">Buy Now</a></div>
-<div class="card product"><img src="assets/s23ultra.svg"><h3>Samsung S23 Ultra</h3><div class="from">256GB · Unlocked</div><div class="price">$449.99</div><a class="buy" href="tel:6156785849">Buy Now</a></div>
-<div class="card product"><img src="assets/iphone15plus.svg"><h3>iPhone 15 Plus</h3><div class="from">256GB · Unlocked</div><div class="price">$399.99</div><a class="buy" href="tel:6156785849">Buy Now</a></div>
-<div class="card product"><img src="assets/iphone14plus.svg"><h3>iPhone 14 Plus</h3><div class="from">128GB · Unlocked</div><div class="price">$349.99</div><a class="buy" href="tel:6156785849">Buy Now</a></div>
-</div></div></section>
+<section id="services" class="services-wrap">
+<div class="container services-grid">
+ <article><div>📱</div><b data-i18n="screenRepair">Screen Repair</b><p data-i18n="screenSub">Cracked screen? We fix it fast.</p></article>
+ <article><div>🔋</div><b data-i18n="battery">Battery Replacement</b><p data-i18n="batterySub">More power. More life.</p></article>
+ <article><div>💧</div><b data-i18n="water">Water Damage</b><p data-i18n="waterSub">We save your device.</p></article>
+ <article><div>🔓</div><b data-i18n="unlock">Carrier Unlock</b><p data-i18n="unlockSub">Unlock eligible phones.</p></article>
+ <article><div>💻</div><b data-i18n="computer">Computer Repair</b><p data-i18n="computerSub">Laptops and desktops repaired.</p></article>
+ <article><div>📶</div><b data-i18n="activations">Activations</b><p data-i18n="activationSub">New line or upgrade.</p></article>
+</div>
+</section>
 
-<section id="speakers" class="section"><div class="wrap promo-row">
-<div class="promo"><img src="assets/speaker-banner.jpg"><div class="shade"><h3>THE LARGEST SELECTION OF SPEAKERS</h3><strong>PRICES FROM $19.99</strong><div><a class="btn blue" href="tel:6156785849">Shop Speakers</a></div></div></div>
-<div id="activations" class="promo"><div class="shade"><h3>ALL CARRIER ACTIVATIONS</h3><strong>NEW LINE OR UPGRADE</strong><p>Fast, easy and prepaid.</p><div><a class="btn blue" href="tel:6156785849">Get Activated</a></div></div></div>
-</div></section>
+<section id="phones" class="section">
+<div class="container">
+ <div class="section-head"><div><h2 data-i18n="topDeals">TOP DEALS. BEST PRICES.</h2><p data-i18n="unlockedReady">Unlocked phones ready for activation.</p></div><a href="tel:6156785849" data-i18n="viewPhones">View All Phones →</a></div>
+ <div class="approved-strip"><img src="assets/phones-approved.jpg" alt="Current phone deals"></div>
+</div>
+</section>
 
-<section id="about" class="section"><div class="wrap"><div class="why">
-<div class="card"><h2>WHY CHOOSE<br>MEGA WIRELESS?</h2><p class="lead">Quality repairs, competitive prices and personal service.</p></div>
-<div class="card stat"><div class="big">10+</div><div>Years Experience</div></div>
-<div class="card stat"><div class="big">10,000+</div><div>Devices Repaired</div></div>
-<div class="card stat"><div class="big">90 Day</div><div>Warranty on Repairs</div></div>
-<div class="card stat"><div class="big">Same Day</div><div>Service in Most Cases</div></div>
-</div></div></section>
+<section class="section promo-grid container">
+ <article id="speakers" class="promo approved-promo"><img src="assets/speaker-banner.jpg" alt="Largest selection of Bluetooth speakers"><a href="tel:6156785849" class="promo-link" aria-label="Shop speakers"></a></article>
+ <article id="activations" class="promo approved-promo"><img src="assets/carrier-banner.jpg" alt="All carrier activations"><a href="tel:6156785849" class="promo-link" aria-label="Get activated"></a></article>
+</section>
 
-<section class="section"><div class="wrap"><div class="reviews">
-<div class="card review"><h2>WHAT OUR CUSTOMERS SAY</h2><div class="stars">★★★★★</div><p><b>Jessica M.</b></p><p>Amazing service! Fixed my iPhone screen fast. Friendly service and great prices.</p></div>
-<div class="card review"><h2>MEGA REWARDS</h2><div class="stars">★★★★★</div><p>Earn points on purchases, repairs and activations. Redeem for discounts, accessories and eligible free-phone rewards.</p></div>
-</div></div></section>
+<section class="section carrier-section">
+<div class="container">
+<h2 data-i18n="prepaidTitle">PREPAID PLANS — NO CONTRACT</h2><p class="lead" data-i18n="prepaidSub">Plans starting from $10/month. Easy activation. No annual contract.</p>
+<div class="carrier-grid">
+ <article><img src="assets/gen.jpg"><h3>Gen Mobile</h3><strong>From $10/mo</strong></article>
+ <article><img src="assets/ultra.jpg"><h3>Ultra Mobile</h3><strong>From $19/mo</strong></article>
+ <article><img src="assets/mobilex.jpg"><h3>MobileX</h3><strong>From $10/mo</strong></article>
+ <article class="simple"><div class="simple-logo">simple mobile</div><h3>Simple Mobile</h3><strong>Prepaid · No Contract</strong></article>
+</div>
+</div>
+</section>
 
-<section id="contact" class="section"><div class="wrap inside">
-<div class="card"><h3>STORE HOURS</h3><table><tr><td>Monday</td><td>10 AM – 9 PM</td></tr><tr><td>Tuesday</td><td>10 AM – 9 PM</td></tr><tr><td>Wednesday</td><td>10 AM – 9 PM</td></tr><tr><td>Thursday</td><td>10 AM – 9 PM</td></tr><tr><td>Friday</td><td>10 AM – 9 PM</td></tr><tr><td style="color:#ffbd35">Saturday</td><td style="color:#ffbd35">10 AM – 10 PM</td></tr><tr><td>Sunday</td><td>10 AM – 9 PM</td></tr></table></div>
-<div class="card"><h3>VISIT US</h3><p>⌖ 4717 Nolensville Pike<br>Nashville, TN 37211</p><p>☎ 615-678-5849</p><p>✉ megawireless4717@gmail.com</p></div>
-<div class="card"><img class="map" src="assets/store-gallery.jpg" alt="Mega Wireless location and store"></div>
-<div class="card walk"><div class="store">▱</div><h2>WALK-INS WELCOME!</h2><p>Open 7 days a week.</p><a class="btn blue" href="tel:6156785849">Call Now</a></div>
-</div></section>
+<section id="rewards" class="section">
+<div class="container why-grid">
+ <article class="why-intro"><h2 data-i18n="why">WHY CHOOSE MEGA WIRELESS?</h2><p data-i18n="whySub">Quality repairs, competitive prices and personal service.</p></article>
+ <article><b>10+</b><span data-i18n="years">Years Experience</span></article>
+ <article><b>10,000+</b><span data-i18n="repaired">Devices Repaired</span></article>
+ <article><b>90 Day</b><span data-i18n="warranty">Warranty on Repairs</span></article>
+ <article><b data-i18n="sameDay">Same Day</b><span data-i18n="mostCases">Service in Most Cases</span></article>
+</div>
+</section>
 
-<footer><div class="wrap footer-grid"><div><div class="logo">MEGA WIRELESS<small>NASHVILLE</small></div><p>© 2026 Mega Wireless Nashville.</p></div><div><b>QUICK LINKS</b><p>Home<br>Phones<br>Services<br>Contact</p></div><div><b>SERVICES</b><p>Phone Repair<br>Battery Replacement<br>Water Damage<br>Carrier Unlock</p></div><div><b>CONTACT US</b><p>615-678-5849<br>4717 Nolensville Pike<br>Nashville, TN 37211</p></div></div></footer>
-<div class="float"><a href="https://wa.me/16156785849">WA</a><a href="tel:6156785849">☎</a><a href="https://www.google.com/maps/search/?api=1&query=4717+Nolensville+Pike+Nashville+TN+37211">⌖</a></div>
+<section class="section">
+<div class="container review-grid">
+ <article class="review-card"><div class="stars">★★★★★</div><h2 data-i18n="reviewsTitle">WHAT OUR CUSTOMERS SAY</h2><p>“Amazing service. Fast repair and great prices.”</p></article>
+ <article class="review-card"><div class="stars">★★★★★</div><h2>MEGA REWARDS</h2><p data-i18n="rewardsText">Earn points on repairs, purchases and activations. Redeem for discounts, accessories and eligible free-phone rewards.</p></article>
+</div>
+</section>
+
+<section id="contact" class="section">
+<div class="container contact-grid">
+ <article><h3 data-i18n="hours">STORE HOURS</h3><table><tr><td>Monday</td><td>10 AM–9 PM</td></tr><tr><td>Tuesday</td><td>10 AM–9 PM</td></tr><tr><td>Wednesday</td><td>10 AM–9 PM</td></tr><tr><td>Thursday</td><td>10 AM–9 PM</td></tr><tr><td>Friday</td><td>10 AM–9 PM</td></tr><tr class="sat"><td>Saturday</td><td>10 AM–10 PM</td></tr><tr><td>Sunday</td><td>10 AM–9 PM</td></tr></table></article>
+ <article><h3 data-i18n="visit">VISIT US</h3><p>4717 Nolensville Pike<br>Nashville, TN 37211</p><p>615-678-5849</p><p>megawireless4717@gmail.com</p></article>
+ <article class="walk"><div>🏪</div><h2 data-i18n="walkins">WALK-INS WELCOME!</h2><p data-i18n="open7">Open 7 days a week.</p><a class="button" href="tel:6156785849" data-i18n="callNow">Call Now</a></article>
+</div>
+</section>
+
+<footer><div class="container footer-grid"><div class="brand">MEGA WIRELESS<small>NASHVILLE</small></div><div><b data-i18n="services">Services</b><p>Phone Repair<br>Computer Repair<br>Activations<br>Accessories</p></div><div><b data-i18n="contact">Contact</b><p>615-678-5849<br>4717 Nolensville Pike<br>Nashville, TN 37211</p></div></div></footer>
+
+<div class="floating"><a href="https://wa.me/16156785849">WA</a><a href="tel:6156785849">☎</a><a href="https://www.google.com/maps/search/?api=1&query=4717+Nolensville+Pike+Nashville+TN+37211">⌖</a></div>
+<script src="assets/app.js"></script>
 </body></html>
