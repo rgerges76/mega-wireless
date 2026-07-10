@@ -1,5 +1,5 @@
 
-const KEY='mw-approved-v3';
+const KEY='mw-approved-v3-3';
 let siteData;
 async function loadData(){
  const saved=localStorage.getItem(KEY);
@@ -9,9 +9,22 @@ async function loadData(){
 function saveData(){localStorage.setItem(KEY,JSON.stringify(siteData))}
 function money(v){return '$'+Number(v||0).toFixed(2)}
 async function init(){
- await loadData();renderTicker();renderPhones();renderRepairs();renderSpeakers();renderOffers();renderCarriers();renderHours();wireStoreLinks();
+ await loadData();renderTicker();renderAnnouncement();renderPhones();renderRepairs();renderHdmiPromotions();renderSpeakers();renderOffers();renderCarriers();renderHours();wireStoreLinks();
  const tr=await (await fetch('translations.json')).json();window.TR=tr;setLang(localStorage.getItem('mw-lang')||'en');
 }
+
+function renderAnnouncement(){
+ const section=document.getElementById('new-owner');
+ const a=siteData.announcement;
+ if(!section || !a || !a.enabled){if(section)section.hidden=true;return}
+ section.hidden=false;
+ document.getElementById('announcementTitle').textContent=a.title||'';
+ document.getElementById('announcementSubtitle').textContent=a.subtitle||'';
+ const button=document.getElementById('announcementButton');
+ button.textContent=a.buttonLabel||'Learn More';
+ button.href=a.target||'#why-us';
+}
+
 function renderTicker(){
  const content=[...siteData.ticker,...siteData.ticker].map((x,i)=>`<span>${x}</span>${i<siteData.ticker.length*2-1?'<span>•</span>':''}`).join('');
  document.querySelector('.ticker-track').innerHTML=content;
@@ -34,6 +47,22 @@ function renderRepairs(){
    <a class="buy store-call" href="#">Book Repair</a>
  </article>`).join('');
 }
+
+function renderHdmiPromotions(){
+ const el=document.getElementById('hdmiPromoGrid');
+ if(!el)return;
+ el.innerHTML=(siteData.repairPromotions||[]).filter(x=>x.visible).map(x=>`<article class="card hdmi-promo-card">
+   <img src="${x.image}" alt="${x.title}">
+   <div class="hdmi-promo-copy">
+     <span class="repair-device">PLAYSTATION & XBOX</span>
+     <h3>${x.title}</h3>
+     <p>${x.subtitle}</p>
+     <div class="hdmi-price">${money(x.price)}</div>
+     <a class="button" href="${x.target||'tel:6156785849'}">${x.buttonLabel||'Book Repair'}</a>
+   </div>
+ </article>`).join('');
+}
+
 function renderSpeakers(){
  const el=document.getElementById('speakerGrid'); if(!el)return;
  el.innerHTML=(siteData.speakers||[]).filter(x=>x.visible).map(x=>`<article class="card speaker-card">
@@ -45,7 +74,13 @@ function renderSpeakers(){
 }
 function renderOffers(){
  document.getElementById('offerGrid').innerHTML=siteData.offers.filter(x=>x.visible).map(x=>`<article class="promo">
- <img src="${x.image}" alt="${x.title}"><div class="promo-overlay"><h3>${x.title}</h3><strong>${x.subtitle}</strong><a class="button store-call" href="#">Learn More</a></div></article>`).join('');
+ <img src="${x.image}" alt="${x.title}">
+ <div class="promo-overlay">
+   <h3>${x.title}</h3>
+   <strong>${x.subtitle}</strong>
+   <a class="button" href="${x.target||'#'}">${x.buttonLabel||'Learn More'}</a>
+ </div>
+ </article>`).join('');
 }
 function renderCarriers(){
  document.getElementById('carrierGrid').innerHTML=siteData.carriers.filter(x=>x.visible).map(x=>`<article class="card carrier">

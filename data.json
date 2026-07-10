@@ -73,6 +73,8 @@
       "title": "Largest Selection of Speakers",
       "subtitle": "Prices starting from $19.99",
       "image": "assets/speaker-approved.jpg",
+      "buttonLabel": "Shop Speakers",
+      "target": "#speakers",
       "visible": true
     },
     {
@@ -80,6 +82,8 @@
       "title": "All Carrier Activations",
       "subtitle": "New line or upgrade \u2014 fast & easy",
       "image": "assets/activation-approved.jpg",
+      "buttonLabel": "View Plans",
+      "target": "#activations",
       "visible": true
     }
   ],
@@ -232,6 +236,25 @@
       "price": 79.99,
       "oldPrice": 99.99,
       "image": "assets/speaker-4.jpg",
+      "visible": true
+    }
+  ],
+  "announcement": {
+    "enabled": true,
+    "title": "NEW OWNER. NEW LOOK. SAME TRUSTED SERVICE.",
+    "subtitle": "Mega Wireless Nashville is now under new ownership\u2014with upgraded service, fresh offers and the same commitment to our community.",
+    "buttonLabel": "Meet the New Mega Wireless",
+    "target": "#why-us"
+  },
+  "repairPromotions": [
+    {
+      "id": "rp1",
+      "title": "HDMI Repair for PlayStation & Xbox",
+      "subtitle": "Professional HDMI port replacement",
+      "price": 70,
+      "image": "assets/hdmi-repair-70.png",
+      "buttonLabel": "Book HDMI Repair",
+      "target": "tel:6156785849",
       "visible": true
     }
   ]

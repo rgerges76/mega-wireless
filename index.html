@@ -6,6 +6,21 @@
 
 <header id="home" class="approved-hero"><img src="assets/hero-approved.jpg" alt="Mega Wireless approved hero"><a class="hot call-hot store-call" href="#"></a><a class="hot map-hot" href="https://www.google.com/maps/search/?api=1&query=4717+Nolensville+Pike+Nashville+TN+37211"></a><a class="hot shop-hot" href="#phones"></a></header>
 
+<section id="new-owner" class="owner-announcement" hidden>
+  <div class="container owner-announcement-inner">
+    <div class="owner-badge">
+      <span class="owner-badge-icon">★</span>
+      <span data-i18n="newOwnerBadge">NEW OWNERSHIP</span>
+    </div>
+    <div class="owner-copy">
+      <h2 id="announcementTitle"></h2>
+      <p id="announcementSubtitle"></p>
+    </div>
+    <a id="announcementButton" class="button owner-announcement-button" href="#why-us"></a>
+  </div>
+</section>
+
+
 <section id="services" class="services-wrap"><div class="container services-grid">
 <article class="service"><div class="icon">📱</div><b data-i18n="screenRepair">Screen Repair</b><p data-i18n="screenSub">Cracked screen? We fix it fast.</p></article>
 <article class="service"><div class="icon">🔋</div><b data-i18n="battery">Battery Replacement</b><p data-i18n="batterySub">More power. More life.</p></article>
@@ -47,12 +62,62 @@
 
 <section id="activations" class="section carrier-section"><div class="container"><h2 data-i18n="prepaidTitle">PREPAID PLANS — NO CONTRACT</h2><p class="lead" data-i18n="prepaidSub">Plans starting from $10/month. Easy activation. No annual contract.</p><div id="carrierGrid" class="carrier-grid"></div></div></section>
 
-<section id="rewards" class="section"><div class="container why-grid">
+<section id="why-us" class="section"><div class="container why-grid">
 <article class="card intro"><h2 data-i18n="why">WHY CHOOSE MEGA WIRELESS?</h2><p data-i18n="whySub">Quality repairs, competitive prices and personal service.</p></article>
 <article class="card stat"><b>10+</b><span data-i18n="years">Years Experience</span></article><article class="card stat"><b>10,000+</b><span data-i18n="repaired">Devices Repaired</span></article><article class="card stat"><b>90 Day</b><span data-i18n="warranty">Warranty on Repairs</span></article><article class="card stat"><b data-i18n="sameDay">Same Day</b><span data-i18n="mostCases">Service in Most Cases</span></article>
 </div></section>
 
-<section class="section"><div class="container review-grid"><article class="card review"><div class="stars">★★★★★</div><h2 data-i18n="reviewsTitle">WHAT OUR CUSTOMERS SAY</h2><p>“Amazing service. Fast repair and great prices.”</p></article><article class="card review"><div class="stars">★★★★★</div><h2>MEGA REWARDS</h2><p data-i18n="rewardsText">Earn points on repairs, purchases and activations.</p></article></div></section>
+<section id="rewards" class="section rewards-join-section">
+<div class="container">
+  <div class="section-head rewards-heading">
+    <div>
+      <span class="section-kicker">JOIN • EARN • REDEEM</span>
+      <h2 data-i18n="joinRewardsTitle">JOIN MEGA REWARDS</h2>
+      <p class="lead" data-i18n="joinRewardsSubtitle">Register with your phone number or email to start earning points.</p>
+    </div>
+  </div>
+  <div class="review-grid">
+  <article class="card review">
+    <div class="stars">★★★★★</div>
+    <h2 data-i18n="reviewsTitle">WHAT OUR CUSTOMERS SAY</h2>
+    <p>“Amazing service. Fast repair and great prices.”</p>
+  </article>
+  <article class="card review rewards-card">
+    <div class="stars">★★★★★</div>
+    <h2>MEGA REWARDS</h2>
+    <p data-i18n="rewardsText">Earn points on repairs, purchases and activations.</p>
+    <div class="rewards-benefits">
+      <span>✓ Repair points</span>
+      <span>✓ Purchase points</span>
+      <span>✓ Activation points</span>
+    </div>
+    <h3 data-i18n="registerBelow">Register below</h3>
+    <form name="mega-rewards" method="POST" data-netlify="true" netlify-honeypot="bot-field" class="rewards-form" action="/rewards-success.html">
+      <input type="hidden" name="form-name" value="mega-rewards">
+      <p class="hidden-field"><label>Do not fill this out: <input name="bot-field"></label></p>
+      <label>
+        <span data-i18n="customerName">Name</span>
+        <input name="name" type="text" autocomplete="name" required>
+      </label>
+      <label>
+        <span data-i18n="customerPhone">Phone Number</span>
+        <input name="phone" type="tel" autocomplete="tel" required>
+      </label>
+      <label>
+        <span data-i18n="customerEmail">Email (optional)</span>
+        <input name="email" type="email" autocomplete="email">
+      </label>
+      <label class="consent-row">
+        <input name="consent" type="checkbox" required>
+        <span data-i18n="rewardsConsent">I agree to receive account and rewards messages from Mega Wireless.</span>
+      </label>
+      <button class="button" type="submit" data-i18n="joinRewards">Join Mega Rewards</button>
+      <small data-i18n="rewardsPrivacy">Your information is submitted securely to the store and is not saved in this browser.</small>
+    </form>
+  </article>
+</div>
+</div>
+</section>
 
 <section id="contact" class="section"><div class="container contact-grid"><article class="card"><h3 data-i18n="hours">STORE HOURS</h3><table><tbody id="hoursBody"></tbody></table></article><article class="card"><h3 data-i18n="visit">VISIT US</h3><p class="address-text"></p><p class="phone-text"></p><p class="email-text"></p></article><article class="card"><h2 data-i18n="walkins">WALK-INS WELCOME!</h2><p data-i18n="open7">Open 7 days a week.</p><a class="button store-call" href="#" data-i18n="callNow">Call Now</a></article></div></section>
 
