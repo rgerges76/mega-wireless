@@ -1,53 +1,47 @@
-# Mega Wireless Approved V3.6
+# Mega Wireless Production Foundation V1
 
-## Corrections in this release
-- Fixed the Admin email/password login.
-- Changed browser storage version so old broken settings cannot interfere.
-- Offer buttons now open the correct website section instead of a blank destination.
-- Added a customer Mega Rewards registration form using Netlify Forms.
-- Rewards customer details are not stored in browser localStorage.
-- Admin can edit offer button text and destination.
+This package starts the production Website + POS architecture.
 
-## Admin
-URL: `/admin.html`
+## Included
+- Approved public website visual baseline
+- Supabase PostgreSQL schema
+- Row Level Security
+- Owner / Manager / Cashier / Technician roles
+- Inventory with cost, price, minimum price, quantity and low-stock threshold
+- POS cash/card checkout
+- Card last 4 digits only
+- Tax toggle
+- Cashier price-floor enforcement
+- Receipt number generation
+- Sales and sale items
+- Profit-ready data model
+- Repair tickets
+- Rewards customers
+- Clock in
+- Audit log
+- Production Admin inventory editor
 
-Use the email and password already configured for the owner.
-Email matching is case-insensitive.
+## Required before it can run
+1. Create a Supabase project.
+2. Run `supabase/001_schema.sql` in the SQL Editor.
+3. Copy `public/config.example.js` to `public/config.js` and fill in:
+   - SUPABASE_URL
+   - SUPABASE_ANON_KEY
+4. Create the owner user in Supabase Authentication.
+5. Insert the owner profile row using that user's UUID:
+   `insert into public.profiles(id,full_name,role) values ('USER_UUID','Ramy Gerges','owner');`
+6. Deploy the `public` folder to Netlify.
 
-After uploading:
-1. Replace every old file with the complete V3.3 package.
-2. Confirm `data.json`, `assets/admin.js`, `assets/app.js`, and `admin.html` were replaced.
-3. Open the website in a private/incognito window for the first test.
-4. Use Ctrl+F5 once after deployment.
-
-## Rewards form
-The rewards form uses Netlify Forms.
-After deployment, registrations appear under:
-Netlify project → Forms → mega-rewards
+## URLs
+- Website: `/`
+- Admin: `/admin.html`
+- POS: `/pos.html`
 
 ## Security
-This public-content Admin still runs in the browser and is for prices/offers/content only.
-Do not put customer lists, IMEI records, payment data, POS transactions, repair tickets, or employee records in the Admin/localStorage.
+- No customer or POS data is stored in localStorage.
+- All sensitive records are protected by Supabase Auth + PostgreSQL RLS.
+- Never place the Supabase service-role key in browser files.
+- Change the password previously shared in chat before production use.
 
-
-## V3.4 Rewards correction
-- The top navigation Rewards link now opens the customer registration form directly.
-- Added a large visible JOIN MEGA REWARDS heading.
-- Registration fields: name, phone number, optional email, and consent.
-- The form remains connected to Netlify Forms under `mega-rewards`.
-
-
-## V3.5 New Owner announcement
-- Added a professional public banner directly below the hero.
-- Message: New Owner. New Look. Same Trusted Service.
-- Banner can be enabled, disabled, and edited from:
-  Admin → New Owner Banner
-- Button text and destination are editable.
-
-
-## V3.6 HDMI Repair
-- Added a dedicated public HDMI repair section.
-- Price displayed: $70.
-- Supports PlayStation and Xbox.
-- Uses the supplied bilingual promotional artwork.
-- Editable from Admin → HDMI Repair Promo.
+## Current limitation
+This is a production foundation, not a fully deployed live system. Deployment requires access to your Supabase and Netlify projects.
