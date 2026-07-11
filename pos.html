@@ -43,7 +43,9 @@ body{background:#020715}.pos-shell{display:grid;grid-template-columns:1fr 390px;
 <div id="login" class="modal open"><div class="modal-card"><h2>Staff Login</h2>
 <input id="email" type="email" placeholder="Email"><br><br>
 <input id="password" type="password" placeholder="Password"><br><br>
-<button class="btn" onclick="signIn()">Login</button><p id="loginMsg" class="msg"></p></div></div>
+<button class="btn" onclick="signIn()">Login</button>
+<p id="loginMsg" class="msg"></p>
+<button type="button" class="btn gray" style="width:100%;margin-top:8px" onclick="forgotPassword()">Forgot Password?</button></div></div>
 
 <div id="payModal" class="modal"><div class="modal-card">
 <h2>Card Payment</h2>
@@ -107,6 +109,18 @@ async function signIn(){
  msg.textContent=error?error.message:'';
  if(!error){document.getElementById('login').classList.remove('open');loadProducts()}
 }
+
+async function forgotPassword(){
+ const emailEl=document.getElementById('email');
+ const msg=document.getElementById('loginMsg');
+ const e=emailEl.value.trim().toLowerCase();
+ if(!e){msg.textContent='Enter your email first.';return}
+ const {error}=await sb.auth.resetPasswordForEmail(e,{
+   redirectTo:window.location.origin+'/reset-password.html'
+ });
+ msg.textContent=error?error.message:'Reset email sent. Check Inbox and Spam.';
+}
+
 async function loadProducts(){
  const {data,error}=await sb.from('products').select('*').eq('active',true).order('name');
  if(error)return alert(error.message); products=data||[]; renderProducts();
