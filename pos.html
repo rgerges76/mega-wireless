@@ -153,14 +153,39 @@ async function forgotPassword(){
  msg.textContent=error?error.message:'Reset email sent. Check Inbox and Spam.';
 }
 
+
+async function fetchAllRows(table, select='*', filters=[]){
+ const pageSize=1000;
+ let from=0;
+ let all=[];
+ while(true){
+  let q=sb.from(table).select(select).range(from,from+pageSize-1);
+  for(const f of filters){
+   if(f.op==='eq')q=q.eq(f.column,f.value);
+   if(f.op==='order')q=q.order(f.column,{ascending:f.ascending!==false});
+  }
+  const {data,error}=await q;
+  if(error)throw error;
+  all=all.concat(data||[]);
+  if(!data||data.length<pageSize)break;
+  from+=pageSize;
+ }
+ return all;
+}
+
 async function loadProducts(){
- const {data,error}=await sb.from('products').select('*').eq('active',true).order('name');
- if(error)return alert(error.message);
- products=data||[];
- const {data:units,error:unitError}=await sb.from('inventory_units').select('id,product_id,unit_code,status').eq('status','available');
- if(unitError)return alert(unitError.message);
- inventoryUnits=units||[];
- renderProducts();
+ try{
+  products=await fetchAllRows('products','*',[
+   {op:'eq',column:'active',value:true},
+   {op:'order',column:'name',ascending:true}
+  ]);
+  inventoryUnits=await fetchAllRows('inventory_units','id,product_id,unit_code,status',[
+   {op:'eq',column:'status',value:'available'}
+  ]);
+  renderProducts();
+ }catch(error){
+  alert(error.message||String(error));
+ }
 }
 function renderProducts(){
  const q=document.getElementById('search').value.toLowerCase().trim();

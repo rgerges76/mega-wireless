@@ -186,11 +186,36 @@ async function login(){
 }
 async function logout(){await sb.auth.signOut();location.reload();}
 
+
+async function fetchAllRows(table, select='*', filters=[]){
+ const pageSize=1000;
+ let from=0;
+ let all=[];
+ while(true){
+  let q=sb.from(table).select(select).range(from,from+pageSize-1);
+  for(const f of filters){
+   if(f.op==='eq')q=q.eq(f.column,f.value);
+   if(f.op==='order')q=q.order(f.column,{ascending:f.ascending!==false});
+  }
+  const {data,error}=await q;
+  if(error)throw error;
+  all=all.concat(data||[]);
+  if(!data||data.length<pageSize)break;
+  from+=pageSize;
+ }
+ return all;
+}
+
 async function loadProducts(){
- const {data,error}=await sb.from('products').select('*').order('name');
- if(error)return message(error.message,'err');
- products=data||[];
- rebuildCategories(); render();
+ try{
+  products=await fetchAllRows('products','*',[
+   {op:'order',column:'name',ascending:true}
+  ]);
+  rebuildCategories();
+  render();
+ }catch(error){
+  message(error.message||String(error),'err');
+ }
 }
 function rebuildCategories(){
  const cats=[...new Set(products.map(p=>p.category).filter(Boolean))].sort();
