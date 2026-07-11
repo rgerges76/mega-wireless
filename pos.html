@@ -104,7 +104,7 @@ body{background:#020715}.pos-shell{display:grid;grid-template-columns:1fr 390px;
     <div id="historySummary" class="msg"></div>
     <div style="overflow:auto">
       <table style="width:100%;border-collapse:collapse">
-        <thead><tr><th style="text-align:left;padding:8px">Date</th><th style="text-align:left;padding:8px">Payment</th><th style="text-align:right;padding:8px">Subtotal</th><th style="text-align:right;padding:8px">Tax</th><th style="text-align:right;padding:8px">Total</th></tr></thead>
+        <thead><tr><th style="text-align:left;padding:8px">Date</th><th style="text-align:left;padding:8px">Payment</th><th style="text-align:right;padding:8px">Subtotal</th><th style="text-align:right;padding:8px">Tax</th><th style="text-align:right;padding:8px">Total</th><th style="text-align:center;padding:8px">Actions</th></tr></thead>
         <tbody id="historyBody"></tbody>
       </table>
     </div>
@@ -201,6 +201,7 @@ function renderCart(){
 document.getElementById('taxEnabled').onchange=renderCart;
 function clearCart(){cart=[];renderCart()}
 let lastReceipt=null;
+let selectedHistorySaleId=null;
 async function doCheckout(method,last4=null){
  if(!cart.length)return alert('Cart is empty');
  const taxOn=document.getElementById('taxEnabled').checked;
@@ -224,7 +225,9 @@ async function doCheckout(method,last4=null){
  buildReceipt();
  document.getElementById('saleDoneTotal').textContent=money(totalValue);
  document.getElementById('saleDoneText').textContent='Receipt ID: '+data;
- document.getElementById('saleDoneModal').classList.add('open');
+ const doneModal=document.getElementById('saleDoneModal');
+ if(doneModal){doneModal.classList.add('open');}
+ else if(confirm('Sale completed. Print receipt now?')){printLastReceipt();}
  clearCart();closePay();loadProducts();
 }
 function buildReceipt(){
@@ -260,7 +263,7 @@ function startForRange(range){
 }
 async function loadHistory(range){
  const {data,error}=await sb.from('sales')
- .select('id,created_at,subtotal,tax,total,payment_method,card_last4')
+ .select('id,created_at,subtotal,tax,total,payment_method,card_last4,status')
  .gte('created_at',startForRange(range))
  .order('created_at',{ascending:false})
  .limit(500);
@@ -270,8 +273,59 @@ async function loadHistory(range){
  summary.textContent=`${rows.length} sales • Total ${money(grand)}`;
  body.innerHTML=rows.map(r=>{
    const pay=r.payment_method==='card'?`Credit ****${r.card_last4||''}`:String(r.payment_method||'').toUpperCase();
-   return `<tr style="border-top:1px solid #17345e"><td style="padding:8px">${new Date(r.created_at).toLocaleString()}</td><td style="padding:8px">${pay}</td><td style="padding:8px;text-align:right">${money(r.subtotal)}</td><td style="padding:8px;text-align:right">${money(r.tax)}</td><td style="padding:8px;text-align:right;font-weight:800">${money(r.total)}</td></tr>`;
+   const refunded = r.status==='refunded';
+   return `<tr style="border-top:1px solid #17345e;opacity:${refunded?0.55:1}">
+     <td style="padding:8px">${new Date(r.created_at).toLocaleString()}</td>
+     <td style="padding:8px">${pay}${refunded?' • REFUNDED':''}</td>
+     <td style="padding:8px;text-align:right">${money(r.subtotal)}</td>
+     <td style="padding:8px;text-align:right">${money(r.tax)}</td>
+     <td style="padding:8px;text-align:right;font-weight:800">${money(r.total)}</td>
+     <td style="padding:8px;text-align:center;white-space:nowrap">
+       <button class="btn gray" onclick="printHistoryReceipt('${r.id}')">Print</button>
+       ${refunded?'':`<button class="btn gray" onclick="refundSale('${r.id}')">Refund</button>`}
+     </td>
+   </tr>`;
  }).join('');
+}
+
+
+async function printHistoryReceipt(saleId){
+ const {data:sale,error:saleErr}=await sb.from('sales')
+   .select('id,created_at,subtotal,tax,total,payment_method,card_last4,status')
+   .eq('id',saleId).single();
+ if(saleErr)return alert(saleErr.message);
+
+ const {data:items,error:itemErr}=await sb.from('sale_items')
+   .select('quantity,unit_price,products(name)')
+   .eq('sale_id',saleId);
+ if(itemErr)return alert(itemErr.message);
+
+ lastReceipt={
+   id:sale.id,
+   date:new Date(sale.created_at),
+   items:(items||[]).map(i=>({
+     name:(i.products&&i.products.name)||'Item',
+     quantity:Number(i.quantity||0),
+     unit_price:Number(i.unit_price||0)
+   })),
+   subtotal:Number(sale.subtotal||0),
+   tax:Number(sale.tax||0),
+   total:Number(sale.total||0),
+   method:sale.payment_method,
+   last4:sale.card_last4
+ };
+ buildReceipt();
+ window.print();
+}
+
+async function refundSale(saleId){
+ if(!confirm('Refund this entire sale? Inventory will be restored.')) return;
+ const reason=prompt('Refund reason (optional):')||'Customer refund';
+ const {data,error}=await sb.rpc('refund_sale',{p_sale_id:saleId,p_reason:reason});
+ if(error)return alert(error.message);
+ alert('Refund completed.');
+ loadHistory('today');
+ loadProducts();
 }
 
 async function signOut(){
