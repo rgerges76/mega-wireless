@@ -4,7 +4,7 @@
 <style>
 body{background:#020715}.pos-shell{display:grid;grid-template-columns:1fr 390px;min-height:100vh}
 .pos-main{padding:18px}.pos-side{border-left:1px solid #1a3e75;background:#061127;padding:18px;position:sticky;top:0;height:100vh;overflow:auto}
-.pos-bar{display:grid;grid-template-columns:auto 1fr auto auto auto;gap:10px;align-items:center;margin-bottom:14px}
+.pos-bar{display:grid;grid-template-columns:auto 1fr auto auto;gap:10px;align-items:center;margin-bottom:14px}
 .pos-bar input{padding:13px}.hint{font-size:12px;color:#9fb4d1;margin:-6px 0 14px}
 .product-grid-pos{display:grid;grid-template-columns:repeat(5,minmax(145px,1fr));gap:10px}
 .product-pos{padding:13px;cursor:pointer}.product-pos:hover{border-color:#36b8ff}.product-pos .qty{color:#9fb1cd;font-size:12px}.product-pos .code{color:#ffbd35;font-size:11px}
@@ -74,10 +74,42 @@ body{background:#020715}.pos-shell{display:grid;grid-template-columns:1fr 390px;
 <p class="total">Total: <span id="total">$0.00</span></p>
 <div class="pay-grid"><button class="btn" onclick="checkoutCash()">Cash</button><button class="btn" onclick="openCard()">Credit</button></div>
 <br><button class="btn gray" onclick="clearCart()">Clear</button>
-<button class="btn gray" onclick="printLastReceipt()">Print Receipt</button>
+<button class="btn gray" onclick="printLastReceipt()">Print Receipt</button><button class="btn gray" onclick="openHistory()">Sales History</button>
 </aside>
 </div>
 
+
+
+<div id="saleDoneModal" class="modal">
+  <div class="modal-card">
+    <h2>Sale Completed</h2>
+    <div id="saleDoneTotal" style="font-size:38px;font-weight:900;color:#ffbd35;margin:12px 0">$0.00</div>
+    <p id="saleDoneText" class="msg"></p>
+    <button class="btn" onclick="printLastReceipt()">Print Receipt</button>
+    <button class="btn gray" onclick="closeSaleDone()">Close</button>
+  </div>
+</div>
+
+<div id="historyModal" class="modal">
+  <div class="modal-card" style="width:min(900px,95vw);max-height:90vh;overflow:auto">
+    <div style="display:flex;justify-content:space-between;gap:10px;align-items:center">
+      <h2>Sales History</h2>
+      <button class="btn gray" onclick="closeHistory()">Close</button>
+    </div>
+    <div style="display:flex;gap:8px;flex-wrap:wrap;margin:12px 0">
+      <button class="btn gray" onclick="loadHistory('today')">Today</button>
+      <button class="btn gray" onclick="loadHistory('week')">This Week</button>
+      <button class="btn gray" onclick="loadHistory('month')">This Month</button>
+    </div>
+    <div id="historySummary" class="msg"></div>
+    <div style="overflow:auto">
+      <table style="width:100%;border-collapse:collapse">
+        <thead><tr><th style="text-align:left;padding:8px">Date</th><th style="text-align:left;padding:8px">Payment</th><th style="text-align:right;padding:8px">Subtotal</th><th style="text-align:right;padding:8px">Tax</th><th style="text-align:right;padding:8px">Total</th></tr></thead>
+        <tbody id="historyBody"></tbody>
+      </table>
+    </div>
+  </div>
+</div>
 
 <div id="receiptPrint" class="receipt-print">
   <div class="receipt-center">
@@ -190,7 +222,9 @@ async function doCheckout(method,last4=null){
    last4
  };
  buildReceipt();
- alert('Sale completed. Receipt ID: '+data);
+ document.getElementById('saleDoneTotal').textContent=money(totalValue);
+ document.getElementById('saleDoneText').textContent='Receipt ID: '+data;
+ document.getElementById('saleDoneModal').classList.add('open');
  clearCart();closePay();loadProducts();
 }
 function buildReceipt(){
@@ -214,6 +248,32 @@ function printLastReceipt(){
  buildReceipt();
  window.print();
 }
+
+function closeSaleDone(){document.getElementById('saleDoneModal').classList.remove('open')}
+function openHistory(){document.getElementById('historyModal').classList.add('open');loadHistory('today')}
+function closeHistory(){document.getElementById('historyModal').classList.remove('open')}
+function startForRange(range){
+ const now=new Date();
+ if(range==='today'){const d=new Date(now);d.setHours(0,0,0,0);return d.toISOString()}
+ if(range==='week'){const d=new Date(now);const day=(now.getDay()+6)%7;d.setDate(now.getDate()-day);d.setHours(0,0,0,0);return d.toISOString()}
+ return new Date(now.getFullYear(),now.getMonth(),1,0,0,0,0).toISOString();
+}
+async function loadHistory(range){
+ const {data,error}=await sb.from('sales')
+ .select('id,created_at,subtotal,tax,total,payment_method,card_last4')
+ .gte('created_at',startForRange(range))
+ .order('created_at',{ascending:false})
+ .limit(500);
+ const summary=document.getElementById('historySummary'), body=document.getElementById('historyBody');
+ if(error){summary.textContent=error.message;body.innerHTML='';return}
+ const rows=data||[], grand=rows.reduce((s,r)=>s+Number(r.total||0),0);
+ summary.textContent=`${rows.length} sales • Total ${money(grand)}`;
+ body.innerHTML=rows.map(r=>{
+   const pay=r.payment_method==='card'?`Credit ****${r.card_last4||''}`:String(r.payment_method||'').toUpperCase();
+   return `<tr style="border-top:1px solid #17345e"><td style="padding:8px">${new Date(r.created_at).toLocaleString()}</td><td style="padding:8px">${pay}</td><td style="padding:8px;text-align:right">${money(r.subtotal)}</td><td style="padding:8px;text-align:right">${money(r.tax)}</td><td style="padding:8px;text-align:right;font-weight:800">${money(r.total)}</td></tr>`;
+ }).join('');
+}
+
 async function signOut(){
  await sb.auth.signOut();
  location.reload();
