@@ -1,1 +1,213 @@
-<!doctype html><html><head><meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1"><title>Mega POS</title><link rel="stylesheet" href="assets/css/app.css"></head><body><div id="login" class="modal open"><div class="modal-card" style="max-width:420px"><h2>Employee Login</h2><input id="empPin" class="search" type="password"><br><br><button class="btn blue" onclick="loginNow()">Login</button></div></div><div class="pos"><main class="catalog"><div class="toolbar"><h1>Mega Wireless POS</h1><span id="employeeName"></span><a class="btn" href="admin.html">Admin</a></div><input id="search" class="search" placeholder="Search" oninput="renderProducts()"><div id="productList" class="product-list"></div></main><aside class="cart"><h2>Current Sale</h2><div id="cartLines"></div><div class="total" id="total">$0.00</div><button class="btn blue" onclick="checkout('Cash')">Cash</button> <button class="btn gold" onclick="checkout('Card')">Card</button></aside></div><script src="assets/js/store.js"></script><script>let data,user,cart=[];(async()=>{data=await MW.getData();renderProducts();renderCart()})();function loginNow(){user=data.employees.find(e=>e.pin===empPin.value);if(!user)return alert('Wrong PIN');employeeName.textContent=user.name;login.classList.remove('open')}function renderProducts(){const q=search.value.toLowerCase();productList.innerHTML=data.products.filter(p=>p.name.toLowerCase().includes(q)||p.barcode.includes(q)).map(p=>`<div class="pos-card" onclick="add('${p.id}')"><b>${p.name}</b><div class="price">${MW.money(p.price)}</div><div>Qty ${p.qty} · Min ${MW.money(p.minimum)}</div></div>`).join('')}function add(id){const p=data.products.find(x=>x.id===id);if(!p||p.qty<1)return;const l=cart.find(x=>x.id===id);if(l)l.qty++;else cart.push({...p,qty:1,sellPrice:p.price});renderCart()}function renderCart(){cartLines.innerHTML=cart.map((x,i)=>`<div class="cart-line"><div>${x.name} x${x.qty}</div><input value="${x.sellPrice}" onchange="priceChange(${i},this.value)"><button onclick="cart.splice(${i},1);renderCart()">×</button></div>`).join('');total.textContent=MW.money(cart.reduce((a,x)=>a+x.qty*x.sellPrice,0)*1.0925)}function priceChange(i,v){v=Number(v);const x=cart[i];if(v<x.minimum){const pin=prompt('Admin PIN');if(pin!==data.employees.find(e=>e.role==='admin').pin)return renderCart()}x.sellPrice=v;renderCart()}function checkout(method){if(!user||!cart.length)return alert('Login and add items');const last4=method==='Card'?prompt('Last 4 digits')||'':'';const sub=cart.reduce((a,x)=>a+x.qty*x.sellPrice,0),tax=sub*.0925,tot=sub+tax;cart.forEach(x=>data.products.find(p=>p.id===x.id).qty-=x.qty);MW.saveData(data);const w=window.open('');w.document.write(`<h2>Mega Wireless</h2>${cart.map(x=>`<div>${x.qty}x ${x.name} ${MW.money(x.qty*x.sellPrice)}</div>`).join('')}<hr>Total ${MW.money(tot)}<br>${method} ${last4}`);w.print();cart=[];renderCart();renderProducts()}</script></body></html>
+<!doctype html>
+<html><head><meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1">
+<title>Mega Wireless POS</title><link rel="stylesheet" href="assets/style.css">
+<style>
+body{background:#020715}.pos-shell{display:grid;grid-template-columns:1fr 390px;min-height:100vh}
+.pos-main{padding:18px}.pos-side{border-left:1px solid #1a3e75;background:#061127;padding:18px;position:sticky;top:0;height:100vh;overflow:auto}
+.pos-bar{display:grid;grid-template-columns:auto 1fr auto auto;gap:10px;align-items:center;margin-bottom:14px}
+.pos-bar input{padding:13px}.hint{font-size:12px;color:#9fb4d1;margin:-6px 0 14px}
+.product-grid-pos{display:grid;grid-template-columns:repeat(5,minmax(145px,1fr));gap:10px}
+.product-pos{padding:13px;cursor:pointer}.product-pos:hover{border-color:#36b8ff}.product-pos .qty{color:#9fb1cd;font-size:12px}.product-pos .code{color:#ffbd35;font-size:11px}
+.cart-row{display:grid;grid-template-columns:1fr 68px 82px 28px;gap:6px;align-items:center;border-bottom:1px solid #16335d;padding:9px 0}
+.cart-row input{padding:7px}.total{font-size:30px;font-weight:900;color:#ffbd35}.pay-grid{display:grid;grid-template-columns:1fr 1fr;gap:9px}
+#payModal .pay-row{margin:12px 0}.msg{min-height:20px;color:#ffbd35;font-weight:700}
+@media(max-width:1000px){.product-grid-pos{grid-template-columns:repeat(3,1fr)}}
+@media(max-width:760px){.pos-shell{grid-template-columns:1fr}.pos-side{position:relative;height:auto}.product-grid-pos{grid-template-columns:repeat(2,1fr)}.pos-bar{grid-template-columns:1fr}.pos-bar h2{margin:0}}
+
+.receipt-print{display:none}
+@media print{
+  @page{size:80mm auto;margin:0}
+  html,body{width:80mm!important;background:#fff!important;color:#000!important}
+  body *{visibility:hidden!important}
+  #receiptPrint,#receiptPrint *{visibility:visible!important}
+  #receiptPrint{
+    display:block!important;
+    position:absolute;
+    left:0;top:0;
+    width:72mm;
+    padding:4mm;
+    font-family:Arial,sans-serif;
+    font-size:11px;
+    line-height:1.35;
+    color:#000!important;
+    background:#fff!important
+  }
+  .receipt-center{text-align:center}
+  .receipt-logo{font-size:17px;font-weight:900;letter-spacing:1px}
+  .receipt-row{display:flex;justify-content:space-between;gap:8px}
+  .receipt-item{margin:4px 0}
+  hr{border:0;border-top:1px dashed #000;margin:6px 0}
+}
+</style></head>
+<body>
+<div id="login" class="modal open"><div class="modal-card"><h2>Staff Login</h2>
+<input id="email" type="email" placeholder="Email"><br><br>
+<input id="password" type="password" placeholder="Password"><br><br>
+<button class="btn" onclick="signIn()">Login</button><p id="loginMsg" class="msg"></p></div></div>
+
+<div id="payModal" class="modal"><div class="modal-card">
+<h2>Card Payment</h2>
+<div class="pay-row"><label>Last 4 card digits<input id="cardLast4" inputmode="numeric" maxlength="4" placeholder="1234"></label></div>
+<p class="msg" id="payMsg"></p>
+<button class="btn" onclick="completeCard()">Complete Card Sale</button>
+<button class="btn gray" onclick="closePay()">Cancel</button>
+</div></div>
+
+<div class="pos-shell">
+<main class="pos-main">
+<div class="pos-bar">
+<h2>MEGA WIRELESS POS</h2>
+<input id="search" autocomplete="off" placeholder='Scan barcode, search, or type "1 cable"'>
+<label><input type="checkbox" id="taxEnabled" checked> Tax</label>
+<button class="btn gray" onclick="clockIn()">Clock In</button><button class="btn gray" onclick="signOut()">Logout</button>
+</div>
+<div class="hint">Quick code example: set a product Quick Code to <b>cable</b>, then type <b>1 cable</b> and press Enter.</div>
+<div id="products" class="product-grid-pos"></div>
+</main>
+
+<aside class="pos-side">
+<h2>Current Sale</h2><div id="cart"></div>
+<p>Subtotal: <b id="subtotal">$0.00</b></p>
+<p>Tax: <b id="tax">$0.00</b></p>
+<p class="total">Total: <span id="total">$0.00</span></p>
+<div class="pay-grid"><button class="btn" onclick="checkoutCash()">Cash</button><button class="btn" onclick="openCard()">Credit</button></div>
+<br><button class="btn gray" onclick="clearCart()">Clear</button>
+<button class="btn gray" onclick="printLastReceipt()">Print Receipt</button>
+</aside>
+</div>
+
+
+<div id="receiptPrint" class="receipt-print">
+  <div class="receipt-center">
+    <div class="receipt-logo">MEGA WIRELESS</div>
+    <div>4717 Nolensville Pike</div>
+    <div>Nashville, TN 37211</div>
+    <div>615-678-5849</div>
+  </div>
+  <hr>
+  <div id="receiptMeta"></div>
+  <hr>
+  <div id="receiptItems"></div>
+  <hr>
+  <div id="receiptTotals"></div>
+  <hr>
+  <div class="receipt-center">Thank you for your business!</div>
+</div>
+
+<script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
+<script src="config.js"></script>
+<script>
+const sb=supabase.createClient(MW_CONFIG.SUPABASE_URL,MW_CONFIG.SUPABASE_ANON_KEY);
+let products=[],cart=[];
+const money=n=>'$'+Number(n||0).toFixed(2);
+
+async function signIn(){
+ const emailEl=document.getElementById('email'), passEl=document.getElementById('password'), msg=document.getElementById('loginMsg');
+ const {error}=await sb.auth.signInWithPassword({email:emailEl.value.trim(),password:passEl.value});
+ msg.textContent=error?error.message:'';
+ if(!error){document.getElementById('login').classList.remove('open');loadProducts()}
+}
+async function loadProducts(){
+ const {data,error}=await sb.from('products').select('*').eq('active',true).order('name');
+ if(error)return alert(error.message); products=data||[]; renderProducts();
+}
+function renderProducts(){
+ const q=document.getElementById('search').value.toLowerCase().trim();
+ document.getElementById('products').innerHTML=products.filter(p=>[p.name,p.sku,p.barcode,p.quick_code,p.category].join(' ').toLowerCase().includes(q))
+ .map(p=>`<article class="card product-pos" onclick="add('${p.id}',1)">
+ <b>${p.name}</b><p>${money(p.price)}</p>
+ <div class="qty">Qty: ${p.quantity}</div>
+ <div class="code">${p.quick_code?'Code: '+p.quick_code:(p.sku||'')}</div>
+ </article>`).join('');
+}
+function add(id,qty=1){
+ const p=products.find(x=>x.id===id); if(!p)return;
+ let r=cart.find(x=>x.product_id===id);
+ if(r)r.quantity+=qty; else cart.push({product_id:id,name:p.name,quantity:qty,unit_price:Number(p.price),minimum_price:Number(p.minimum_price||0)});
+ renderCart(); document.getElementById('search').value=''; renderProducts();
+}
+function processCommand(){
+ const el=document.getElementById('search'); const raw=el.value.trim();
+ if(!raw)return;
+ const m=raw.match(/^(\d+)\s+(.+)$/);
+ const qty=m?Number(m[1]):1; const term=(m?m[2]:raw).trim().toLowerCase();
+ let p=products.find(x=>String(x.barcode||'').toLowerCase()===term ||
+                          String(x.sku||'').toLowerCase()===term ||
+                          String(x.quick_code||'').toLowerCase()===term ||
+                          String(x.name||'').toLowerCase()===term);
+ if(!p){
+   const matches=products.filter(x=>[x.name,x.sku,x.barcode,x.quick_code].join(' ').toLowerCase().includes(term));
+   if(matches.length===1)p=matches[0];
+ }
+ if(p)add(p.id,qty); else alert('No exact product found. Use barcode, SKU, or Quick Code.');
+}
+document.getElementById('search').addEventListener('input',renderProducts);
+document.getElementById('search').addEventListener('keydown',e=>{if(e.key==='Enter')processCommand()});
+function renderCart(){
+ document.getElementById('cart').innerHTML=cart.map((r,i)=>`<div class="cart-row">
+ <span>${r.name}</span>
+ <input type="number" min="1" value="${r.quantity}" onchange="cart[${i}].quantity=+this.value;renderCart()">
+ <input type="number" step=".01" value="${r.unit_price}" onchange="cart[${i}].unit_price=+this.value;renderCart()">
+ <button onclick="cart.splice(${i},1);renderCart()">×</button></div>`).join('');
+ let sub=cart.reduce((s,r)=>s+r.quantity*r.unit_price,0), tx=document.getElementById('taxEnabled').checked?sub*MW_CONFIG.TAX_RATE:0;
+ document.getElementById('subtotal').textContent=money(sub);document.getElementById('tax').textContent=money(tx);document.getElementById('total').textContent=money(sub+tx);
+}
+document.getElementById('taxEnabled').onchange=renderCart;
+function clearCart(){cart=[];renderCart()}
+let lastReceipt=null;
+async function doCheckout(method,last4=null){
+ if(!cart.length)return alert('Cart is empty');
+ const taxOn=document.getElementById('taxEnabled').checked;
+ const snapshot=cart.map(x=>({...x}));
+ const subtotalValue=snapshot.reduce((s,r)=>s+r.quantity*r.unit_price,0);
+ const taxValue=taxOn?subtotalValue*MW_CONFIG.TAX_RATE:0;
+ const totalValue=subtotalValue+taxValue;
+ const items=snapshot.map(({product_id,quantity,unit_price})=>({product_id,quantity,unit_price}));
+ const {data,error}=await sb.rpc('create_sale',{p_items:items,p_tax_enabled:taxOn,p_payment:method,p_card_last4:last4,p_customer_id:null});
+ if(error)return alert(error.message);
+ lastReceipt={
+   id:data,
+   date:new Date(),
+   items:snapshot,
+   subtotal:subtotalValue,
+   tax:taxValue,
+   total:totalValue,
+   method,
+   last4
+ };
+ buildReceipt();
+ alert('Sale completed. Receipt ID: '+data);
+ clearCart();closePay();loadProducts();
+}
+function buildReceipt(){
+ if(!lastReceipt)return;
+ const r=lastReceipt;
+ document.getElementById('receiptMeta').innerHTML=
+   `<div class="receipt-row"><span>Receipt</span><span>${r.id}</span></div>
+    <div class="receipt-row"><span>Date</span><span>${r.date.toLocaleString()}</span></div>
+    <div class="receipt-row"><span>Payment</span><span>${r.method==='card'?'CREDIT ****'+r.last4:'CASH'}</span></div>`;
+ document.getElementById('receiptItems').innerHTML=r.items.map(x=>
+   `<div class="receipt-item"><div>${x.name}</div>
+    <div class="receipt-row"><span>${x.quantity} × ${money(x.unit_price)}</span><span>${money(x.quantity*x.unit_price)}</span></div></div>`
+ ).join('');
+ document.getElementById('receiptTotals').innerHTML=
+   `<div class="receipt-row"><span>Subtotal</span><span>${money(r.subtotal)}</span></div>
+    <div class="receipt-row"><span>Tax</span><span>${money(r.tax)}</span></div>
+    <div class="receipt-row" style="font-weight:900;font-size:14px"><span>Total</span><span>${money(r.total)}</span></div>`;
+}
+function printLastReceipt(){
+ if(!lastReceipt)return alert('Complete a sale first.');
+ buildReceipt();
+ window.print();
+}
+async function signOut(){
+ await sb.auth.signOut();
+ location.reload();
+}
+function checkoutCash(){doCheckout('cash',null)}
+function openCard(){if(!cart.length)return alert('Cart is empty');document.getElementById('cardLast4').value='';document.getElementById('payMsg').textContent='';document.getElementById('payModal').classList.add('open')}
+function closePay(){document.getElementById('payModal').classList.remove('open')}
+function completeCard(){const v=document.getElementById('cardLast4').value.trim();if(!/^\d{4}$/.test(v)){document.getElementById('payMsg').textContent='Enter exactly 4 digits.';return}doCheckout('card',v)}
+async function clockIn(){const {data:{user}}=await sb.auth.getUser();if(!user)return;const {error}=await sb.from('time_entries').insert({employee_id:user.id});alert(error?error.message:'Clocked in')}
+sb.auth.getSession().then(({data})=>{if(data.session){document.getElementById('login').classList.remove('open');loadProducts()}});
+</script></body></html>
