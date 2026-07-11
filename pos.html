@@ -132,7 +132,7 @@ body{background:#020715}.pos-shell{display:grid;grid-template-columns:1fr 390px;
 <script src="config.js"></script>
 <script>
 const sb=supabase.createClient(MW_CONFIG.SUPABASE_URL,MW_CONFIG.SUPABASE_ANON_KEY);
-let products=[],cart=[];
+let products=[],cart=[],inventoryUnits=[];
 const money=n=>'$'+Number(n||0).toFixed(2);
 
 async function signIn(){
@@ -155,48 +155,103 @@ async function forgotPassword(){
 
 async function loadProducts(){
  const {data,error}=await sb.from('products').select('*').eq('active',true).order('name');
- if(error)return alert(error.message); products=data||[]; renderProducts();
+ if(error)return alert(error.message);
+ products=data||[];
+ const {data:units,error:unitError}=await sb.from('inventory_units').select('id,product_id,unit_code,status').eq('status','available');
+ if(unitError)return alert(unitError.message);
+ inventoryUnits=units||[];
+ renderProducts();
 }
 function renderProducts(){
  const q=document.getElementById('search').value.toLowerCase().trim();
- document.getElementById('products').innerHTML=products.filter(p=>[p.name,p.sku,p.barcode,p.quick_code,p.category].join(' ').toLowerCase().includes(q))
- .map(p=>`<article class="card product-pos" onclick="add('${p.id}',1)">
+ const matchingProductIds=new Set(inventoryUnits.filter(u=>String(u.unit_code).toLowerCase().includes(q)).map(u=>u.product_id));
+ document.getElementById('products').innerHTML=products.filter(p=>[p.name,p.sku,p.barcode,p.quick_code,p.category].join(' ').toLowerCase().includes(q)||matchingProductIds.has(p.id))
+ .map(p=>`<article class="card product-pos" onclick="productClick('${p.id}')">
  <b>${p.name}</b><p>${money(p.price)}</p>
- <div class="qty">Qty: ${p.quantity}</div>
+ <div class="qty">Qty: ${p.quantity}${p.track_individual_units?' • Scan unit code':''}</div>
  <div class="code">${p.quick_code?'Code: '+p.quick_code:(p.sku||'')}</div>
  </article>`).join('');
 }
+function productClick(id){
+ const p=products.find(x=>x.id===id);
+ if(!p)return;
+ if(p.track_individual_units){
+  const code=prompt(`Scan or enter Barcode / IMEI / Serial for:\n${p.name}`);
+  if(code)addTrackedUnit(p,code.trim());
+ }else add(id,1);
+}
 function add(id,qty=1){
- const p=products.find(x=>x.id===id); if(!p)return;
- let r=cart.find(x=>x.product_id===id);
- if(r)r.quantity+=qty; else cart.push({product_id:id,name:p.name,quantity:qty,unit_price:Number(p.price),minimum_price:Number(p.minimum_price||0)});
- renderCart(); document.getElementById('search').value=''; renderProducts();
+ const p=products.find(x=>x.id===id);
+ if(!p)return;
+ if(Number(p.quantity||0)<qty)return alert('Not enough stock.');
+ let r=cart.find(x=>x.product_id===id&&!x.unit_code);
+ if(r){
+  if(r.quantity+qty>Number(p.quantity||0))return alert('Not enough stock.');
+  r.quantity+=qty;
+ }else{
+  cart.push({product_id:id,name:p.name,quantity:qty,unit_price:Number(p.price),minimum_price:Number(p.minimum_price||0),unit_codes:[]});
+ }
+ renderCart();
+ document.getElementById('search').value='';
+ renderProducts();
+}
+function addTrackedUnit(product,code){
+ const unit=inventoryUnits.find(u=>u.product_id===product.id&&String(u.unit_code).toLowerCase()===String(code).toLowerCase());
+ if(!unit)return alert('This Barcode / IMEI / Serial is not available.');
+ if(cart.some(x=>x.unit_code&&String(x.unit_code).toLowerCase()===String(code).toLowerCase()))return alert('This unit is already in the cart.');
+ cart.push({
+  product_id:product.id,
+  name:product.name,
+  quantity:1,
+  unit_price:Number(product.price),
+  minimum_price:Number(product.minimum_price||0),
+  unit_code:unit.unit_code,
+  unit_codes:[unit.unit_code]
+ });
+ renderCart();
+ document.getElementById('search').value='';
+ renderProducts();
 }
 function processCommand(){
- const el=document.getElementById('search'); const raw=el.value.trim();
+ const el=document.getElementById('search');
+ const raw=el.value.trim();
  if(!raw)return;
- const m=raw.match(/^(\d+)\s+(.+)$/);
- const qty=m?Number(m[1]):1; const term=(m?m[2]:raw).trim().toLowerCase();
- let p=products.find(x=>String(x.barcode||'').toLowerCase()===term ||
-                          String(x.sku||'').toLowerCase()===term ||
-                          String(x.quick_code||'').toLowerCase()===term ||
-                          String(x.name||'').toLowerCase()===term);
- if(!p){
-   const matches=products.filter(x=>[x.name,x.sku,x.barcode,x.quick_code].join(' ').toLowerCase().includes(term));
-   if(matches.length===1)p=matches[0];
+ const term=raw.toLowerCase();
+
+ const unit=inventoryUnits.find(u=>String(u.unit_code).toLowerCase()===term);
+ if(unit){
+  const p=products.find(x=>x.id===unit.product_id);
+  if(p)return addTrackedUnit(p,unit.unit_code);
  }
- if(p)add(p.id,qty); else alert('No exact product found. Use barcode, SKU, or Quick Code.');
+
+ const m=raw.match(/^(\d+)\s+(.+)$/);
+ const qty=m?Number(m[1]):1;
+ const productTerm=(m?m[2]:raw).trim().toLowerCase();
+
+ let p=products.find(x=>String(x.barcode||'').toLowerCase()===productTerm ||
+                          String(x.sku||'').toLowerCase()===productTerm ||
+                          String(x.quick_code||'').toLowerCase()===productTerm ||
+                          String(x.name||'').toLowerCase()===productTerm);
+ if(!p){
+  const matches=products.filter(x=>[x.name,x.sku,x.barcode,x.quick_code].join(' ').toLowerCase().includes(productTerm));
+  if(matches.length===1)p=matches[0];
+ }
+ if(!p)return alert('No exact product or unit code found.');
+ if(p.track_individual_units)return productClick(p.id);
+ add(p.id,qty);
 }
 document.getElementById('search').addEventListener('input',renderProducts);
 document.getElementById('search').addEventListener('keydown',e=>{if(e.key==='Enter')processCommand()});
 function renderCart(){
  document.getElementById('cart').innerHTML=cart.map((r,i)=>`<div class="cart-row">
- <span>${r.name}</span>
- <input type="number" min="1" value="${r.quantity}" onchange="cart[${i}].quantity=+this.value;renderCart()">
+ <span>${r.name}${r.unit_code?`<div style="font-size:11px;color:#ffbd35">${r.unit_code}</div>`:''}</span>
+ <input type="number" min="1" ${r.unit_code?'disabled':''} value="${r.quantity}" onchange="cart[${i}].quantity=+this.value;renderCart()">
  <input type="number" step=".01" value="${r.unit_price}" onchange="cart[${i}].unit_price=+this.value;renderCart()">
  <button onclick="cart.splice(${i},1);renderCart()">×</button></div>`).join('');
  let sub=cart.reduce((s,r)=>s+r.quantity*r.unit_price,0), tx=document.getElementById('taxEnabled').checked?sub*MW_CONFIG.TAX_RATE:0;
- document.getElementById('subtotal').textContent=money(sub);document.getElementById('tax').textContent=money(tx);document.getElementById('total').textContent=money(sub+tx);
+ document.getElementById('subtotal').textContent=money(sub);
+ document.getElementById('tax').textContent=money(tx);
+ document.getElementById('total').textContent=money(sub+tx);
 }
 document.getElementById('taxEnabled').onchange=renderCart;
 function clearCart(){cart=[];renderCart()}
@@ -209,8 +264,8 @@ async function doCheckout(method,last4=null){
  const subtotalValue=snapshot.reduce((s,r)=>s+r.quantity*r.unit_price,0);
  const taxValue=taxOn?subtotalValue*MW_CONFIG.TAX_RATE:0;
  const totalValue=subtotalValue+taxValue;
- const items=snapshot.map(({product_id,quantity,unit_price})=>({product_id,quantity,unit_price}));
- const {data,error}=await sb.rpc('create_sale',{p_items:items,p_tax_enabled:taxOn,p_payment:method,p_card_last4:last4,p_customer_id:null});
+ const items=snapshot.map(({product_id,quantity,unit_price,unit_codes=[]})=>({product_id,quantity,unit_price,unit_codes}));
+ const {data,error}=await sb.rpc('create_sale_v2',{p_items:items,p_tax_enabled:taxOn,p_payment:method,p_card_last4:last4,p_customer_id:null});
  if(error)return alert(error.message);
  lastReceipt={
    id:data,
@@ -239,6 +294,7 @@ function buildReceipt(){
     <div class="receipt-row"><span>Payment</span><span>${r.method==='card'?'CREDIT ****'+r.last4:'CASH'}</span></div>`;
  document.getElementById('receiptItems').innerHTML=r.items.map(x=>
    `<div class="receipt-item"><div>${x.name}</div>
+    ${x.unit_code?`<div style="font-size:10px">Code: ${x.unit_code}</div>`:''}
     <div class="receipt-row"><span>${x.quantity} × ${money(x.unit_price)}</span><span>${money(x.quantity*x.unit_price)}</span></div></div>`
  ).join('');
  document.getElementById('receiptTotals').innerHTML=
@@ -296,7 +352,10 @@ async function printHistoryReceipt(saleId){
  if(saleErr)return alert(saleErr.message);
 
  const {data:items,error:itemErr}=await sb.from('sale_items')
-   .select('quantity,unit_price,products(name)')
+   .select('id,quantity,unit_price,products(name)')
+   .eq('sale_id',saleId);
+ const {data:unitRows}=await sb.from('sale_item_units')
+   .select('sale_item_id,unit_code')
    .eq('sale_id',saleId);
  if(itemErr)return alert(itemErr.message);
 
@@ -306,7 +365,8 @@ async function printHistoryReceipt(saleId){
    items:(items||[]).map(i=>({
      name:(i.products&&i.products.name)||'Item',
      quantity:Number(i.quantity||0),
-     unit_price:Number(i.unit_price||0)
+     unit_price:Number(i.unit_price||0),
+     unit_code:(unitRows||[]).find(u=>u.sale_item_id===i.id)?.unit_code||null
    })),
    subtotal:Number(sale.subtotal||0),
    tax:Number(sale.tax||0),

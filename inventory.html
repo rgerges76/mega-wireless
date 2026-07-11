@@ -105,7 +105,7 @@ td.num{text-align:right}
           <th>Name</th><th>Category</th><th>SKU</th><th>Barcode</th><th>Quick Code</th>
           <th style="text-align:right">Qty</th><th style="text-align:right">Cost</th>
           <th style="text-align:right">Price</th><th style="text-align:right">Min Price</th>
-          <th>Active</th><th>Website</th><th>Actions</th>
+          <th>Individual Codes</th><th>Active</th><th>Website</th><th>Actions</th>
         </tr>
       </thead>
       <tbody id="rows"></tbody>
@@ -122,7 +122,7 @@ td.num{text-align:right}
       <div class="field"><label>SKU</label><input id="f_sku"></div>
       <div class="field"><label>Barcode</label><input id="f_barcode"></div>
       <div class="field"><label>Quick Code</label><input id="f_quick_code"></div>
-      <div class="field"><label>Quantity</label><input id="f_quantity" type="number" step="1" min="0" value="0"></div>
+      <div class="field"><label>Quantity</label><input id="f_quantity" type="number" step="1" min="0" value="0" oninput="renderUnitCodeFields()"></div>
       <div class="field"><label>Cost</label><input id="f_cost" type="number" step="0.01" min="0" value="0"></div>
       <div class="field"><label>Selling Price</label><input id="f_price" type="number" step="0.01" min="0" value="0"></div>
       <div class="field"><label>Minimum Price</label><input id="f_minimum_price" type="number" step="0.01" min="0" value="0"></div>
@@ -131,6 +131,12 @@ td.num{text-align:right}
     <div class="checks">
       <label><input id="f_active" type="checkbox" checked> Active in POS</label>
       <label><input id="f_website_visible" type="checkbox"> Visible on Website</label>
+      <label><input id="f_track_individual_units" type="checkbox" onchange="toggleUnitCodes()"> Each unit has its own Barcode / IMEI / Serial</label>
+    </div>
+    <div id="unitCodeBox" style="display:none;border:1px solid #285287;border-radius:12px;padding:12px;margin-top:10px">
+      <b>Individual Barcode / IMEI / Serial Numbers</b>
+      <p class="small">The number of fields follows Quantity.</p>
+      <div id="unitCodeFields" class="grid"></div>
     </div>
     <div class="foot">
       <button class="btn" onclick="closeForm()">Cancel</button>
@@ -143,8 +149,12 @@ td.num{text-align:right}
   <div class="dialog" style="max-width:430px">
     <h2>Add Stock</h2>
     <p id="stockName"></p>
-    <div class="field"><label>Quantity to add</label><input id="stockQty" type="number" min="1" step="1" value="1"></div>
+    <div class="field"><label>Quantity to add</label><input id="stockQty" type="number" min="1" step="1" value="1" oninput="renderStockUnitFields()"></div>
     <div class="field" style="margin-top:10px"><label>New cost (optional)</label><input id="stockCost" type="number" min="0" step="0.01" placeholder="Leave blank to keep current cost"></div>
+    <div id="stockUnitBox" style="display:none;margin-top:12px">
+      <b>New Barcode / IMEI / Serial Numbers</b>
+      <div id="stockUnitFields" style="margin-top:8px"></div>
+    </div>
     <div class="foot">
       <button class="btn" onclick="closeStock()">Cancel</button>
       <button class="btn gold" onclick="saveStock()">Add Stock</button>
@@ -208,6 +218,7 @@ function render(){
     <td class="num">${money(p.cost)}</td>
     <td class="num">${money(p.price)}</td>
     <td class="num">${money(p.minimum_price)}</td>
+    <td>${p.track_individual_units?'Yes':'No'}</td>
     <td>${p.active===false?'No':'Yes'}</td>
     <td>${p.website_visible?'Yes':'No'}</td>
     <td class="actions">
@@ -232,6 +243,8 @@ function openForm(){
  document.getElementById('f_low_stock_threshold').value='5';
  document.getElementById('f_active').checked=true;
  document.getElementById('f_website_visible').checked=false;
+ document.getElementById('f_track_individual_units').checked=false;
+ toggleUnitCodes();
  document.getElementById('modal').classList.add('open');
 }
 function editProduct(id){
@@ -241,40 +254,135 @@ function editProduct(id){
    .forEach(k=>document.getElementById('f_'+k).value=p[k]??'');
  document.getElementById('f_active').checked=p.active!==false;
  document.getElementById('f_website_visible').checked=!!p.website_visible;
+ document.getElementById('f_track_individual_units').checked=!!p.track_individual_units;
+ toggleUnitCodes();
+ loadExistingUnitCodes(id);
  document.getElementById('modal').classList.add('open');
 }
+
+function toggleUnitCodes(){
+ const on=document.getElementById('f_track_individual_units').checked;
+ document.getElementById('unitCodeBox').style.display=on?'block':'none';
+ document.getElementById('f_barcode').disabled=on;
+ if(on)renderUnitCodeFields();
+}
+function renderUnitCodeFields(existing=[]){
+ if(!document.getElementById('f_track_individual_units').checked)return;
+ const qty=Math.max(0,Number(document.getElementById('f_quantity').value||0));
+ const current=[...document.querySelectorAll('.unit-code-input')].map(x=>x.value);
+ const values=existing.length?existing:current;
+ document.getElementById('unitCodeFields').innerHTML=Array.from({length:qty},(_,i)=>`
+  <div class="field"><label>Unit ${i+1}</label>
+  <input class="unit-code-input" placeholder="Barcode / IMEI / Serial ${i+1}" value="${escapeAttr(values[i]||'')}"></div>
+ `).join('');
+}
+async function loadExistingUnitCodes(productId){
+ if(!document.getElementById('f_track_individual_units').checked)return;
+ const {data,error}=await sb.from('inventory_units').select('unit_code').eq('product_id',productId).eq('status','available').order('created_at');
+ if(error)return message(error.message,'err');
+ document.getElementById('f_quantity').value=(data||[]).length;
+ renderUnitCodeFields((data||[]).map(x=>x.unit_code));
+}
+
 function closeForm(){document.getElementById('modal').classList.remove('open')}
 async function saveProduct(){
- const name=val('f_name').trim(); if(!name)return message('Product name is required.','err');
+ const name=val('f_name').trim();
+ if(!name)return message('Product name is required.','err');
+
+ const tracked=document.getElementById('f_track_individual_units').checked;
+ const qty=num('f_quantity');
+ const codes=tracked?[...document.querySelectorAll('.unit-code-input')].map(x=>x.value.trim()).filter(Boolean):[];
+
+ if(tracked){
+  if(codes.length!==qty)return message(`Enter exactly ${qty} codes.`,'err');
+  if(new Set(codes.map(x=>x.toLowerCase())).size!==codes.length)return message('Every code must be different.','err');
+ }
+
  const payload={
-  name,category:val('f_category').trim()||null,sku:val('f_sku').trim()||null,
-  barcode:val('f_barcode').trim()||null,quick_code:val('f_quick_code').trim()||null,
-  quantity:num('f_quantity'),cost:num('f_cost'),price:num('f_price'),
-  minimum_price:num('f_minimum_price'),low_stock_threshold:num('f_low_stock_threshold'),
+  name,
+  category:val('f_category').trim()||null,
+  sku:val('f_sku').trim()||null,
+  barcode:tracked?null:(val('f_barcode').trim()||null),
+  quick_code:val('f_quick_code').trim()||null,
+  quantity:qty,
+  cost:num('f_cost'),
+  price:num('f_price'),
+  minimum_price:num('f_minimum_price'),
+  low_stock_threshold:num('f_low_stock_threshold'),
   active:document.getElementById('f_active').checked,
-  website_visible:document.getElementById('f_website_visible').checked
+  website_visible:document.getElementById('f_website_visible').checked,
+  track_individual_units:tracked
  };
- let result;
- if(editingId) result=await sb.from('products').update(payload).eq('id',editingId);
- else result=await sb.from('products').insert(payload);
- if(result.error)return message(result.error.message,'err');
- closeForm();message(editingId?'Product updated.':'Product added.');await loadProducts();
+
+ let productId=editingId;
+ if(editingId){
+  const {error}=await sb.from('products').update(payload).eq('id',editingId);
+  if(error)return message(error.message,'err');
+ }else{
+  const {data,error}=await sb.from('products').insert(payload).select('id').single();
+  if(error)return message(error.message,'err');
+  productId=data.id;
+ }
+
+ if(tracked){
+  const {data:existing,error:readError}=await sb.from('inventory_units').select('unit_code').eq('product_id',productId);
+  if(readError)return message(readError.message,'err');
+  const current=new Set((existing||[]).map(x=>String(x.unit_code).toLowerCase()));
+  const rows=codes.filter(c=>!current.has(c.toLowerCase())).map(unit_code=>({product_id:productId,unit_code,status:'available'}));
+  if(rows.length){
+   const {error}=await sb.from('inventory_units').insert(rows);
+   if(error)return message(error.message,'err');
+  }
+  const {count,error}=await sb.from('inventory_units').select('*',{count:'exact',head:true}).eq('product_id',productId).eq('status','available');
+  if(error)return message(error.message,'err');
+  await sb.from('products').update({quantity:count||0}).eq('id',productId);
+ }
+
+ closeForm();
+ message(editingId?'Product updated.':'Product added.');
+ await loadProducts();
 }
 function openStock(id){
  const p=products.find(x=>x.id===id);if(!p)return;
  stockId=id;document.getElementById('stockName').textContent=`${p.name} — Current quantity: ${Number(p.quantity||0)}`;
  document.getElementById('stockQty').value=1;document.getElementById('stockCost').value='';
+ document.getElementById('stockUnitBox').style.display=p.track_individual_units?'block':'none';
+ renderStockUnitFields();
  document.getElementById('stockModal').classList.add('open');
 }
 function closeStock(){document.getElementById('stockModal').classList.remove('open')}
+function renderStockUnitFields(){
+ const p=products.find(x=>x.id===stockId);
+ if(!p||!p.track_individual_units)return;
+ const qty=Math.max(1,Number(val('stockQty')||1));
+ const current=[...document.querySelectorAll('.stock-unit-code')].map(x=>x.value);
+ document.getElementById('stockUnitFields').innerHTML=Array.from({length:qty},(_,i)=>`
+  <input class="stock-unit-code" style="margin:5px 0" placeholder="Barcode / IMEI / Serial ${i+1}" value="${escapeAttr(current[i]||'')}">
+ `).join('');
+}
 async function saveStock(){
- const p=products.find(x=>x.id===stockId); if(!p)return;
- const add=Number(val('stockQty')||0); if(add<=0)return message('Enter a quantity greater than zero.','err');
+ const p=products.find(x=>x.id===stockId);
+ if(!p)return;
+ const add=Number(val('stockQty')||0);
+ if(add<=0)return message('Enter a quantity greater than zero.','err');
+ const c=val('stockCost').trim();
+
+ if(p.track_individual_units){
+  const codes=[...document.querySelectorAll('.stock-unit-code')].map(x=>x.value.trim()).filter(Boolean);
+  if(codes.length!==add)return message(`Enter exactly ${add} codes.`,'err');
+  if(new Set(codes.map(x=>x.toLowerCase())).size!==codes.length)return message('Every code must be different.','err');
+  const {error}=await sb.from('inventory_units').insert(codes.map(unit_code=>({product_id:p.id,unit_code,status:'available'})));
+  if(error)return message(error.message,'err');
+ }
+
  const update={quantity:Number(p.quantity||0)+add};
- const c=val('stockCost').trim(); if(c!=='')update.cost=Number(c);
+ if(c!=='')update.cost=Number(c);
  const {error}=await sb.from('products').update(update).eq('id',stockId);
  if(error)return message(error.message,'err');
- closeStock();message('Stock added successfully.');await loadProducts();
+
+ closeStock();
+ message('Stock added successfully.');
+ await loadProducts();
 }
 async function toggleActive(id,isInactive){
  const {error}=await sb.from('products').update({active:isInactive}).eq('id',id);
