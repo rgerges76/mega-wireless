@@ -1,14 +1,42 @@
-<!doctype html><html><head><meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1"><title>Mega Wireless Admin</title><link rel="stylesheet" href="assets/style.css"></head>
-<body class="admin-body"><div id="login" class="modal open"><div class="modal-card login-card"><h2>Owner / Manager Login</h2><input id="email" type="email" placeholder="Email"><br><br><input id="password" type="password" placeholder="Password"><br><br><button class="btn" onclick="signIn()">Login</button><p id="msg"></p></div></div>
-<div class="admin-main"><div class="toolbar"><div><h1>Inventory & Website Products</h1><p class="lead">Production database</p></div><button class="btn" onclick="openEditor()">Add Product</button></div><div id="content"></div></div>
+<!doctype html>
+<html><head><meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1">
+<title>Mega Wireless Inventory Admin</title><link rel="stylesheet" href="assets/style.css">
+<style>
+body{background:#020715}.wrap{max-width:1300px;margin:auto;padding:20px}.top{display:flex;gap:10px;align-items:center;justify-content:space-between}.tools{display:grid;grid-template-columns:1fr auto auto;gap:10px;margin:15px 0}.table-wrap{overflow:auto}.data-table{width:100%;border-collapse:collapse}.data-table th,.data-table td{border-bottom:1px solid #17345e;padding:10px;text-align:left}.data-table th{position:sticky;top:0;background:#07152d}.small{padding:7px 10px}.form-grid{display:grid;grid-template-columns:repeat(2,1fr);gap:12px}.msg{color:#ffbd35}
+@media(max-width:700px){.tools,.form-grid{grid-template-columns:1fr}}
+</style></head><body>
+<div id="login" class="modal open"><div class="modal-card"><h2>Owner / Manager Login</h2>
+<input id="email" type="email" placeholder="Email"><br><br><input id="password" type="password" placeholder="Password"><br><br>
+<button class="btn" onclick="signIn()">Login</button><p id="msg" class="msg"></p></div></div>
+
+<div class="wrap"><div class="top"><div><h1>Inventory & Quick Codes</h1><p>Use Quick Code for items without a barcode. Example: <b>cable</b>.</p></div><button class="btn" onclick="openEditor()">Add Product</button></div>
+<div class="tools"><input id="filter" placeholder="Search name, SKU, barcode, quick code"><button class="btn gray" onclick="load()">Refresh</button><a class="btn gray" href="pos.html" style="text-decoration:none">Open POS</a></div>
+<div class="table-wrap card"><table class="data-table"><thead><tr><th>Name</th><th>SKU</th><th>Barcode</th><th>Quick Code</th><th>Qty</th><th>Cost</th><th>Price</th><th>Min</th><th></th></tr></thead><tbody id="tbody"></tbody></table></div></div>
+
 <div id="editModal" class="modal"><div class="modal-card"><h2>Product</h2><div class="form-grid">
-<label>Name<input id="p_name"></label><label>SKU<input id="p_sku"></label><label>Category<input id="p_category"></label><label>Quantity<input id="p_quantity" type="number"></label><label>Cost<input id="p_cost" type="number" step=".01"></label><label>Price<input id="p_price" type="number" step=".01"></label><label>Minimum Price<input id="p_min" type="number" step=".01"></label><label>Low Stock Threshold<input id="p_low" type="number" value="5"></label><label>Image URL<input id="p_image"></label><label>Website Visible<select id="p_visible"><option value="true">Yes</option><option value="false">No</option></select></label></div><br><button class="btn" onclick="saveProduct()">Save</button> <button class="btn gray" onclick="editModal.classList.remove('open')">Close</button></div></div>
+<label>Name<input id="p_name"></label><label>SKU<input id="p_sku"></label>
+<label>Barcode<input id="p_barcode"></label><label>Quick Code<input id="p_quick" placeholder="cable"></label>
+<label>Category<input id="p_category"></label><label>Quantity<input id="p_quantity" type="number"></label>
+<label>Cost<input id="p_cost" type="number" step=".01"></label><label>Price<input id="p_price" type="number" step=".01"></label>
+<label>Minimum Price<input id="p_min" type="number" step=".01"></label><label>Low Stock<input id="p_low" type="number" value="5"></label>
+<label>Website Visible<select id="p_visible"><option value="true">Yes</option><option value="false">No</option></select></label>
+<label>Active<select id="p_active"><option value="true">Yes</option><option value="false">No</option></select></label>
+</div><p id="editMsg" class="msg"></p><br><button class="btn" onclick="saveProduct()">Save</button> <button class="btn gray" onclick="closeEditor()">Close</button></div></div>
+
 <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script><script src="config.js"></script><script>
 const sb=supabase.createClient(MW_CONFIG.SUPABASE_URL,MW_CONFIG.SUPABASE_ANON_KEY);let rows=[],editing=null;
-async function signIn(){const {error}=await sb.auth.signInWithPassword({email:email.value,password:password.value});msg.textContent=error?error.message:'';if(!error){login.classList.remove('open');load()}}
-async function load(){const {data,error}=await sb.from('products').select('*').order('name');if(error)return alert(error.message);rows=data;content.innerHTML=`<div class="table-wrap"><table class="data-table"><tr><th>Name</th><th>Qty</th><th>Cost</th><th>Price</th><th>Min</th><th>Website</th><th></th></tr>${rows.map((r,i)=>`<tr><td>${r.name}</td><td>${r.quantity}</td><td>$${r.cost}</td><td>$${r.price}</td><td>$${r.minimum_price}</td><td>${r.website_visible}</td><td><button class="small edit" onclick="edit(${i})">Edit</button></td></tr>`).join('')}</table></div>`}
-function openEditor(){editing=null;['name','sku','category','quantity','cost','price','min','image'].forEach(x=>document.getElementById('p_'+x).value='');p_low.value=5;p_visible.value='true';editModal.classList.add('open')}
-function edit(i){editing=rows[i];p_name.value=editing.name;p_sku.value=editing.sku||'';p_category.value=editing.category;p_quantity.value=editing.quantity;p_cost.value=editing.cost;p_price.value=editing.price;p_min.value=editing.minimum_price;p_low.value=editing.low_stock_threshold;p_image.value=editing.image_url||'';p_visible.value=String(editing.website_visible);editModal.classList.add('open')}
-async function saveProduct(){const payload={name:p_name.value,sku:p_sku.value||null,category:p_category.value||'Accessories',quantity:+p_quantity.value||0,cost:+p_cost.value||0,price:+p_price.value||0,minimum_price:+p_min.value||0,low_stock_threshold:+p_low.value||5,image_url:p_image.value||null,website_visible:p_visible.value==='true'};let q=editing?sb.from('products').update(payload).eq('id',editing.id):sb.from('products').insert(payload);const {error}=await q;if(error)return alert(error.message);editModal.classList.remove('open');load()}
+async function signIn(){const {error}=await sb.auth.signInWithPassword({email:email.value.trim(),password:password.value});msg.textContent=error?error.message:'';if(!error){login.classList.remove('open');load()}}
+async function load(){const {data,error}=await sb.from('products').select('*').order('name');if(error)return alert(error.message);rows=data||[];render()}
+function render(){const q=filter.value.toLowerCase();tbody.innerHTML=rows.filter(r=>[r.name,r.sku,r.barcode,r.quick_code,r.category].join(' ').toLowerCase().includes(q)).map((r,i)=>`<tr><td>${r.name}</td><td>${r.sku||''}</td><td>${r.barcode||''}</td><td><b>${r.quick_code||''}</b></td><td>${r.quantity}</td><td>$${Number(r.cost).toFixed(2)}</td><td>$${Number(r.price).toFixed(2)}</td><td>$${Number(r.minimum_price).toFixed(2)}</td><td><button class="btn small" onclick="edit('${r.id}')">Edit</button></td></tr>`).join('')}
+filter.oninput=render;
+function openEditor(){editing=null;['name','sku','barcode','quick','category','quantity','cost','price','min'].forEach(x=>document.getElementById('p_'+x).value='');p_low.value=5;p_visible.value='false';p_active.value='true';editMsg.textContent='';editModal.classList.add('open')}
+function edit(id){editing=rows.find(r=>r.id===id);p_name.value=editing.name;p_sku.value=editing.sku||'';p_barcode.value=editing.barcode||'';p_quick.value=editing.quick_code||'';p_category.value=editing.category||'';p_quantity.value=editing.quantity;p_cost.value=editing.cost;p_price.value=editing.price;p_min.value=editing.minimum_price;p_low.value=editing.low_stock_threshold;p_visible.value=String(editing.website_visible);p_active.value=String(editing.active);editMsg.textContent='';editModal.classList.add('open')}
+function closeEditor(){editModal.classList.remove('open')}
+async function saveProduct(){
+ const payload={name:p_name.value.trim(),sku:p_sku.value.trim()||null,barcode:p_barcode.value.trim()||null,quick_code:p_quick.value.trim().toLowerCase()||null,category:p_category.value.trim()||'Uncategorized',quantity:+p_quantity.value||0,cost:+p_cost.value||0,price:+p_price.value||0,minimum_price:+p_min.value||0,low_stock_threshold:+p_low.value||5,website_visible:p_visible.value==='true',active:p_active.value==='true'};
+ if(!payload.name){editMsg.textContent='Name is required';return}
+ let q=editing?sb.from('products').update(payload).eq('id',editing.id):sb.from('products').insert(payload);
+ const {error}=await q;if(error){editMsg.textContent=error.message;return}closeEditor();load()
+}
 sb.auth.getSession().then(({data})=>{if(data.session){login.classList.remove('open');load()}});
 </script></body></html>
