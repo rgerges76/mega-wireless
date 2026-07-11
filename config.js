@@ -1,6 +1,6 @@
 window.MW_CONFIG = {
   SUPABASE_URL: "https://fmp...supabase.co",
-  SUPABASE_ANON_KEY: "sb_publishable_...",
+  SUPABASE_ANON_KEY: "sb_publishable_المفتاح_الكامل",
   TAX_RATE: 0.0925,
   STORE_NAME: "Mega Wireless Nashville",
   STORE_PHONE: "615-678-5849",
