@@ -13,6 +13,31 @@ body{background:#020715}.pos-shell{display:grid;grid-template-columns:1fr 390px;
 #payModal .pay-row{margin:12px 0}.msg{min-height:20px;color:#ffbd35;font-weight:700}
 @media(max-width:1000px){.product-grid-pos{grid-template-columns:repeat(3,1fr)}}
 @media(max-width:760px){.pos-shell{grid-template-columns:1fr}.pos-side{position:relative;height:auto}.product-grid-pos{grid-template-columns:repeat(2,1fr)}.pos-bar{grid-template-columns:1fr}.pos-bar h2{margin:0}}
+
+.receipt-print{display:none}
+@media print{
+  @page{size:80mm auto;margin:0}
+  html,body{width:80mm!important;background:#fff!important;color:#000!important}
+  body *{visibility:hidden!important}
+  #receiptPrint,#receiptPrint *{visibility:visible!important}
+  #receiptPrint{
+    display:block!important;
+    position:absolute;
+    left:0;top:0;
+    width:72mm;
+    padding:4mm;
+    font-family:Arial,sans-serif;
+    font-size:11px;
+    line-height:1.35;
+    color:#000!important;
+    background:#fff!important
+  }
+  .receipt-center{text-align:center}
+  .receipt-logo{font-size:17px;font-weight:900;letter-spacing:1px}
+  .receipt-row{display:flex;justify-content:space-between;gap:8px}
+  .receipt-item{margin:4px 0}
+  hr{border:0;border-top:1px dashed #000;margin:6px 0}
+}
 </style></head>
 <body>
 <div id="login" class="modal open"><div class="modal-card"><h2>Staff Login</h2>
@@ -34,7 +59,7 @@ body{background:#020715}.pos-shell{display:grid;grid-template-columns:1fr 390px;
 <h2>MEGA WIRELESS POS</h2>
 <input id="search" autocomplete="off" placeholder='Scan barcode, search, or type "1 cable"'>
 <label><input type="checkbox" id="taxEnabled" checked> Tax</label>
-<button class="btn gray" onclick="clockIn()">Clock In</button>
+<button class="btn gray" onclick="clockIn()">Clock In</button><button class="btn gray" onclick="signOut()">Logout</button>
 </div>
 <div class="hint">Quick code example: set a product Quick Code to <b>cable</b>, then type <b>1 cable</b> and press Enter.</div>
 <div id="products" class="product-grid-pos"></div>
@@ -47,8 +72,26 @@ body{background:#020715}.pos-shell{display:grid;grid-template-columns:1fr 390px;
 <p class="total">Total: <span id="total">$0.00</span></p>
 <div class="pay-grid"><button class="btn" onclick="checkoutCash()">Cash</button><button class="btn" onclick="openCard()">Credit</button></div>
 <br><button class="btn gray" onclick="clearCart()">Clear</button>
-<button class="btn gray" onclick="window.print()">Print</button>
+<button class="btn gray" onclick="printLastReceipt()">Print Receipt</button>
 </aside>
+</div>
+
+
+<div id="receiptPrint" class="receipt-print">
+  <div class="receipt-center">
+    <div class="receipt-logo">MEGA WIRELESS</div>
+    <div>4717 Nolensville Pike</div>
+    <div>Nashville, TN 37211</div>
+    <div>615-678-5849</div>
+  </div>
+  <hr>
+  <div id="receiptMeta"></div>
+  <hr>
+  <div id="receiptItems"></div>
+  <hr>
+  <div id="receiptTotals"></div>
+  <hr>
+  <div class="receipt-center">Thank you for your business!</div>
 </div>
 
 <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
@@ -111,12 +154,55 @@ function renderCart(){
 }
 document.getElementById('taxEnabled').onchange=renderCart;
 function clearCart(){cart=[];renderCart()}
+let lastReceipt=null;
 async function doCheckout(method,last4=null){
  if(!cart.length)return alert('Cart is empty');
- const items=cart.map(({product_id,quantity,unit_price})=>({product_id,quantity,unit_price}));
- const {data,error}=await sb.rpc('create_sale',{p_items:items,p_tax_enabled:document.getElementById('taxEnabled').checked,p_payment:method,p_card_last4:last4,p_customer_id:null});
+ const taxOn=document.getElementById('taxEnabled').checked;
+ const snapshot=cart.map(x=>({...x}));
+ const subtotalValue=snapshot.reduce((s,r)=>s+r.quantity*r.unit_price,0);
+ const taxValue=taxOn?subtotalValue*MW_CONFIG.TAX_RATE:0;
+ const totalValue=subtotalValue+taxValue;
+ const items=snapshot.map(({product_id,quantity,unit_price})=>({product_id,quantity,unit_price}));
+ const {data,error}=await sb.rpc('create_sale',{p_items:items,p_tax_enabled:taxOn,p_payment:method,p_card_last4:last4,p_customer_id:null});
  if(error)return alert(error.message);
- alert('Sale completed. Receipt ID: '+data); clearCart(); closePay(); loadProducts();
+ lastReceipt={
+   id:data,
+   date:new Date(),
+   items:snapshot,
+   subtotal:subtotalValue,
+   tax:taxValue,
+   total:totalValue,
+   method,
+   last4
+ };
+ buildReceipt();
+ alert('Sale completed. Receipt ID: '+data);
+ clearCart();closePay();loadProducts();
+}
+function buildReceipt(){
+ if(!lastReceipt)return;
+ const r=lastReceipt;
+ document.getElementById('receiptMeta').innerHTML=
+   `<div class="receipt-row"><span>Receipt</span><span>${r.id}</span></div>
+    <div class="receipt-row"><span>Date</span><span>${r.date.toLocaleString()}</span></div>
+    <div class="receipt-row"><span>Payment</span><span>${r.method==='card'?'CREDIT ****'+r.last4:'CASH'}</span></div>`;
+ document.getElementById('receiptItems').innerHTML=r.items.map(x=>
+   `<div class="receipt-item"><div>${x.name}</div>
+    <div class="receipt-row"><span>${x.quantity} × ${money(x.unit_price)}</span><span>${money(x.quantity*x.unit_price)}</span></div></div>`
+ ).join('');
+ document.getElementById('receiptTotals').innerHTML=
+   `<div class="receipt-row"><span>Subtotal</span><span>${money(r.subtotal)}</span></div>
+    <div class="receipt-row"><span>Tax</span><span>${money(r.tax)}</span></div>
+    <div class="receipt-row" style="font-weight:900;font-size:14px"><span>Total</span><span>${money(r.total)}</span></div>`;
+}
+function printLastReceipt(){
+ if(!lastReceipt)return alert('Complete a sale first.');
+ buildReceipt();
+ window.print();
+}
+async function signOut(){
+ await sb.auth.signOut();
+ location.reload();
 }
 function checkoutCash(){doCheckout('cash',null)}
 function openCard(){if(!cart.length)return alert('Cart is empty');document.getElementById('cardLast4').value='';document.getElementById('payMsg').textContent='';document.getElementById('payModal').classList.add('open')}

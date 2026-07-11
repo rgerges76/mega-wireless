@@ -10,7 +10,7 @@ body{background:#020715}.wrap{max-width:1300px;margin:auto;padding:20px}.top{dis
 <button class="btn" onclick="signIn()">Login</button><p id="msg" class="msg"></p></div></div>
 
 <div class="wrap"><div class="top"><div><h1>Inventory & Quick Codes</h1><p>Use Quick Code for items without a barcode. Example: <b>cable</b>.</p></div><button class="btn" onclick="openEditor()">Add Product</button></div>
-<div class="tools"><input id="filter" placeholder="Search name, SKU, barcode, quick code"><button class="btn gray" onclick="load()">Refresh</button><a class="btn gray" href="pos.html" style="text-decoration:none">Open POS</a></div>
+<div class="tools"><input id="filter" placeholder="Search name, SKU, barcode, quick code"><button class="btn gray" onclick="load()">Refresh</button><a class="btn gray" href="pos.html" style="text-decoration:none">Open POS</a><button class="btn gray" onclick="signOut()">Logout</button></div>
 <div class="table-wrap card"><table class="data-table"><thead><tr><th>Name</th><th>SKU</th><th>Barcode</th><th>Quick Code</th><th>Qty</th><th>Cost</th><th>Price</th><th>Min</th><th></th></tr></thead><tbody id="tbody"></tbody></table></div></div>
 
 <div id="editModal" class="modal"><div class="modal-card"><h2>Product</h2><div class="form-grid">
@@ -38,5 +38,6 @@ async function saveProduct(){
  let q=editing?sb.from('products').update(payload).eq('id',editing.id):sb.from('products').insert(payload);
  const {error}=await q;if(error){editMsg.textContent=error.message;return}closeEditor();load()
 }
+async function signOut(){await sb.auth.signOut();location.reload()}
 sb.auth.getSession().then(({data})=>{if(data.session){login.classList.remove('open');load()}});
 </script></body></html>
