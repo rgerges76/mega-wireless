@@ -1,8 +1,66 @@
 <!doctype html>
-<html lang="en"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1">
-<title>Rewards Registration Received</title><link rel="stylesheet" href="assets/style.css"></head>
-<body><main class="success-page"><div class="card success-card">
-<div class="stars">★★★★★</div><h1>Welcome to Mega Rewards</h1>
-<p>Your registration was received. Mega Wireless will confirm your rewards account.</p>
-<a class="button" href="/">Return to Website</a>
-</div></main></body></html>
+<html lang="en">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>Rewards Registration Complete | Mega Wireless</title>
+  <meta name="description" content="Your Mega Wireless rewards registration was completed successfully.">
+  <style>
+    :root{--navy:#06152f;--blue:#0f6fff;--gold:#ffbf2f;--white:#fff;--muted:#b9c7dc}
+    *{box-sizing:border-box}
+    body{
+      margin:0;min-height:100vh;display:flex;align-items:center;justify-content:center;
+      padding:24px;font-family:Arial,Helvetica,sans-serif;
+      background:radial-gradient(circle at top,rgba(15,111,255,.28),transparent 38%),
+                 linear-gradient(160deg,#020814,#07172f 65%,#020814);
+      color:var(--white)
+    }
+    .card{
+      width:min(560px,100%);background:rgba(7,23,47,.94);
+      border:1px solid rgba(255,255,255,.12);border-radius:24px;padding:34px 26px;
+      text-align:center;box-shadow:0 22px 70px rgba(0,0,0,.45)
+    }
+    .check{
+      width:86px;height:86px;margin:0 auto 22px;border-radius:50%;
+      display:grid;place-items:center;background:var(--gold);color:#111;
+      font-size:46px;font-weight:900;box-shadow:0 12px 30px rgba(255,191,47,.28)
+    }
+    h1{margin:0 0 14px;font-size:clamp(28px,6vw,42px);line-height:1.08}
+    .lead{margin:0 auto 22px;max-width:440px;color:var(--muted);font-size:18px;line-height:1.6}
+    .reward-box{
+      margin:24px 0;padding:18px;border-radius:16px;background:rgba(15,111,255,.13);
+      border:1px solid rgba(15,111,255,.34)
+    }
+    .reward-box strong{display:block;color:var(--gold);font-size:20px;margin-bottom:7px}
+    .arabic{direction:rtl;font-size:17px;line-height:1.7;color:#edf4ff;margin:18px 0 0}
+    .buttons{display:grid;gap:11px;margin-top:28px}
+    a{display:block;text-decoration:none;padding:14px 18px;border-radius:12px;font-weight:800}
+    .primary{background:var(--blue);color:var(--white)}
+    .secondary{background:transparent;color:var(--white);border:1px solid rgba(255,255,255,.18)}
+    .small{margin-top:22px;color:#8294af;font-size:13px;line-height:1.5}
+  </style>
+</head>
+<body>
+  <main class="card">
+    <div class="check">✓</div>
+    <h1>You're officially in!</h1>
+    <p class="lead">
+      Your Mega Wireless Rewards registration was completed successfully.
+      You can now start earning points on eligible purchases and services.
+    </p>
+    <div class="reward-box">
+      <strong>Save more every time you visit</strong>
+      Ask our team about your points balance and available rewards during your next purchase.
+    </div>
+    <p class="arabic">
+      تم تسجيلك بنجاح في برنامج نقاط Mega Wireless.<br>
+      تقدر دلوقتي تبدأ تجمع نقاط على المشتريات والخدمات المؤهلة وتستفيد من المكافآت المتاحة.
+    </p>
+    <div class="buttons">
+      <a class="primary" href="/">Back to Mega Wireless</a>
+      <a class="secondary" href="tel:+16156785849">Call (615) 678-5849</a>
+    </div>
+    <p class="small">Mega Wireless • 4717 Nolensville Pike, Nashville, TN 37211</p>
+  </main>
+</body>
+</html>
