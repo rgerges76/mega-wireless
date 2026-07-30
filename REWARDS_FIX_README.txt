@@ -1,17 +1,19 @@
-MEGA REWARDS FIX
-================
+MEGA REWARDS FINAL FIX
+======================
 
-Modified files:
+Files updated:
 - index.html
 - public/index.html
 - _redirects
 - public/_redirects
 
-The rewards form now:
-1. Uses a new Netlify form name: mega-rewards-v3
-2. Submits with JavaScript as URL-encoded form data
-3. Redirects only after Netlify returns a successful response
-4. Keeps the customer on the form and shows an error if submission fails
-5. Includes redirects for the rewards success page
+What changed:
+- Rewards form no longer posts directly to the success page.
+- JavaScript submits the form to Netlify first.
+- Only after a successful response does the browser open /rewards-success.html.
+- Both possible publish directories (root and public) are covered.
 
-Upload the COMPLETE contents of this folder to GitHub, replacing the existing files.
+Important:
+Confirm Netlify is connected to the same GitHub repository and check its Publish directory.
+If Publish directory is public, Netlify uses public/index.html.
+If Publish directory is blank or ., Netlify uses index.html.

@@ -1,6 +1,15 @@
 <!doctype html>
 <html lang="en">
 <head>
+<!-- Google tag (gtag.js) -->
+<script async src="https://www.googletagmanager.com/gtag/js?id=G-LR9H4N0S98"></script>
+<script>
+  window.dataLayer = window.dataLayer || [];
+  function gtag(){dataLayer.push(arguments);}
+  gtag('js', new Date());
+  gtag('config', 'G-LR9H4N0S98');
+</script>
+
   <meta charset="utf-8">
   <meta name="viewport" content="width=device-width, initial-scale=1">
   <title>Rewards Registration Complete | Mega Wireless</title>
@@ -62,5 +71,17 @@
     </div>
     <p class="small">Mega Wireless • 4717 Nolensville Pike, Nashville, TN 37211</p>
   </main>
+
+<script>
+  window.addEventListener('load', function () {
+    if (typeof gtag === 'function') {
+      gtag('event', 'rewards_signup', {
+        event_category: 'Rewards',
+        event_label: 'Mega Rewards completed'
+      });
+    }
+  });
+</script>
+
 </body>
 </html>
