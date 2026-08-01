@@ -1,0 +1,21 @@
+/* Mega Wireless immediate conversion upgrade */
+.offer-ribbon{background:linear-gradient(135deg,#a40013,#ff273f);padding:18px 0;border-bottom:1px solid #ff7181}
+.offer-ribbon .container{display:flex;align-items:center;justify-content:space-between;gap:18px}
+.offer-ribbon h2{margin:0;font-size:26px}.offer-ribbon p{margin:4px 0 0}
+.offer-value{background:#ffbd35;color:#101010;padding:12px 18px;border-radius:14px;font-weight:900;white-space:nowrap}
+.trust-badges{display:flex;flex-wrap:wrap;justify-content:center;gap:8px;margin:10px 0}
+.trust-badges span{display:inline-block;padding:6px 9px;border-radius:999px;background:#0b2247;border:1px solid #285991;font-size:11px;font-weight:800}
+.phone-gift{color:#ffbd35;font-weight:900;margin:8px 0}
+.special-grid{display:grid;grid-template-columns:repeat(3,1fr);gap:16px}.special-card{padding:24px}
+.special-card .big-price{font-size:42px;color:#ffbd35;font-weight:900}.special-card ul{padding-left:20px;color:#dce9ff;line-height:1.8}
+.special-card.featured{border:2px solid #ffbd35;box-shadow:0 0 30px #ffbd3533}
+.quick-actions{display:grid;grid-template-columns:repeat(5,1fr);gap:12px}
+.quick-actions a{padding:18px 10px;text-align:center;border:1px solid #245188;border-radius:14px;background:#07152e;font-weight:900}
+.quick-actions b{display:block;font-size:25px;margin-bottom:8px}
+.service-proof{background:#061127;border-block:1px solid #1a3e75}.proof-track{display:flex;gap:26px;overflow:hidden;white-space:nowrap;padding:12px 0;color:#ffcc55;font-weight:900}
+.computer-grid{display:grid;grid-template-columns:repeat(3,1fr);gap:14px}.computer-grid article{padding:20px}
+.live-status{display:inline-flex;align-items:center;gap:8px;font-weight:900}.live-status:before{content:'';width:10px;height:10px;border-radius:50%;background:#38d96b;box-shadow:0 0 12px #38d96b}
+.live-status.closed:before{background:#ff5570;box-shadow:0 0 12px #ff5570}
+.floating #wa{background:#1fa855}.product .buy{background:linear-gradient(135deg,#0a6f31,#18a74b)}
+@media(max-width:900px){.offer-ribbon .container{align-items:flex-start;flex-direction:column}.special-grid,.computer-grid{grid-template-columns:1fr}.quick-actions{grid-template-columns:repeat(2,1fr)}}
+@media(max-width:600px){.offer-ribbon h2{font-size:21px}.offer-value{width:100%;text-align:center}.quick-actions{grid-template-columns:1fr 1fr}}
