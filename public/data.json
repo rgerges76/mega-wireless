@@ -4,254 +4,287 @@
     "email": "megawireless4717@gmail.com",
     "address": "4717 Nolensville Pike, Nashville, TN 37211",
     "hours": {
-      "Monday": "10:00 AM \u2013 9:00 PM",
-      "Tuesday": "10:00 AM \u2013 9:00 PM",
-      "Wednesday": "10:00 AM \u2013 9:00 PM",
-      "Thursday": "10:00 AM \u2013 9:00 PM",
-      "Friday": "10:00 AM \u2013 9:00 PM",
-      "Saturday": "10:00 AM \u2013 10:00 PM",
-      "Sunday": "10:00 AM \u2013 9:00 PM"
+      "Monday": "10:00 AM – 9:00 PM",
+      "Tuesday": "10:00 AM – 9:00 PM",
+      "Wednesday": "10:00 AM – 9:00 PM",
+      "Thursday": "10:00 AM – 9:00 PM",
+      "Friday": "10:00 AM – 9:00 PM",
+      "Saturday": "10:00 AM – 10:00 PM",
+      "Sunday": "10:00 AM – 9:00 PM"
     }
   },
   "ticker": [
-    "Screen Repair From $29",
-    "Plans Starting From $10/Month",
-    "Bluetooth Speakers From $19.99",
-    "Same-Day Repair",
+    "Back to School: FREE Case + FREE Screen Protector with Every Phone",
+    "iPhone Screen Repair in 10–15 Minutes",
+    "FREE Screen Protector with Every iPhone Screen Repair",
+    "MobileX Student Plan $10/Month — No Contract",
+    "Xbox HDMI Port Repair $69.99",
+    "All Phones Include a Limited 3-Month Warranty",
     "Open 7 Days"
   ],
   "phones": [
     {
-      "id": "p1",
-      "name": "iPhone 15 Pro",
-      "storage": "256GB",
-      "price": 449.99,
-      "oldPrice": 599.99,
-      "image": "assets/iphone15pro.svg",
-      "visible": true
-    },
-    {
-      "id": "p2",
-      "name": "iPhone 15",
-      "storage": "128GB",
-      "price": 349.99,
-      "oldPrice": 449.99,
+      "id": "p11",
+      "name": "iPhone 11",
+      "storage": "64GB",
+      "price": 199.99,
+      "oldPrice": 229.99,
       "image": "assets/iphone15.svg",
-      "visible": true
+      "visible": true,
+      "gift": "FREE $50 Gift Bundle",
+      "warranty": "Limited 3-Month Warranty"
     },
     {
-      "id": "p3",
-      "name": "Samsung S23 Ultra",
-      "storage": "256GB",
+      "id": "p12",
+      "name": "iPhone 12",
+      "storage": "64GB",
+      "price": 229.99,
+      "oldPrice": 269.99,
+      "image": "assets/iphone15.svg",
+      "visible": true,
+      "gift": "FREE $50 Gift Bundle",
+      "warranty": "Limited 3-Month Warranty"
+    },
+    {
+      "id": "p13",
+      "name": "iPhone 13",
+      "storage": "128GB",
+      "price": 299.0,
+      "oldPrice": 349.99,
+      "image": "assets/iphone15.svg",
+      "visible": true,
+      "gift": "FREE $50 Gift Bundle",
+      "warranty": "Limited 3-Month Warranty"
+    },
+    {
+      "id": "p14pro",
+      "name": "iPhone 14 Pro",
+      "storage": "128GB",
       "price": 449.99,
-      "oldPrice": 649.99,
-      "image": "assets/s23ultra.svg",
-      "visible": true
+      "oldPrice": 499.99,
+      "image": "assets/iphone15pro.svg",
+      "visible": true,
+      "gift": "FREE $50 Gift Bundle",
+      "warranty": "Limited 3-Month Warranty"
     },
     {
-      "id": "p4",
-      "name": "iPhone 15 Plus",
-      "storage": "256GB",
-      "price": 399.99,
-      "oldPrice": 529.99,
-      "image": "assets/iphone15plus.svg",
-      "visible": true
-    },
-    {
-      "id": "p5",
+      "id": "p14plus",
       "name": "iPhone 14 Plus",
       "storage": "128GB",
-      "price": 349.99,
-      "oldPrice": 459.99,
+      "price": 459.0,
+      "oldPrice": 499.99,
       "image": "assets/iphone14plus.svg",
-      "visible": true
+      "visible": true,
+      "gift": "FREE $50 Gift Bundle",
+      "warranty": "Limited 3-Month Warranty"
+    },
+    {
+      "id": "p14pm",
+      "name": "iPhone 14 Pro Max",
+      "storage": "128GB",
+      "price": 599.0,
+      "oldPrice": 649.99,
+      "image": "assets/iphone15pro.svg",
+      "visible": true,
+      "gift": "FREE $50 Gift Bundle",
+      "warranty": "Limited 3-Month Warranty"
+    },
+    {
+      "id": "p15plus",
+      "name": "iPhone 15 Plus",
+      "storage": "256GB",
+      "price": 449.99,
+      "oldPrice": 499.99,
+      "image": "assets/iphone15plus.svg",
+      "visible": true,
+      "gift": "FREE $50 Gift Bundle",
+      "warranty": "Limited 3-Month Warranty"
+    },
+    {
+      "id": "p17pm",
+      "name": "iPhone 17 Pro Max",
+      "storage": "512GB",
+      "price": 1199.99,
+      "oldPrice": 1299.99,
+      "image": "assets/iphone15pro.svg",
+      "visible": true,
+      "gift": "FREE $50 Gift Bundle",
+      "warranty": "Limited 3-Month Warranty"
+    },
+    {
+      "id": "p12pm",
+      "name": "iPhone 12 Pro Max",
+      "storage": "128GB",
+      "price": 349.99,
+      "oldPrice": 399.99,
+      "image": "assets/iphone15pro.svg",
+      "visible": true,
+      "gift": "FREE $50 Gift Bundle",
+      "warranty": "Limited 3-Month Warranty"
+    },
+    {
+      "id": "blu-c5l",
+      "name": "BLU C5L Max",
+      "storage": "64GB · Dual SIM",
+      "price": 59.99,
+      "oldPrice": 79.99,
+      "image": "assets/mobilex.jpg",
+      "visible": true,
+      "gift": "FREE Case + Screen Protector",
+      "warranty": "Limited 3-Month Warranty"
+    },
+    {
+      "id": "s20u",
+      "name": "Samsung Galaxy S20 Ultra",
+      "storage": "128GB",
+      "price": 329.99,
+      "oldPrice": 379.99,
+      "image": "assets/s23ultra.svg",
+      "visible": true,
+      "gift": "FREE $50 Gift Bundle",
+      "warranty": "Limited 3-Month Warranty"
+    },
+    {
+      "id": "s21",
+      "name": "Samsung Galaxy S21",
+      "storage": "128GB",
+      "price": 249.99,
+      "oldPrice": 299.99,
+      "image": "assets/s23ultra.svg",
+      "visible": true,
+      "gift": "FREE $50 Gift Bundle",
+      "warranty": "Limited 3-Month Warranty"
     }
   ],
   "offers": [
     {
-      "id": "o1",
+      "id": "school",
+      "title": "Back-to-School Phone Bundle",
+      "subtitle": "Android Phone + New Line $89.99",
+      "image": "assets/activation-approved.jpg",
+      "buttonLabel": "Call to Activate",
+      "target": "tel:6156785849",
+      "visible": true
+    },
+    {
+      "id": "gift",
+      "title": "FREE $50 Gift Bundle",
+      "subtitle": "Premium Case + Tempered Glass + Installation",
+      "image": "assets/phones-approved.jpg",
+      "buttonLabel": "Shop Phones",
+      "target": "#phones",
+      "visible": true
+    },
+    {
+      "id": "speakers",
       "title": "Largest Selection of Speakers",
       "subtitle": "Prices starting from $19.99",
       "image": "assets/speaker-approved.jpg",
       "buttonLabel": "Shop Speakers",
       "target": "#speakers",
       "visible": true
-    },
-    {
-      "id": "o2",
-      "title": "All Carrier Activations",
-      "subtitle": "New line or upgrade \u2014 fast & easy",
-      "image": "assets/activation-approved.jpg",
-      "buttonLabel": "View Plans",
-      "target": "#activations",
-      "visible": true
     }
   ],
   "carriers": [
     {
-      "id": "c1",
+      "id": "mobilex-student",
+      "name": "MobileX Student Plan",
+      "price": "$10/mo · Unlimited Talk & Text · 2GB Data · No Contract",
+      "brandClass": "mobilex",
+      "visible": true
+    },
+    {
+      "id": "gen",
       "name": "Gen Mobile",
       "price": "Plans from $10/mo",
       "brandClass": "gen",
       "visible": true
     },
     {
-      "id": "c2",
+      "id": "ultra",
       "name": "Ultra Mobile",
       "price": "Plans from $19/mo",
       "brandClass": "ultra",
       "visible": true
     },
     {
-      "id": "c3",
-      "name": "MobileX",
-      "price": "Plans from $10/mo",
-      "brandClass": "mobilex",
-      "visible": true
-    },
-    {
-      "id": "c4",
+      "id": "simple",
       "name": "Simple Mobile",
-      "price": "Prepaid \u00b7 No Contract",
+      "price": "Prepaid · No Contract",
       "brandClass": "simple",
-      "visible": true
-    },
-    {
-      "id": "c5",
-      "name": "AT&T Prepaid",
-      "price": "Unlimited from $35/mo",
-      "brandClass": "att",
-      "visible": true
-    },
-    {
-      "id": "c6",
-      "name": "Cricket Wireless",
-      "price": "Prepaid plans available",
-      "brandClass": "cricket",
-      "visible": true
-    },
-    {
-      "id": "c7",
-      "name": "Boost Mobile",
-      "price": "New lines and upgrades",
-      "brandClass": "boost",
-      "visible": true
-    },
-    {
-      "id": "c8",
-      "name": "H2O Wireless",
-      "price": "No-contract prepaid",
-      "brandClass": "h2o",
       "visible": true
     }
   ],
   "repairs": [
     {
       "id": "r1",
-      "device": "iPhone 11",
+      "device": "Most iPhones",
       "service": "Screen Repair",
       "price": 49.99,
-      "time": "30\u201345 min",
-      "warranty": "90 days",
+      "time": "10–15 minutes",
+      "warranty": "FREE screen protector included · 90-day repair warranty",
       "visible": true
     },
     {
       "id": "r2",
-      "device": "iPhone 13",
-      "service": "Screen Repair",
-      "price": 79.99,
-      "time": "30\u201345 min",
-      "warranty": "90 days",
+      "device": "iPhone",
+      "service": "Battery Replacement",
+      "price": 59.99,
+      "time": "Fast same-day service",
+      "warranty": "90-day repair warranty",
       "visible": true
     },
     {
       "id": "r3",
-      "device": "iPhone 14",
-      "service": "Screen Repair",
-      "price": 99.99,
-      "time": "45\u201360 min",
-      "warranty": "90 days",
-      "visible": true
-    },
-    {
-      "id": "r4",
-      "device": "Most iPhones",
-      "service": "Battery Replacement",
-      "price": 59.99,
-      "time": "30\u201345 min",
-      "warranty": "90 days",
-      "visible": true
-    },
-    {
-      "id": "r5",
       "device": "Phones & Tablets",
       "service": "Charging Port Repair",
       "price": 69.99,
       "time": "Same day in most cases",
-      "warranty": "90 days",
+      "warranty": "90-day repair warranty",
       "visible": true
     },
     {
-      "id": "r6",
+      "id": "r4",
       "device": "All Devices",
       "service": "Free Diagnostics",
       "price": 0,
       "time": "Fast inspection",
       "warranty": "No obligation",
       "visible": true
-    }
-  ],
-  "adminAuth": {
-    "email": "ramyook@gmail.com",
-    "passwordHash": "5475c29a4fc94402e689f201ca79067c56cb62696a9f5765863d4b3a9401aa81"
-  },
-  "speakers": [
+    },
     {
-      "id": "s1",
-      "name": "Ultra Pro V2",
-      "price": 49.99,
-      "oldPrice": 69.99,
-      "image": "assets/speaker-1.jpg",
+      "id": "r5",
+      "device": "Students",
+      "service": "Screen Repair Special",
+      "price": 0,
+      "time": "Show valid student ID",
+      "warranty": "Save $10–$15 on eligible screen repairs",
       "visible": true
     },
     {
-      "id": "s2",
-      "name": "RGB Party Speaker",
-      "price": 59.99,
-      "oldPrice": 79.99,
-      "image": "assets/speaker-2.jpg",
-      "visible": true
-    },
-    {
-      "id": "s3",
-      "name": "H&A Party Tower",
-      "price": 89.99,
-      "oldPrice": 119.99,
-      "image": "assets/speaker-3.jpg",
-      "visible": true
-    },
-    {
-      "id": "s4",
-      "name": "LED Party Tower",
-      "price": 79.99,
-      "oldPrice": 99.99,
-      "image": "assets/speaker-4.jpg",
+      "id": "r6",
+      "device": "Families",
+      "service": "Family Repair Bundle",
+      "price": 0,
+      "time": "Repair two or more phones",
+      "warranty": "15% off the second eligible repair",
       "visible": true
     }
   ],
+  "speakers": [],
   "announcement": {
     "enabled": true,
-    "title": "NEW OWNER. NEW LOOK. SAME TRUSTED SERVICE.",
-    "subtitle": "Mega Wireless Nashville is now under new ownership\u2014with upgraded service, fresh offers and the same commitment to our community.",
-    "buttonLabel": "Meet the New Mega Wireless",
-    "target": "#why-us"
+    "title": "BACK TO SCHOOL — FREE $50 GIFT BUNDLE",
+    "subtitle": "Buy any phone and receive a free premium case, tempered-glass protector and professional installation. Limited-time offer while supplies last.",
+    "buttonLabel": "Shop Phone Deals",
+    "target": "#phones"
   },
   "repairPromotions": [
     {
       "id": "rp1",
-      "title": "HDMI Repair for PlayStation & Xbox",
-      "subtitle": "Professional HDMI port replacement",
-      "price": 70,
+      "title": "Xbox HDMI Port Repair",
+      "subtitle": "Professional HDMI port replacement · Same-day service available",
+      "price": 69.99,
       "image": "assets/hdmi-repair-70.png",
       "buttonLabel": "Book HDMI Repair",
       "target": "tel:6156785849",
