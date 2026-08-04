@@ -268,7 +268,7 @@ html[dir="rtl"] .floating{right:auto;left:16px}
 
 <script>
 /* Phone list and repair prices load from data/*.json - edit them in the admin panel */
-var PHONES=[];
+var PHONES=[{"name": "BLU C5L Max", "specs": "64GB / Dual SIM", "price": "$59.99", "image": "", "bundle": false, "active": true}, {"name": "iPhone 11", "specs": "64GB", "price": "$199.99", "image": "", "bundle": true, "active": true}, {"name": "iPhone 12", "specs": "64GB", "price": "$229.99", "image": "", "bundle": true, "active": true}, {"name": "Samsung Galaxy S21", "specs": "128GB", "price": "$249.99", "image": "", "bundle": true, "active": true}, {"name": "iPhone 13", "specs": "128GB", "price": "$299.00", "image": "", "bundle": true, "active": true}, {"name": "Samsung S20 Ultra", "specs": "128GB", "price": "$329.99", "image": "", "bundle": true, "active": true}, {"name": "iPhone 12 Pro Max", "specs": "128GB", "price": "$349.99", "image": "", "bundle": true, "active": true}, {"name": "iPhone 14 Pro", "specs": "128GB", "price": "$449.99", "image": "", "bundle": true, "active": true}, {"name": "iPhone 15 Plus", "specs": "256GB", "price": "$449.99", "image": "", "bundle": true, "active": true}, {"name": "iPhone 14 Plus", "specs": "128GB", "price": "$459.00", "image": "", "bundle": true, "active": true}, {"name": "iPhone 14 Pro Max", "specs": "128GB", "price": "$599.00", "image": "", "bundle": true, "active": true}, {"name": "iPhone 17 Pro Max", "specs": "512GB", "price": "$1,199.99", "image": "", "bundle": true, "active": true}];
 
 /* ============ TRANSLATIONS ============ */
 var T={
@@ -455,7 +455,7 @@ ar:{
 };
 
 var LANG='en';
-var REPAIRS={screens:[],services:[]};
+var REPAIRS={"screens": [{"model": "iPhone 11", "price": "$59.99", "active": true}, {"model": "iPhone 12", "price": "$69.99", "active": true}, {"model": "iPhone 13", "price": "$79.99", "active": true}, {"model": "iPhone 14", "price": "$89.99", "active": true}, {"model": "iPhone 14 Pro Max", "price": "$99.00", "active": true}, {"model": "iPhone 15 Pro Max", "price": "$99.00", "active": true}, {"model": "iPhone 16 Pro Max", "price": "$99.00", "active": true}], "services": [{"service": "iPhone battery replacement", "price": "$59", "active": true}, {"service": "Samsung screen replacement", "price": "$99", "active": true}, {"service": "Charging port repair", "price": "$69", "active": true}, {"service": "iPad screen / glass", "price": "$99", "active": true}, {"service": "Xbox HDMI port replacement", "price": "$69.99", "active": true}, {"service": "Water damage diagnosis", "price": "Free", "active": true}, {"service": "Computer diagnostics", "price": "Free", "active": true}]};
 
 function buildTickers(){
   var t=T[LANG];
@@ -509,12 +509,7 @@ function buildRepairs(){
     v.innerHTML=h3;
   }
 }
-function loadData(){
-  fetch('data/phones.json?v='+Date.now()).then(function(r){return r.json();})
-    .then(function(d){ if(d&&d.phones){PHONES=d.phones; buildPhones();} }).catch(function(){});
-  fetch('data/repairs.json?v='+Date.now()).then(function(r){return r.json();})
-    .then(function(d){ if(d){REPAIRS=d; buildRepairs();} }).catch(function(){});
-}
+function loadData(){/* data is built into this file */}
 
 function setStatus(){
   var n=new Date(), m=n.getHours()*60+n.getMinutes();
