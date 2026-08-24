@@ -1,0 +1,73 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width,initial-scale=1">
+<meta name="robots" content="noindex,nofollow,noarchive">
+<meta name="theme-color" content="#0a0f2e">
+<title>Mega Wireless — Admin Dashboard</title>
+<style>
+html,body{min-height:100%;margin:0;background:#0a0f2e;font-family:Arial,Helvetica,sans-serif;color:#fff}
+#gate{position:fixed;inset:0;z-index:99999;display:grid;place-items:center;background:radial-gradient(circle at 85% 0,#23317e 0,#11184c 36%,#070b22 100%)}
+#gate.hidden{display:none}.box{width:min(440px,88vw);padding:32px;border:1px solid rgba(0,229,255,.38);border-radius:22px;background:rgba(255,255,255,.06);box-shadow:0 24px 80px rgba(0,0,0,.52);text-align:center}.brand{font-size:28px;font-weight:1000;letter-spacing:2px}.brand span{color:#00e5ff}.sub{color:#c0caef;line-height:1.6;margin:10px 0 18px}.bar{height:5px;border-radius:99px;background:linear-gradient(90deg,#ff4d9d,#a855f7,#2f6bff,#00e5ff,#ffd23f);background-size:260% 100%;animation:move 1.8s linear infinite}@keyframes move{to{background-position:260% 0}}.btn{margin-top:18px;border:0;border-radius:12px;padding:12px 20px;font-weight:900;cursor:pointer;background:linear-gradient(135deg,#2f6bff,#a855f7);color:#fff}.small{font-size:12px;color:#8fa5c8;margin-top:14px}
+</style>
+<script>window.CMS_MANUAL_INIT=true;</script>
+<script src="https://identity.netlify.com/v1/netlify-identity-widget.js"></script>
+<script src="https://unpkg.com/decap-cms@3.8.3/dist/decap-cms.js"></script>
+</head>
+<body>
+<div id="gate"><div class="box"><div class="brand">MEGA <span>WIRELESS</span></div><div class="sub" id="msg">Checking your secure admin session…</div><div class="bar"></div><button id="loginBtn" class="btn" type="button" style="display:none">Admin Login</button><div class="small">Edit phones · repair prices · offers · photos</div></div></div>
+<script>
+(function(){
+  var gate=document.getElementById('gate');
+  var msg=document.getElementById('msg');
+  var loginBtn=document.getElementById('loginBtn');
+  var started=false;
+
+  function startCMS(){
+    if(started) return;
+    started=true;
+    msg.textContent='Loading admin editor…';
+    loginBtn.style.display='none';
+    try{
+      if(window.CMS && typeof window.CMS.init==='function'){
+        window.CMS.init();
+        setTimeout(function(){gate.classList.add('hidden');},700);
+      }else{
+        throw new Error('CMS library did not load');
+      }
+    }catch(e){
+      msg.textContent='Admin editor failed to load. Refresh this page once.';
+      loginBtn.style.display='inline-block';
+      loginBtn.textContent='Refresh Admin';
+      loginBtn.onclick=function(){location.reload();};
+    }
+  }
+
+  function showLogin(){
+    msg.textContent='Sign in with your Mega Wireless admin email and password.';
+    loginBtn.style.display='inline-block';
+    loginBtn.textContent='Admin Login';
+    loginBtn.onclick=function(){window.netlifyIdentity.open('login');};
+  }
+
+  if(!window.netlifyIdentity){
+    msg.textContent='Secure login service did not load. Refresh this page.';
+    loginBtn.style.display='inline-block';
+    loginBtn.textContent='Refresh Admin';
+    loginBtn.onclick=function(){location.reload();};
+    return;
+  }
+
+  window.netlifyIdentity.on('init',function(user){
+    if(user) startCMS(); else showLogin();
+  });
+  window.netlifyIdentity.on('login',function(){
+    window.netlifyIdentity.close();
+    startCMS();
+  });
+  window.netlifyIdentity.on('logout',function(){location.replace('/admin');});
+})();
+</script>
+</body>
+</html>
