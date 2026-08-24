@@ -2,22 +2,57 @@
 <html lang="en">
 <head>
 <meta charset="utf-8">
-<meta name="viewport" content="width=device-width, initial-scale=1">
-<meta name="robots" content="noindex, nofollow">
-<title>Mega Wireless — Admin</title>
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+<meta name="robots" content="noindex,nofollow,noarchive">
+<meta name="theme-color" content="#0b1026">
+<title>Mega Wireless Admin</title>
 <link rel="icon" href="data:,">
+<style>
+:root{--bg:#0b1026;--panel:#151b45;--cyan:#1fe5ff;--pink:#ff4fa3;--gold:#ffd84a;--text:#fff;--muted:#b8c4e8}
+*{box-sizing:border-box}html,body{margin:0;min-height:100%;font-family:Inter,system-ui,-apple-system,Segoe UI,Arial,sans-serif;background:radial-gradient(circle at 15% 10%,rgba(31,229,255,.16),transparent 28%),radial-gradient(circle at 90% 5%,rgba(255,79,163,.15),transparent 30%),linear-gradient(160deg,#080d22,#15144a 55%,#09132b);color:var(--text)}
+#gate{min-height:100vh;display:grid;place-items:center;padding:24px}.card{width:min(430px,100%);padding:30px;border-radius:28px;background:linear-gradient(160deg,rgba(255,255,255,.12),rgba(255,255,255,.055));border:1px solid rgba(255,255,255,.14);box-shadow:0 30px 90px rgba(0,0,0,.42);backdrop-filter:blur(18px)}
+.brand{font-weight:1000;letter-spacing:.15em;font-size:21px}.brand span{color:var(--cyan)}.sub{color:var(--muted);line-height:1.55;margin:12px 0 24px}.status{padding:12px 14px;border-radius:14px;background:rgba(255,255,255,.07);color:var(--muted);font-size:14px}.row{display:flex;gap:10px;flex-wrap:wrap;margin-top:18px}.btn{border:0;border-radius:14px;padding:13px 17px;font-weight:900;cursor:pointer}.primary{background:linear-gradient(135deg,var(--cyan),#6978ff);color:#081020}.ghost{background:rgba(255,255,255,.08);color:#fff;border:1px solid rgba(255,255,255,.14)}.tiny{font-size:12px;color:#8fa0cf;margin-top:18px;line-height:1.5}#cms{display:none}
+</style>
 </head>
 <body>
+<div id="gate">
+  <div class="card">
+    <div class="brand">MEGA <span>WIRELESS</span> ADMIN</div>
+    <div class="sub">Secure control panel for website prices, phone inventory and current offers.</div>
+    <div id="status" class="status">Checking your secure login…</div>
+    <div class="row">
+      <button id="loginBtn" class="btn primary" type="button" style="display:none">Sign in</button>
+      <a class="btn ghost" href="/">View website</a>
+    </div>
+    <div class="tiny">Use the same Netlify Identity account you activated from the invitation email.</div>
+  </div>
+</div>
+<div id="cms"></div>
 <script src="https://identity.netlify.com/v1/netlify-identity-widget.js"></script>
-<script src="https://unpkg.com/decap-cms@^3.0.0/dist/decap-cms.js"></script>
 <script>
-if (window.netlifyIdentity) {
-  window.netlifyIdentity.on("init", function(user){
-    if (!user) {
-      window.netlifyIdentity.on("login", function(){ document.location.href = "/admin/"; });
-    }
-  });
-}
+(function(){
+  const status=document.getElementById('status');
+  const loginBtn=document.getElementById('loginBtn');
+  function loadCMS(){
+    if(window.__mwCmsLoaded)return;
+    window.__mwCmsLoaded=true;
+    document.getElementById('gate').style.display='none';
+    const s=document.createElement('script');
+    s.src='https://unpkg.com/decap-cms@^3.0.0/dist/decap-cms.js';
+    s.onerror=function(){window.__mwCmsLoaded=false;document.getElementById('gate').style.display='grid';status.textContent='Admin editor failed to load. Refresh the page and try again.'};
+    document.body.appendChild(s);
+  }
+  function sync(user){
+    if(user){status.textContent='Signed in as '+(user.email||'admin')+'. Loading dashboard…';loginBtn.style.display='none';loadCMS();}
+    else{status.textContent='Sign in to open the Mega Wireless dashboard.';loginBtn.style.display='inline-flex';}
+  }
+  loginBtn.addEventListener('click',()=>window.netlifyIdentity&&netlifyIdentity.open('login'));
+  if(!window.netlifyIdentity){status.textContent='Secure login service is unavailable. Refresh the page.';return;}
+  netlifyIdentity.on('init',sync);
+  netlifyIdentity.on('login',user=>{netlifyIdentity.close();sync(user)});
+  netlifyIdentity.on('logout',()=>{location.reload()});
+  netlifyIdentity.init();
+})();
 </script>
 </body>
 </html>
