@@ -2,42 +2,11 @@
 <html lang="en">
 <head>
 <meta charset="utf-8">
-<meta name="viewport" content="width=device-width, initial-scale=1">
-<meta name="robots" content="noindex, nofollow">
-<meta name="theme-color" content="#0a0f2e">
-<title>Mega Wireless — Admin</title>
-<link rel="icon" href="data:,">
-<style>
-html,body{min-height:100%;margin:0;background:radial-gradient(circle at top right,#1d2660 0,#0a0f2e 42%,#070b22 100%);font-family:Arial,Helvetica,sans-serif;color:#fff}
-#mw-loader{position:fixed;inset:0;display:grid;place-items:center;z-index:9999;background:linear-gradient(145deg,rgba(10,15,46,.98),rgba(29,38,96,.98))}
-#mw-loader .box{width:min(420px,88vw);padding:34px;border:1px solid rgba(0,229,255,.35);border-radius:22px;background:rgba(255,255,255,.05);box-shadow:0 24px 80px rgba(0,0,0,.45);text-align:center;backdrop-filter:blur(12px)}
-.brand{font-size:27px;font-weight:1000;letter-spacing:2px}.brand span{color:#00e5ff}.sub{color:#b9c4ee;line-height:1.6;margin:10px 0 18px}.bar{height:5px;border-radius:99px;background:linear-gradient(90deg,#ff4d9d,#a855f7,#2f6bff,#00e5ff,#ffd23f);background-size:250% 100%;animation:move 2s linear infinite}@keyframes move{to{background-position:250% 0}}
-.small{font-size:12px;color:#8ea4bf;margin-top:14px}
-</style>
+<meta name="viewport" content="width=device-width,initial-scale=1">
+<meta name="robots" content="noindex,nofollow">
+<meta http-equiv="refresh" content="0;url=/admin/">
+<title>Mega Wireless Admin</title>
+<script>location.replace('/admin/');</script>
 </head>
-<body>
-<div id="mw-loader"><div class="box"><div class="brand">MEGA <span>WIRELESS</span></div><div class="sub">Loading secure admin dashboard…</div><div class="bar"></div><div class="small">Phones · Repairs · Offers · Inventory</div></div></div>
-<script src="https://identity.netlify.com/v1/netlify-identity-widget.js"></script>
-<script src="https://unpkg.com/decap-cms@^3.0.0/dist/decap-cms.js"></script>
-<script>
-(function(){
-  var loader=document.getElementById('mw-loader');
-  function hideLoader(){ if(loader) loader.style.display='none'; }
-  setTimeout(hideLoader,3500);
-  if(!window.netlifyIdentity){ hideLoader(); return; }
-  window.netlifyIdentity.on('init',function(user){
-    if(user){ hideLoader(); return; }
-    hideLoader();
-    window.netlifyIdentity.open('login');
-  });
-  window.netlifyIdentity.on('login',function(){
-    hideLoader();
-    window.netlifyIdentity.close();
-  });
-  window.netlifyIdentity.on('logout',function(){
-    window.location.href='/';
-  });
-})();
-</script>
-</body>
+<body></body>
 </html>
