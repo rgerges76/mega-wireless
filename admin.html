@@ -3,10 +3,38 @@
 <head>
 <meta charset="utf-8">
 <meta name="viewport" content="width=device-width,initial-scale=1">
-<meta name="robots" content="noindex,nofollow">
-<meta http-equiv="refresh" content="0;url=/admin/">
-<title>Mega Wireless Admin</title>
-<script>location.replace('/admin/');</script>
+<meta name="robots" content="noindex,nofollow,noarchive">
+<meta name="theme-color" content="#0a0f2e">
+<title>Mega Wireless — Admin</title>
+<style>
+html,body{margin:0;min-height:100%;background:#0a0f2e;font-family:Arial,Helvetica,sans-serif}
+#boot{position:fixed;inset:0;display:grid;place-items:center;background:radial-gradient(circle at top right,#23317e,#11184c 38%,#070b22);color:#fff;z-index:99999}
+#boot .box{width:min(430px,88vw);padding:32px;border:1px solid rgba(0,229,255,.35);border-radius:22px;background:rgba(255,255,255,.06);box-shadow:0 24px 80px rgba(0,0,0,.5);text-align:center}.brand{font-size:28px;font-weight:1000;letter-spacing:2px}.brand span{color:#00e5ff}.sub{color:#c5d0f2;margin:10px 0 18px;line-height:1.5}.bar{height:5px;border-radius:99px;background:linear-gradient(90deg,#ff4d9d,#a855f7,#2f6bff,#00e5ff,#ffd23f);background-size:260% 100%;animation:move 1.8s linear infinite}@keyframes move{to{background-position:260% 0}}
+</style>
+<script src="https://identity.netlify.com/v1/netlify-identity-widget.js"></script>
 </head>
-<body></body>
+<body>
+<div id="boot"><div class="box"><div class="brand">MEGA <span>WIRELESS</span></div><div class="sub">Loading secure admin editor…</div><div class="bar"></div></div></div>
+<script src="https://unpkg.com/decap-cms@^3.0.0/dist/decap-cms.js"></script>
+<script>
+(function(){
+  var boot=document.getElementById('boot');
+  function hide(){if(boot)boot.style.display='none'}
+  setTimeout(hide,4500);
+  if(window.netlifyIdentity){
+    window.netlifyIdentity.on('init',function(user){
+      if(!user){
+        hide();
+        window.netlifyIdentity.open('login');
+      } else hide();
+    });
+    window.netlifyIdentity.on('login',function(){
+      window.netlifyIdentity.close();
+      location.replace('/admin.html');
+    });
+    window.netlifyIdentity.on('logout',function(){location.replace('/');});
+  }
+})();
+</script>
+</body>
 </html>
