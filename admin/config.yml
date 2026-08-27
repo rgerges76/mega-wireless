@@ -23,7 +23,6 @@ collections:
             label: "iPhone Screen Prices"
             label_singular: "Screen Price"
             widget: "list"
-            summary: "{{fields.model}} — {{fields.price}}"
             fields:
               - { name: "model", label: "Model", widget: "string", hint: "Example: iPhone 13" }
               - { name: "price", label: "Displayed Price", widget: "string", hint: "Example: $79.99" }
@@ -32,7 +31,6 @@ collections:
             label: "Other Repair Prices"
             label_singular: "Service"
             widget: "list"
-            summary: "{{fields.service}} — {{fields.price}}"
             fields:
               - { name: "service", label: "Service name", widget: "string" }
               - { name: "price", label: "Displayed Price", widget: "string", hint: "Use a dollar price or Free" }
@@ -50,7 +48,6 @@ collections:
             label: "Phones"
             label_singular: "Phone"
             widget: "list"
-            summary: "{{fields.name}} — {{fields.price}}"
             fields:
               - { name: "name", label: "Phone Name", widget: "string", hint: "Example: iPhone 13 Pro Max" }
               - { name: "specs", label: "Storage / Details", widget: "string", required: false, hint: "Example: 256GB · Unlocked" }
@@ -71,7 +68,6 @@ collections:
             label: "Offers"
             label_singular: "Offer"
             widget: "list"
-            summary: "{{fields.title}} — {{fields.price}}"
             fields:
               - { name: "title", label: "Offer Title", widget: "string" }
               - { name: "price", label: "Big Price Text", widget: "string", hint: "Example: $10 Off or 15% Off" }
