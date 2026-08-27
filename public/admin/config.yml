@@ -2,6 +2,9 @@ backend:
   name: git-gateway
   branch: main
 
+site_url: "https://megawirelessusa.com"
+display_url: "https://megawirelessusa.com"
+locale: "en"
 publish_mode: simple
 media_folder: "public/assets/phones"
 public_folder: "/assets/phones"
@@ -12,52 +15,61 @@ collections:
     files:
       - name: "repairs"
         label: "Screen & Service Prices"
-        file: "public/data/repairs.json"
+        file: "public/repairs.json"
+        description: "Customer-facing repair prices. Turn any line OFF to hide it without deleting it."
         fields:
           - name: "screens"
             label: "iPhone Screen Prices"
+            label_singular: "Screen Price"
             widget: "list"
-            summary: "{{fields.model}} - {{fields.price}}"
             fields:
-              - { name: "model", label: "Model", widget: "string" }
-              - { name: "price", label: "Price", widget: "string" }
+              - { name: "model", label: "Model", widget: "string", hint: "Example: iPhone 13" }
+              - { name: "price", label: "Displayed Price", widget: "string", hint: "Example: $79.99" }
               - { name: "active", label: "Show on website", widget: "boolean", default: true }
           - name: "services"
             label: "Other Repair Prices"
+            label_singular: "Service"
             widget: "list"
-            summary: "{{fields.service}} - {{fields.price}}"
             fields:
               - { name: "service", label: "Service name", widget: "string" }
-              - { name: "price", label: "Price", widget: "string" }
+              - { name: "price", label: "Displayed Price", widget: "string", hint: "Use a dollar price or Free" }
               - { name: "active", label: "Show on website", widget: "boolean", default: true }
 
   - name: "phones"
     label: "Phones For Sale"
     files:
       - name: "phones"
-        label: "Phone List & Prices"
-        file: "public/data/phones.json"
+        label: "Phone Inventory & Prices"
+        file: "public/phones.json"
+        description: "Edit customer-facing phone inventory. Hide sold-out phones with the Show switch instead of deleting them."
         fields:
           - name: "phones"
             label: "Phones"
+            label_singular: "Phone"
             widget: "list"
-            summary: "{{fields.name}} - {{fields.price}}"
             fields:
-              - { name: "name", label: "Phone Name", widget: "string" }
-              - { name: "specs", label: "Storage / Details", widget: "string", required: false }
-              - { name: "price", label: "Price", widget: "string" }
-              - { name: "image", label: "Photo", widget: "image", required: false }
-              - { name: "bundle", label: "Free case + protector", widget: "boolean", default: true }
+              - { name: "name", label: "Phone Name", widget: "string", hint: "Example: iPhone 13 Pro Max" }
+              - { name: "specs", label: "Storage / Details", widget: "string", required: false, hint: "Example: 256GB · Unlocked" }
+              - { name: "price", label: "Displayed Price", widget: "string", hint: "Example: $399.99" }
+              - { name: "image", label: "Product Photo", widget: "image", required: false }
+              - { name: "bundle", label: "Free case + screen protector", widget: "boolean", default: true }
               - { name: "active", label: "Show on website", widget: "boolean", default: true }
 
   - name: "offers"
-    label: "Daily Offers"
+    label: "Homepage Offers"
     files:
       - name: "offers"
-        label: "Today's Offers"
+        label: "Active Promotions"
         file: "public/offers.json"
+        description: "Offers appear only when Show on website is ON and the end date has not passed."
         fields:
           - name: "offers"
             label: "Offers"
+            label_singular: "Offer"
             widget: "list"
-            summary:
+            fields:
+              - { name: "title", label: "Offer Title", widget: "string" }
+              - { name: "price", label: "Big Price Text", widget: "string", hint: "Example: $10 Off or 15% Off" }
+              - { name: "description", label: "Short Description", widget: "text" }
+              - { name: "valid_until", label: "Offer Ends On", widget: "datetime", date_format: "YYYY-MM-DD", time_format: false, format: "YYYY-MM-DD" }
+              - { name: "active", label: "Show on website", widget: "boolean", default: false }
