@@ -1,1 +1,63 @@
+backend:
+  name: git-gateway
+  branch: main
 
+publish_mode: simple
+media_folder: "public/assets/phones"
+public_folder: "/assets/phones"
+
+collections:
+  - name: "repairs"
+    label: "Repair Prices"
+    files:
+      - name: "repairs"
+        label: "Screen & Service Prices"
+        file: "public/data/repairs.json"
+        fields:
+          - name: "screens"
+            label: "iPhone Screen Prices"
+            widget: "list"
+            summary: "{{fields.model}} - {{fields.price}}"
+            fields:
+              - { name: "model", label: "Model", widget: "string" }
+              - { name: "price", label: "Price", widget: "string" }
+              - { name: "active", label: "Show on website", widget: "boolean", default: true }
+          - name: "services"
+            label: "Other Repair Prices"
+            widget: "list"
+            summary: "{{fields.service}} - {{fields.price}}"
+            fields:
+              - { name: "service", label: "Service name", widget: "string" }
+              - { name: "price", label: "Price", widget: "string" }
+              - { name: "active", label: "Show on website", widget: "boolean", default: true }
+
+  - name: "phones"
+    label: "Phones For Sale"
+    files:
+      - name: "phones"
+        label: "Phone List & Prices"
+        file: "public/data/phones.json"
+        fields:
+          - name: "phones"
+            label: "Phones"
+            widget: "list"
+            summary: "{{fields.name}} - {{fields.price}}"
+            fields:
+              - { name: "name", label: "Phone Name", widget: "string" }
+              - { name: "specs", label: "Storage / Details", widget: "string", required: false }
+              - { name: "price", label: "Price", widget: "string" }
+              - { name: "image", label: "Photo", widget: "image", required: false }
+              - { name: "bundle", label: "Free case + protector", widget: "boolean", default: true }
+              - { name: "active", label: "Show on website", widget: "boolean", default: true }
+
+  - name: "offers"
+    label: "Daily Offers"
+    files:
+      - name: "offers"
+        label: "Today's Offers"
+        file: "public/offers.json"
+        fields:
+          - name: "offers"
+            label: "Offers"
+            widget: "list"
+            summary:
