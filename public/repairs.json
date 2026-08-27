@@ -1,20 +1,76 @@
 {
   "screens": [
-    { "model": "iPhone 11",         "price": "$59.99", "active": true },
-    { "model": "iPhone 12",         "price": "$69.99", "active": true },
-    { "model": "iPhone 13",         "price": "$79.99", "active": true },
-    { "model": "iPhone 14",         "price": "$89.99", "active": true },
-    { "model": "iPhone 14 Pro Max", "price": "$99.00", "active": true },
-    { "model": "iPhone 15 Pro Max", "price": "$99.00", "active": true },
-    { "model": "iPhone 16 Pro Max", "price": "$99.00", "active": true }
+    {
+      "model": "iPhone 11",
+      "price": "$59.99",
+      "active": true
+    },
+    {
+      "model": "iPhone 12",
+      "price": "$69.99",
+      "active": true
+    },
+    {
+      "model": "iPhone 13",
+      "price": "$69.99",
+      "active": true
+    },
+    {
+      "model": "iPhone 14",
+      "price": "$89.99",
+      "active": true
+    },
+    {
+      "model": "iPhone 14 Pro Max",
+      "price": "$99.00",
+      "active": true
+    },
+    {
+      "model": "iPhone 15 Pro Max",
+      "price": "$119.99",
+      "active": true
+    },
+    {
+      "model": "iPhone 16 Pro Max",
+      "price": "$129.99",
+      "active": true
+    }
   ],
   "services": [
-    { "service": "iPhone battery replacement",  "price": "$59",    "active": true },
-    { "service": "Samsung screen replacement",  "price": "$99",    "active": true },
-    { "service": "Charging port repair",        "price": "$69",    "active": true },
-    { "service": "iPad screen / glass",         "price": "$99",    "active": true },
-    { "service": "Xbox HDMI port replacement",  "price": "$69.99", "active": true },
-    { "service": "Water damage diagnosis",      "price": "Free",   "active": true },
-    { "service": "Computer diagnostics",        "price": "Free",   "active": true }
+    {
+      "service": "iPhone battery replacement",
+      "price": "$49.99",
+      "active": true
+    },
+    {
+      "service": "Samsung screen replacement",
+      "price": "$79.99",
+      "active": true
+    },
+    {
+      "service": "Charging port repair",
+      "price": "$39.99",
+      "active": true
+    },
+    {
+      "service": "iPad screen / glass",
+      "price": "$89.99",
+      "active": true
+    },
+    {
+      "service": "Xbox HDMI port replacement",
+      "price": "$69.99",
+      "active": true
+    },
+    {
+      "service": "Water damage diagnosis",
+      "price": "Free",
+      "active": true
+    },
+    {
+      "service": "Computer diagnostics",
+      "price": "Free",
+      "active": true
+    }
   ]
 }
