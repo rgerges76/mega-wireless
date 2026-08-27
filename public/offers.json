@@ -20,6 +20,13 @@
       "description": "Replace your screen and battery together in one visit and save.",
       "valid_until": "2026-09-30",
       "active": false
+    },
+    {
+      "active": true,
+      "title": "any walet case only 2 for $15",
+      "price": "2 FOR $14.99",
+      "description": "any iphone wallet case 2 for $14.99",
+      "valid_until": "2026-08-27"
     }
   ]
 }
