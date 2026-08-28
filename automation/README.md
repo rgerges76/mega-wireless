@@ -20,48 +20,83 @@ Business source of truth:
 - `automation/agent-instructions.md`
 - Current structured business data connected explicitly to the agent
 
-## Initial rollout
+## Current rollout status — 2026-08-28
+
+### Botpress agent
+Created in Botpress Vibe as **Mega Wireless**.
+
+Draft capabilities created by Vibe:
+- FAQ / knowledge answers
+- Product recommendations
+- Lead qualification
+- Repair intake
+- Technical troubleshooting
+- Human-handoff intent/fallback logic
+
+Known test status:
+- Store locations / business hours simulation: created; currently requires review.
+- Accessory Recommendation simulation: created; did not run automatically.
+- Remaining regression scenarios were not created/run automatically by Vibe.
+
+The agent must not be treated as production-verified until the full regression suite in `automation/botpress-simulation-suite.md` has been completed.
+
+### Website deployment
+Do not add a guessed Botpress snippet to production.
+
+Botpress requires the exact current Webchat embed snippet from the published agent. Current Botpress documentation places it under the agent's Webchat/Deploy settings. Once that exact snippet is available, it should be inserted into the public site's `index.html` immediately before the closing `</body>` tag.
+
+### WhatsApp
+Meta/WhatsApp authorization requires the account owner. After authorization, test inbound customer messages and handoff behavior before relying on the channel for production support.
+
+### Make automation
+The webhook data contract is prepared in:
+- `automation/make-lead-contract.json`
+
+Use it for:
+- sales leads
+- repair leads
+- human follow-up requests
+
+No passwords, PINs, OTPs, payment-card data, OAuth tokens, or account credentials may be sent through the automation payload.
+
+## Rollout phases
 
 ### Phase 1 — Agent
-- Create one Botpress agent for Mega Wireless.
-- Load `automation/agent-instructions.md` as the behavioral policy.
-- Load `automation/knowledge-base.md` and the public website as knowledge sources.
-- Publish the agent.
+- Create Botpress agent. **Done.**
+- Load/align behavioral policy with `automation/agent-instructions.md`. **Prepared.**
+- Use `automation/knowledge-base.md` and the public website as approved knowledge sources. **Prepared.**
+- Complete regression simulations. **In progress / blocked by Botpress simulation runner behavior.**
 
 ### Phase 2 — Website
-- Enable Botpress Webchat.
-- Add the published Botpress Webchat embed code to `index.html`.
-- Configure the launcher for concise bilingual customer support.
+- Confirm latest working Botpress publish.
+- Copy exact Webchat embed code from Botpress.
+- Add exact snippet to `index.html` before `</body>`.
+- Test desktop and mobile launcher behavior.
 
 ### Phase 3 — WhatsApp
-- Install Botpress's official WhatsApp integration.
-- Authorize the Mega Wireless WhatsApp Business account through Meta.
-- Test inbound messages, human escalation, and media handling.
+- Install Botpress official WhatsApp integration.
+- Authorize Mega Wireless WhatsApp Business through Meta.
+- Test inbound messages, multilingual replies, human escalation, and media handling.
 
 ### Phase 4 — Automation
 - Connect Botpress to Make by webhook.
-- Create lead workflow with fields: name, phone, request type, device/model, issue, preferred contact method, summary, timestamp, source channel.
+- Implement `automation/make-lead-contract.json`.
 - Route repair leads and sales leads separately.
 - Add staff notification.
-- Keep payment and account secrets out of automation payloads.
+- Confirm webhook delivery before the agent claims any lead/handoff was submitted.
 
 ### Phase 5 — POS / repairs
 - Add a controlled backend integration before allowing the assistant to claim live inventory, repair status, order status, or completed actions.
 - Browser-local POS data is not a reliable multi-device source of truth and must not be exposed as live cloud data without a backend.
 
-## Current implementation state
+## Production release gate
+Do not consider the automation production-ready until:
+1. Botpress regression simulations pass or have been manually reviewed.
+2. Human-handoff fallback behavior is verified.
+3. The exact Botpress Webchat snippet is installed and tested on megawirelessusa.com.
+4. WhatsApp is tested after Meta authorization if WhatsApp will be used.
+5. Make webhook routing confirms successful lead delivery.
+6. No agent response claims live inventory/order/repair status without a connected backend.
 
-Completed in repository:
-- Master agent operating instructions.
-- Master AI knowledge-base source.
-- Architecture and rollout source of truth.
-
-External authorization still required:
-- Botpress account/workspace creation or login.
-- Meta/WhatsApp authorization.
-- Make account/workspace creation or login.
-
-These authorizations must be performed by the account owner; credentials, access codes, and OAuth tokens must not be posted in source control or chat.
-
-## Deployment rule
-Do not add a Botpress embed snippet to production until the agent is published and the exact current Webchat embed code is available. This avoids broken or stale chat code on the live site.
+## Security rule
+Credentials, access codes, OAuth codes/tokens, API keys, passwords, payment information, and one-time verification codes must never be committed to GitHub or pasted into public source files.
