@@ -7,13 +7,13 @@ window.MEGA_DEFAULTS = {
     "email": "megawireless4717@gmail.com",
     "heroImage": "assets/img/owner-main.jpg",
     "hours": {
-      "Monday": "10:00 AM – 9:00 PM",
-      "Tuesday": "10:00 AM – 9:00 PM",
-      "Wednesday": "10:00 AM – 9:00 PM",
-      "Thursday": "10:00 AM – 9:00 PM",
-      "Friday": "10:00 AM – 9:00 PM",
-      "Saturday": "10:00 AM – 10:00 PM",
-      "Sunday": "10:00 AM – 9:00 PM"
+      "Monday": "10:00 AM – 8:00 PM",
+      "Tuesday": "10:00 AM – 8:00 PM",
+      "Wednesday": "10:00 AM – 8:00 PM",
+      "Thursday": "10:00 AM – 8:00 PM",
+      "Friday": "10:00 AM – 8:00 PM",
+      "Saturday": "10:00 AM – 8:00 PM",
+      "Sunday": "10:00 AM – 8:00 PM"
     }
   },
   "banners": [
