@@ -25,5 +25,11 @@
 /offers.json
   Cache-Control: no-cache, max-age=0, must-revalidate
 
+/ai-knowledge.html
+  Cache-Control: no-cache, max-age=0, must-revalidate
+
+/llms.txt
+  Cache-Control: no-cache, max-age=0, must-revalidate
+
 /assets/*
   Cache-Control: public, max-age=86400
