@@ -1,6 +1,5 @@
 window.MEGA_DEFAULTS = {
   "store": {
-    "adminPin": "1234",
     "name": "Mega Wireless Nashville",
     "phone": "615-678-5849",
     "whatsapp": "16156785849",
@@ -155,7 +154,6 @@ window.MEGA_DEFAULTS = {
       "brand": "Apple",
       "model": "iPhone 11",
       "service": "Screen Repair",
-      "cost": 28,
       "price": 60,
       "time": "25 min",
       "warranty": "30 days",
@@ -165,7 +163,6 @@ window.MEGA_DEFAULTS = {
       "brand": "Apple",
       "model": "iPhone 12",
       "service": "Screen Repair",
-      "cost": 32,
       "price": 65,
       "time": "30 min",
       "warranty": "30 days",
@@ -175,7 +172,6 @@ window.MEGA_DEFAULTS = {
       "brand": "Apple",
       "model": "iPhone 13",
       "service": "Screen Repair",
-      "cost": 38,
       "price": 70,
       "time": "30 min",
       "warranty": "30 days",
@@ -185,7 +181,6 @@ window.MEGA_DEFAULTS = {
       "brand": "Samsung",
       "model": "S23 Ultra",
       "service": "Screen Repair",
-      "cost": 185,
       "price": 249,
       "time": "Same day",
       "warranty": "30 days",
@@ -197,57 +192,25 @@ window.MEGA_DEFAULTS = {
       "sku": "CASE-001",
       "name": "Phone Case",
       "cat": "Accessories",
-      "cost": 4,
-      "price": 15,
-      "min": 10,
-      "qty": 50
+      "price": 15
     },
     {
       "sku": "GLASS-001",
       "name": "Tempered Glass",
       "cat": "Accessories",
-      "cost": 1.5,
-      "price": 10,
-      "min": 5,
-      "qty": 100
+      "price": 10
     },
     {
       "sku": "SPK-001",
       "name": "Bluetooth Speaker",
       "cat": "Speakers",
-      "cost": 18,
-      "price": 39.99,
-      "min": 29.99,
-      "qty": 15
+      "price": 39.99
     },
     {
       "sku": "ACT-GEN10",
       "name": "Gen Mobile $10 Plan",
       "cat": "Activations",
-      "cost": 0,
-      "price": 10,
-      "min": 10,
-      "qty": 999
-    }
-  ],
-  "employees": [
-    {
-      "name": "Admin",
-      "pin": "1234",
-      "role": "Admin",
-      "canDiscount": true,
-      "canRefund": true,
-      "canEditInventory": true,
-      "canEmployees": true
-    },
-    {
-      "name": "Cashier",
-      "pin": "0000",
-      "role": "Cashier",
-      "canDiscount": true,
-      "canRefund": false,
-      "canEditInventory": false,
-      "canEmployees": false
+      "price": 10
     }
   ]
 };
