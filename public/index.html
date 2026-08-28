@@ -626,6 +626,55 @@ document.addEventListener('click', function(e){
   else if(h.indexOf('wa.me')>-1) gtag('event','whatsapp_click');
 });
 </script>
-\n<!-- Mega Wireless AI Chat launcher -->\n<div id="bp-embedded-webchat" aria-label="Mega Wireless AI chat"></div>\n<button id="mega-ai-chat-button" type="button" aria-label="Open Mega Wireless AI chat">AI CHAT</button>\n<style id="mega-ai-chat-style">\n  #mega-ai-chat-button{\n    position:fixed;left:18px;bottom:22px;z-index:10050;\n    min-width:86px;height:58px;padding:0 17px;\n    border:2px solid #00e5ff;border-radius:999px;\n    background:linear-gradient(135deg,#2f6bff,#a855f7);\n    color:#fff;font:900 13px/1 Arial,Helvetica,sans-serif;\n    cursor:pointer;box-shadow:0 10px 32px rgba(47,107,255,.65);\n  }\n  #mega-ai-chat-button:hover{transform:translateY(-2px)}\n  #bp-embedded-webchat{\n    position:fixed;left:18px;bottom:92px;z-index:10040;\n    width:min(410px,calc(100vw - 28px));\n    height:min(650px,calc(100vh - 130px));\n    border-radius:18px;overflow:hidden;background:#fff;\n    box-shadow:0 18px 60px rgba(0,0,0,.5);\n    opacity:0;visibility:hidden;pointer-events:none;\n    transform:translateY(10px) scale(.98);\n    transition:opacity .18s ease,transform .18s ease,visibility .18s ease;\n  }\n  #bp-embedded-webchat.mega-chat-open{\n    opacity:1;visibility:visible;pointer-events:auto;transform:none;\n  }\n  @media(max-width:640px){\n    #mega-ai-chat-button{left:12px;bottom:96px;height:54px;min-width:82px}\n    #bp-embedded-webchat{left:8px;bottom:158px;width:calc(100vw - 16px);height:min(66vh,620px)}\n  }\n</style>\n<script>\n(function(){\n  var btn=document.getElementById('mega-ai-chat-button');\n  var box=document.getElementById('bp-embedded-webchat');\n  if(!btn||!box) return;\n  function hasContent(){return box.children.length>0 || !!box.querySelector('iframe')}\n  function openBox(){box.classList.add('mega-chat-open');btn.textContent='CLOSE'}\n  function closeBox(){box.classList.remove('mega-chat-open');btn.textContent='AI CHAT'}\n  btn.addEventListener('click',function(){\n    if(hasContent()){box.classList.contains('mega-chat-open')?closeBox():openBox();return}\n    if(window.botpress&&typeof window.botpress.toggle==='function'){window.botpress.toggle();return}\n    openBox();\n  });\n  setTimeout(function(){if(hasContent()) closeBox()},2500);\n})();\n</script>\n<!-- /Mega Wireless AI Chat launcher -->\n
+
+<!-- Mega Wireless AI Chat launcher -->
+<div id="bp-embedded-webchat" aria-label="Mega Wireless AI chat"></div>
+<button id="mega-ai-chat-button" type="button" aria-label="Open Mega Wireless AI chat">AI CHAT</button>
+<style id="mega-ai-chat-style">
+  #mega-ai-chat-button{
+    position:fixed;left:18px;bottom:22px;z-index:10050;
+    min-width:86px;height:58px;padding:0 17px;
+    border:2px solid #00e5ff;border-radius:999px;
+    background:linear-gradient(135deg,#2f6bff,#a855f7);
+    color:#fff;font:900 13px/1 Arial,Helvetica,sans-serif;
+    cursor:pointer;box-shadow:0 10px 32px rgba(47,107,255,.65);
+  }
+  #mega-ai-chat-button:hover{transform:translateY(-2px)}
+  #bp-embedded-webchat{
+    position:fixed;left:18px;bottom:92px;z-index:10040;
+    width:min(410px,calc(100vw - 28px));
+    height:min(650px,calc(100vh - 130px));
+    border-radius:18px;overflow:hidden;background:#fff;
+    box-shadow:0 18px 60px rgba(0,0,0,.5);
+    opacity:0;visibility:hidden;pointer-events:none;
+    transform:translateY(10px) scale(.98);
+    transition:opacity .18s ease,transform .18s ease,visibility .18s ease;
+  }
+  #bp-embedded-webchat.mega-chat-open{
+    opacity:1;visibility:visible;pointer-events:auto;transform:none;
+  }
+  @media(max-width:640px){
+    #mega-ai-chat-button{left:12px;bottom:96px;height:54px;min-width:82px}
+    #bp-embedded-webchat{left:8px;bottom:158px;width:calc(100vw - 16px);height:min(66vh,620px)}
+  }
+</style>
+<script>
+(function(){
+  var btn=document.getElementById('mega-ai-chat-button');
+  var box=document.getElementById('bp-embedded-webchat');
+  if(!btn||!box) return;
+  function hasContent(){return box.children.length>0 || !!box.querySelector('iframe')}
+  function openBox(){box.classList.add('mega-chat-open');btn.textContent='CLOSE'}
+  function closeBox(){box.classList.remove('mega-chat-open');btn.textContent='AI CHAT'}
+  btn.addEventListener('click',function(){
+    if(hasContent()){box.classList.contains('mega-chat-open')?closeBox():openBox();return}
+    if(window.botpress&&typeof window.botpress.toggle==='function'){window.botpress.toggle();return}
+    openBox();
+  });
+  setTimeout(function(){if(hasContent()) closeBox()},2500);
+})();
+</script>
+<!-- /Mega Wireless AI Chat launcher -->
+
 </body>
 </html>
