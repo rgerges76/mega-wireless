@@ -82,6 +82,12 @@ html[dir="rtl"] .floating{right:auto;left:16px}
 @media(max-width:980px){.navlinks{display:none}.phone-grid{grid-template-columns:repeat(2,1fr)}.quick-grid{grid-template-columns:repeat(2,1fr)}.offer-grid,.repair-grid,.photo-grid,.two-col,.review-grid{grid-template-columns:repeat(2,1fr)}}
 @media(max-width:640px){.hero{min-height:520px;background-position:62% center}.hero-inner{min-height:520px}.hero-copy{max-width:92%}.navbuttons .action-outline{display:none}.phone-grid,.offer-grid,.repair-grid,.photo-grid,.two-col,.review-grid{grid-template-columns:1fr}.section{padding:44px 0}h1{font-size:42px}.navrow{gap:8px}}
 </style>
+
+<!-- Botpress Webchat -->
+<script src="https://cdn.botpress.cloud/webchat/v5.0/inject.js"></script>
+<script src="https://files.bpcontent.cloud/2026/08/28/15/20260828155536-V0H9SFBE.js" defer></script>
+<!-- /Botpress Webchat -->
+
 </head>
 <body>
 
@@ -620,5 +626,6 @@ document.addEventListener('click', function(e){
   else if(h.indexOf('wa.me')>-1) gtag('event','whatsapp_click');
 });
 </script>
+\n<!-- Mega Wireless AI Chat launcher -->\n<div id="bp-embedded-webchat" aria-label="Mega Wireless AI chat"></div>\n<button id="mega-ai-chat-button" type="button" aria-label="Open Mega Wireless AI chat">AI CHAT</button>\n<style id="mega-ai-chat-style">\n  #mega-ai-chat-button{\n    position:fixed;left:18px;bottom:22px;z-index:10050;\n    min-width:86px;height:58px;padding:0 17px;\n    border:2px solid #00e5ff;border-radius:999px;\n    background:linear-gradient(135deg,#2f6bff,#a855f7);\n    color:#fff;font:900 13px/1 Arial,Helvetica,sans-serif;\n    cursor:pointer;box-shadow:0 10px 32px rgba(47,107,255,.65);\n  }\n  #mega-ai-chat-button:hover{transform:translateY(-2px)}\n  #bp-embedded-webchat{\n    position:fixed;left:18px;bottom:92px;z-index:10040;\n    width:min(410px,calc(100vw - 28px));\n    height:min(650px,calc(100vh - 130px));\n    border-radius:18px;overflow:hidden;background:#fff;\n    box-shadow:0 18px 60px rgba(0,0,0,.5);\n    opacity:0;visibility:hidden;pointer-events:none;\n    transform:translateY(10px) scale(.98);\n    transition:opacity .18s ease,transform .18s ease,visibility .18s ease;\n  }\n  #bp-embedded-webchat.mega-chat-open{\n    opacity:1;visibility:visible;pointer-events:auto;transform:none;\n  }\n  @media(max-width:640px){\n    #mega-ai-chat-button{left:12px;bottom:96px;height:54px;min-width:82px}\n    #bp-embedded-webchat{left:8px;bottom:158px;width:calc(100vw - 16px);height:min(66vh,620px)}\n  }\n</style>\n<script>\n(function(){\n  var btn=document.getElementById('mega-ai-chat-button');\n  var box=document.getElementById('bp-embedded-webchat');\n  if(!btn||!box) return;\n  function hasContent(){return box.children.length>0 || !!box.querySelector('iframe')}\n  function openBox(){box.classList.add('mega-chat-open');btn.textContent='CLOSE'}\n  function closeBox(){box.classList.remove('mega-chat-open');btn.textContent='AI CHAT'}\n  btn.addEventListener('click',function(){\n    if(hasContent()){box.classList.contains('mega-chat-open')?closeBox():openBox();return}\n    if(window.botpress&&typeof window.botpress.toggle==='function'){window.botpress.toggle();return}\n    openBox();\n  });\n  setTimeout(function(){if(hasContent()) closeBox()},2500);\n})();\n</script>\n<!-- /Mega Wireless AI Chat launcher -->\n
 </body>
 </html>
