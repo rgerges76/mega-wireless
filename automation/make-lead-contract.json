@@ -1,0 +1,54 @@
+{
+  "version": "1.0",
+  "source": "mega-wireless-ai",
+  "purpose": "Lead, repair-intake, and human-follow-up routing from Botpress to Make",
+  "allowed_event_types": [
+    "sales_lead",
+    "repair_lead",
+    "human_handoff"
+  ],
+  "payload": {
+    "event_type": "sales_lead | repair_lead | human_handoff",
+    "timestamp": "ISO-8601 UTC timestamp",
+    "source_channel": "webchat | whatsapp | facebook | instagram | other",
+    "customer": {
+      "name": "string or null",
+      "phone": "string or null",
+      "preferred_contact_method": "phone | sms | whatsapp | webchat | other | null"
+    },
+    "request": {
+      "category": "sales | repair | activation | accessories | store_info | complaint | refund | warranty | payment | other",
+      "device_brand": "string or null",
+      "device_model": "string or null",
+      "issue": "string or null",
+      "budget": "string or null",
+      "summary": "short plain-language summary"
+    },
+    "agent": {
+      "needs_human": "boolean",
+      "handoff_reason": "string or null",
+      "confidence": "high | medium | low | null"
+    }
+  },
+  "forbidden_fields": [
+    "password",
+    "pin",
+    "otp",
+    "one_time_code",
+    "payment_card_number",
+    "cvv",
+    "account_password",
+    "oauth_token",
+    "access_token"
+  ],
+  "routing": {
+    "sales_lead": "sales queue",
+    "repair_lead": "repair queue",
+    "human_handoff": "priority staff follow-up queue"
+  },
+  "notes": [
+    "Do not claim the lead was delivered unless Make confirms webhook success.",
+    "Do not use browser-local POS inventory or sales data as a live multi-device source of truth.",
+    "Live order status, repair status, and inventory require a controlled backend integration before the agent may state them as current facts."
+  ]
+}
