@@ -1,0 +1,48 @@
+{
+  "version": 1,
+  "eventTypes": ["sales_lead", "repair_lead", "human_followup"],
+  "required": ["eventType", "createdAt", "source", "summary"],
+  "properties": {
+    "eventType": {
+      "type": "string",
+      "enum": ["sales_lead", "repair_lead", "human_followup"]
+    },
+    "createdAt": {
+      "type": "string",
+      "description": "ISO-8601 timestamp"
+    },
+    "source": {
+      "type": "string",
+      "description": "webchat, whatsapp, facebook, instagram, or other connected channel"
+    },
+    "customer": {
+      "type": "object",
+      "properties": {
+        "name": {"type": "string"},
+        "phone": {"type": "string"},
+        "preferredContact": {"type": "string"}
+      }
+    },
+    "device": {
+      "type": "object",
+      "properties": {
+        "brand": {"type": "string"},
+        "model": {"type": "string"},
+        "issue": {"type": "string"},
+        "powersOn": {"type": ["boolean", "null"]}
+      }
+    },
+    "sales": {
+      "type": "object",
+      "properties": {
+        "budget": {"type": "string"},
+        "productType": {"type": "string"},
+        "preferences": {"type": "string"}
+      }
+    },
+    "summary": {
+      "type": "string",
+      "description": "Short staff-ready summary of the customer's intent and what has already been discussed"
+    }
+  }
+}
