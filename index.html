@@ -635,5 +635,52 @@ document.addEventListener('click', function(e){
   else if(h.indexOf('wa.me')>-1) gtag('event','whatsapp_click');
 });
 </script>
+
+<!-- Mega Wireless AI Chat fallback launcher -->
+<div id="bp-embedded-webchat" aria-label="Mega Wireless AI chat"></div>
+<button id="mega-ai-chat-button" type="button" aria-label="Open Mega Wireless AI chat">AI Chat</button>
+<style id="mega-ai-chat-fallback-style">
+  #bp-embedded-webchat{
+    position:fixed;right:18px;bottom:92px;
+    width:min(410px,calc(100vw - 24px));height:min(650px,calc(100vh - 120px));
+    z-index:10001;border-radius:18px;overflow:hidden;
+    box-shadow:0 18px 60px rgba(0,0,0,.45);background:#fff;
+    opacity:0;visibility:hidden;pointer-events:none;
+    transform:translateY(10px) scale(.98);
+    transition:opacity .18s ease,transform .18s ease,visibility .18s ease;
+  }
+  #bp-embedded-webchat.mega-chat-open{opacity:1;visibility:visible;pointer-events:auto;transform:none}
+  #mega-ai-chat-button{
+    position:fixed;right:18px;bottom:18px;z-index:10002;
+    min-width:68px;height:58px;padding:0 16px;border:2px solid #00e5ff;
+    border-radius:999px;background:linear-gradient(135deg,#2f6bff,#a855f7);
+    color:#fff;font:900 14px/1 Arial,Helvetica,sans-serif;cursor:pointer;
+    box-shadow:0 10px 32px rgba(47,107,255,.6);
+  }
+  #mega-ai-chat-button:hover{transform:translateY(-2px)}
+  .bpFab{display:none!important}
+  @media(max-width:640px){
+    #bp-embedded-webchat{right:8px;bottom:84px;width:calc(100vw - 16px);height:min(72vh,650px)}
+    #mega-ai-chat-button{right:12px;bottom:12px}
+  }
+</style>
+<script>
+(function(){
+  var btn=document.getElementById('mega-ai-chat-button');
+  var box=document.getElementById('bp-embedded-webchat');
+  if(!btn||!box) return;
+  function hasContent(){return box.children.length>0 || !!box.querySelector('iframe')}
+  function openBox(){box.classList.add('mega-chat-open');btn.textContent='Close';btn.setAttribute('aria-label','Close Mega Wireless AI chat')}
+  function closeBox(){box.classList.remove('mega-chat-open');btn.textContent='AI Chat';btn.setAttribute('aria-label','Open Mega Wireless AI chat')}
+  btn.addEventListener('click',function(){
+    if(hasContent()){box.classList.contains('mega-chat-open')?closeBox():openBox();return}
+    if(window.botpress&&typeof window.botpress.toggle==='function'){window.botpress.toggle();return}
+    openBox()
+  });
+  setTimeout(function(){if(hasContent()) closeBox()},2500);
+})();
+</script>
+<!-- /Mega Wireless AI Chat fallback launcher -->
+
 </body>
 </html>
