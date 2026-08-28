@@ -4,7 +4,12 @@
 - Business: Mega Wireless
 - Location: 4717 Nolensville Pike, Nashville, TN 37211
 - Phone: 615-678-5849
+- Email: megawireless4717@gmail.com
 - Website: https://megawirelessusa.com/
+
+## Store hours
+- Open every day: 10:00 AM – 8:00 PM
+- Holiday hours may vary; call ahead to confirm.
 
 ## Services
 Mega Wireless provides customer support for:
@@ -14,6 +19,7 @@ Mega Wireless provides customer support for:
 - Screen, battery, charging-port, and related device repair
 - Prepaid wireless activation and service
 - Accessories
+- Bluetooth speakers
 - In-store customer assistance
 
 ## Source-of-truth policy
@@ -52,13 +58,4 @@ A human teammate is required for:
 - Staff approvals
 - Unconfirmed current pricing or availability when the customer needs a definitive answer
 
-## Privacy and security
-Never request or store:
-- Passwords
-- One-time passcodes
-- Account PINs
-- Full payment-card information
-- Login credentials
-- Security answers
-
-Collect only the minimum customer information needed to handle a lead, repair inquiry, or staff handoff.
+If live handoff is unavailable, collect only the customer's name, phone number, and reason for contact, and clearly state that staff follow-up is required.
