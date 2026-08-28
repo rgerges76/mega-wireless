@@ -1,0 +1,148 @@
+name: Fix Botpress Launcher
+
+on:
+  push:
+    paths:
+      - '.github/workflows/fix-botpress-launcher.yml'
+
+permissions:
+  contents: write
+
+jobs:
+  install:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v4
+
+      - name: Add reliable Mega Wireless AI chat launcher
+        shell: bash
+        run: |
+          python - <<'PY'
+          from pathlib import Path
+
+          path = Path('index.html')
+          html = path.read_text(encoding='utf-8')
+          marker = 'id="mega-ai-chat-button"'
+          if marker in html:
+              print('AI chat fallback already installed')
+              raise SystemExit(0)
+
+          fallback = r'''
+<!-- Mega Wireless AI Chat fallback launcher -->
+<div id="bp-embedded-webchat" aria-label="Mega Wireless AI chat"></div>
+<button id="mega-ai-chat-button" type="button" aria-label="Open Mega Wireless AI chat">AI Chat</button>
+<style id="mega-ai-chat-fallback-style">
+  #bp-embedded-webchat{
+    position:fixed;
+    right:18px;
+    bottom:92px;
+    width:min(410px,calc(100vw - 24px));
+    height:min(650px,calc(100vh - 120px));
+    z-index:10001;
+    border-radius:18px;
+    overflow:hidden;
+    box-shadow:0 18px 60px rgba(0,0,0,.45);
+    background:#fff;
+    opacity:0;
+    visibility:hidden;
+    pointer-events:none;
+    transform:translateY(10px) scale(.98);
+    transition:opacity .18s ease,transform .18s ease,visibility .18s ease;
+  }
+  #bp-embedded-webchat.mega-chat-open{
+    opacity:1;
+    visibility:visible;
+    pointer-events:auto;
+    transform:none;
+  }
+  #mega-ai-chat-button{
+    position:fixed;
+    right:18px;
+    bottom:18px;
+    z-index:10002;
+    min-width:68px;
+    height:58px;
+    padding:0 16px;
+    border:2px solid #00e5ff;
+    border-radius:999px;
+    background:linear-gradient(135deg,#2f6bff,#a855f7);
+    color:#fff;
+    font:900 14px/1 Arial,Helvetica,sans-serif;
+    cursor:pointer;
+    box-shadow:0 10px 32px rgba(47,107,255,.6);
+  }
+  #mega-ai-chat-button:hover{transform:translateY(-2px)}
+  .bpFab{display:none!important}
+  @media(max-width:640px){
+    #bp-embedded-webchat{right:8px;bottom:84px;width:calc(100vw - 16px);height:min(72vh,650px)}
+    #mega-ai-chat-button{right:12px;bottom:12px}
+  }
+</style>
+<script>
+(function(){
+  var btn=document.getElementById('mega-ai-chat-button');
+  var box=document.getElementById('bp-embedded-webchat');
+  if(!btn||!box) return;
+
+  function embeddedHasContent(){
+    return box.children.length>0 || box.querySelector('iframe');
+  }
+
+  function openEmbedded(){
+    box.classList.add('mega-chat-open');
+    btn.textContent='Close';
+    btn.setAttribute('aria-label','Close Mega Wireless AI chat');
+  }
+
+  function closeEmbedded(){
+    box.classList.remove('mega-chat-open');
+    btn.textContent='AI Chat';
+    btn.setAttribute('aria-label','Open Mega Wireless AI chat');
+  }
+
+  btn.addEventListener('click',function(){
+    if(embeddedHasContent()){
+      if(box.classList.contains('mega-chat-open')) closeEmbedded(); else openEmbedded();
+      return;
+    }
+    if(window.botpress && typeof window.botpress.toggle==='function'){
+      window.botpress.toggle();
+      return;
+    }
+    openEmbedded();
+  });
+
+  if(window.botpress && typeof window.botpress.on==='function'){
+    window.botpress.on('webchat:initialized',function(){
+      if(embeddedHasContent()) closeEmbedded();
+    });
+  }
+
+  setTimeout(function(){
+    if(embeddedHasContent()) closeEmbedded();
+  },2500);
+})();
+</script>
+<!-- /Mega Wireless AI Chat fallback launcher -->
+'''
+
+          if '</body>' not in html:
+              raise SystemExit('index.html has no </body> tag')
+          html = html.replace('</body>', fallback + '\n</body>', 1)
+          path.write_text(html, encoding='utf-8')
+          print('Reliable AI chat launcher installed')
+          PY
+
+      - name: Commit launcher fix
+        shell: bash
+        run: |
+          if git diff --quiet -- index.html; then
+            echo "No changes to commit"
+            exit 0
+          fi
+          git config user.name "Mega Wireless Automation"
+          git config user.email "actions@users.noreply.github.com"
+          git add index.html
+          git commit -m "Add reliable Botpress AI chat launcher"
+          git push
