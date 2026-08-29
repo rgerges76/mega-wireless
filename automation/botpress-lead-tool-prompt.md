@@ -2,7 +2,7 @@
 
 Use only after Make creates the production Custom Webhook URL. Replace `{{MAKE_WEBHOOK_URL}}` before applying.
 
-Create or update ONLY the Mega Wireless lead-delivery automation tool. Do not alter pricing, knowledge sources, language behavior, repair policies, webchat appearance, or unrelated playbooks.
+Create or update ONLY the Mega Wireless lead-delivery automation tool. Do not alter pricing, knowledge sources, language behavior, repair policies, webchat appearance, channel connections, or unrelated playbooks.
 
 Create a reusable tool/action named `sendLeadToAutomation` that sends an HTTPS POST to `{{MAKE_WEBHOOK_URL}}` with `Content-Type: application/json`.
 
@@ -10,7 +10,7 @@ Payload fields:
 - version: `2.0`
 - event_type: `sales_lead | repair_lead | human_handoff`
 - timestamp: ISO-8601 UTC
-- source_channel: webchat/whatsapp/facebook/instagram/other
+- source_channel: `webchat | whatsapp | facebook_messenger | instagram | gmail | other`
 - language: English/Arabic/Spanish/Other
 - customer.name
 - customer.phone
@@ -43,5 +43,6 @@ Calling rules:
 10. Populate exact_price only when approved Mega Wireless knowledge contains an exact model-specific price. Never guess.
 11. If webhook delivery fails, do not tell the customer the lead was successfully delivered.
 12. Keep customer replies concise and in the customer's current language.
+13. Preserve the actual inbound channel in `source_channel`; do not label WhatsApp, Instagram, Messenger, or Gmail traffic as webchat.
 
 Do not publish yet. Test one repair lead, one sales lead, and one human handoff in Preview first.
