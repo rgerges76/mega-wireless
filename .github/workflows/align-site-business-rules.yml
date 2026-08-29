@@ -17,7 +17,7 @@ jobs:
         with:
           fetch-depth: 0
 
-      - name: Align public repair copy and fallback prices
+      - name: Correct repair copy without changing active promotion copy
         shell: bash
         run: |
           python - <<'PY'
@@ -28,38 +28,20 @@ jobs:
           repairs_js = 'var REPAIRS=' + json.dumps(repairs, ensure_ascii=False, separators=(',', ':')) + ';'
 
           replacements = {
-              '<meta property="og:description" content="iPhone screen repair in 10 to 15 minutes. Unlocked phones with 3-month warranty. 4717 Nolensville Pike, Nashville.">': '<meta property="og:description" content="Professional phone repair in Nashville with free initial diagnostics. Exact repair pricing is confirmed before work begins. 4717 Nolensville Pike, Nashville.">',
-              'Fixed in 15 Minutes.': 'Professional Repair.',
-              'iPhone screen repair from $59.99. Free screen protector included. Unlocked phones, prepaid plans and computer repair — all in one place on Nolensville Pike.': 'Professional iPhone and device repair with a free initial diagnostic. We confirm the required repair and price before any work begins.',
-              'Free tempered-glass screen protector included with every iPhone screen repair. 90-day repair warranty.': 'Free initial diagnostic. Standard iPhone screen replacements include a 30-day warranty.',
-              '10 to 15 Minutes': 'Service Time Varies',
-              'Most iPhone models, from $59.99. Parts availability applies. 90-day repair warranty.': 'Approved model-specific pricing is shown above. Parts availability applies. Standard screen replacements include a 30-day warranty.',
-              'Family owned and operated in South Nashville. Over 10 years of experience, more than 10,000 devices repaired, and a 90-day warranty on repairs.': 'Family owned and operated in South Nashville. Over 10 years of experience, more than 10,000 devices repaired, free initial diagnostics, and a 30-day warranty on standard screen replacements.',
-              'iPhone Screen Repair in 10 to 15 Minutes': 'Free Initial Device Diagnostics',
-              'iPhone Screen: 10 to 15 Minutes': 'iPhone Screen Repair: Professional Service',
-              'Free Screen Protector with iPhone Screen Repair': '30-Day Warranty on Standard Screen Replacement',
+              '<div class="repair-gift" data-i18n="rp1g">Free Screen Protector</div>': '<div class="repair-gift" data-i18n="rp1g">Free Initial Diagnostic</div>',
+              'rp1g:"Free Screen Protector"': 'rp1g:"Free Initial Diagnostic"',
+              'iPhone Screen Repair in Service Time Varies': 'Free Initial Device Diagnostics',
+              'iPhone Screen: Service Time Varies': 'iPhone Screen Repair: Professional Service',
 
-              'Reparada en 15 minutos.': 'Reparación profesional.',
-              'Reparación de pantalla de iPhone desde $59.99. Protector de pantalla gratis. Teléfonos desbloqueados, planes prepagados y reparación de computadoras — todo en Nolensville Pike.': 'Reparación profesional de iPhone y otros dispositivos con diagnóstico inicial gratis. Confirmamos la reparación necesaria y el precio antes de comenzar cualquier trabajo.',
-              'Protector de pantalla de vidrio templado gratis con cada cambio de pantalla de iPhone. Garantía de 90 días.': 'Diagnóstico inicial gratis. Los cambios de pantalla estándar de iPhone incluyen garantía de 30 días.',
-              '10 a 15 minutos': 'Tiempo según el equipo',
-              'Protector gratis': 'Diagnóstico inicial gratis',
-              'La mayoría de modelos iPhone, desde $59.99. Sujeto a disponibilidad de piezas. Garantía de 90 días.': 'Los precios aprobados por modelo se muestran arriba. Sujeto a disponibilidad de piezas. Garantía de 30 días en cambios de pantalla estándar.',
-              'Negocio familiar en el sur de Nashville. Más de 10 años de experiencia, más de 10,000 equipos reparados y garantía de 90 días.': 'Negocio familiar en el sur de Nashville. Más de 10 años de experiencia, más de 10,000 equipos reparados, diagnóstico inicial gratis y garantía de 30 días en cambios de pantalla estándar.',
-              'Pantalla de iPhone en 10 a 15 minutos': 'Diagnóstico inicial gratis',
-              'Pantalla iPhone: 10 a 15 minutos': 'Reparación profesional de pantalla iPhone',
-              'Protector gratis con cambio de pantalla': 'Garantía de 30 días en cambio de pantalla estándar',
+              'bs1c:"Diagnóstico inicial gratis con pantalla de iPhone"': 'bs1c:"Protector gratis con pantalla de iPhone"',
+              'Pantalla de iPhone en Tiempo según el equipo': 'Diagnóstico inicial gratis',
+              'Pantalla iPhone: Tiempo según el equipo': 'Reparación profesional de pantalla iPhone',
+              'Diagnóstico inicial gratis con cambio de pantalla': 'Garantía de 30 días en cambio de pantalla estándar',
 
-              'نصلحها في ١٥ دقيقة.': 'صيانة احترافية.',
-              'تغيير شاشة آيفون يبدأ من ٥٩.٩٩ دولار، مع واقي شاشة مجاني. هواتف مفتوحة، خطوط مسبقة الدفع، وصيانة كمبيوتر — كل ذلك في مكان واحد على Nolensville Pike.': 'صيانة احترافية للآيفون والأجهزة الأخرى مع فحص مبدئي مجاني. بنوضح لك الإصلاح المطلوب والسعر قبل ما نبدأ أي شغل.',
-              'واقي شاشة زجاجي مجاني مع كل تغيير شاشة آيفون. ضمان ٩٠ يوم على الصيانة.': 'فحص مبدئي مجاني. تغيير شاشة الآيفون القياسي يشمل ضمان ٣٠ يوم.',
-              '١٠ إلى ١٥ دقيقة': 'المدة حسب الجهاز',
-              'واقي شاشة مجاني': 'فحص مبدئي مجاني',
-              'معظم موديلات الآيفون، يبدأ من ٥٩.٩٩$. حسب توفر القطع. ضمان ٩٠ يوم.': 'الأسعار المعتمدة حسب الموديل موضحة بالأعلى. حسب توفر القطع. تغيير الشاشة القياسي يشمل ضمان ٣٠ يوم.',
-              'محل عائلي في جنوب ناشفيل. خبرة أكثر من ١٠ سنوات، وأكثر من ١٠٠٠٠ جهاز تم إصلاحه، وضمان ٩٠ يوم على الصيانة.': 'محل عائلي في جنوب ناشفيل. خبرة أكثر من ١٠ سنوات وأكثر من ١٠٠٠٠ جهاز تم إصلاحه، مع فحص مبدئي مجاني وضمان ٣٠ يوم على تغيير الشاشة القياسي.',
-              'تغيير شاشة آيفون في ١٠ إلى ١٥ دقيقة': 'فحص مبدئي مجاني',
-              'شاشة آيفون: ١٠ إلى ١٥ دقيقة': 'صيانة شاشة آيفون باحتراف',
-              'واقي شاشة مجاني مع تغيير الشاشة': 'ضمان ٣٠ يوم على تغيير الشاشة القياسي',
+              'bs1c:"فحص مبدئي مجاني مع شاشة الآيفون"': 'bs1c:"واقي شاشة مجاني مع شاشة الآيفون"',
+              'تغيير شاشة آيفون في المدة حسب الجهاز': 'فحص مبدئي مجاني',
+              'شاشة آيفون: المدة حسب الجهاز': 'صيانة شاشة آيفون باحتراف',
+              'فحص مبدئي مجاني مع تغيير الشاشة': 'ضمان ٣٠ يوم على تغيير الشاشة القياسي',
           }
 
           for filename in ('public/index.html', 'index.html'):
@@ -76,8 +58,8 @@ jobs:
               if text != original:
                   p.write_text(text, encoding='utf-8')
 
-          # Production checks: stale generic repair promises must be gone from the production page.
           prod = Path('public/index.html').read_text(encoding='utf-8')
+
           forbidden = [
               '90-day repair warranty',
               'Garantía de 90 días',
@@ -85,19 +67,29 @@ jobs:
               'Fixed in 15 Minutes.',
               'Reparada en 15 minutos.',
               'نصلحها في ١٥ دقيقة.',
+              'iPhone Screen Repair in Service Time Varies',
+              'Pantalla de iPhone en Tiempo según el equipo',
+              'تغيير شاشة آيفون في المدة حسب الجهاز',
           ]
           for phrase in forbidden:
               if phrase in prod:
-                  raise SystemExit(f'Stale production phrase remains: {phrase}')
+                  raise SystemExit(f'Stale or malformed production phrase remains: {phrase}')
 
-          # Verify approved fallback pricing is present.
-          required = ['$59.99','$69.99','$89.99','$99.00','$119.99','$130','$49.99','$79.99','$39.99']
+          required = [
+              'Free initial diagnostic. Standard iPhone screen replacements include a 30-day warranty.',
+              'rp1g:"Free Initial Diagnostic"',
+              'rp1g:"Diagnóstico inicial gratis"',
+              'rp1g:"فحص مبدئي مجاني"',
+              'bs1c:"Protector gratis con pantalla de iPhone"',
+              'bs1c:"واقي شاشة مجاني مع شاشة الآيفون"',
+              '$119.99', '$130', '$49.99', '$79.99', '$39.99'
+          ]
           missing = [x for x in required if x not in prod]
           if missing:
-              raise SystemExit(f'Missing expected approved fallback values: {missing}')
+              raise SystemExit(f'Missing required production values: {missing}')
           PY
 
-      - name: Commit aligned site copy
+      - name: Commit corrected site copy
         shell: bash
         run: |
           if git diff --quiet -- public/index.html index.html; then
@@ -107,5 +99,5 @@ jobs:
           git config user.name 'Mega Wireless Automation'
           git config user.email 'actions@users.noreply.github.com'
           git add public/index.html index.html
-          git commit -m 'Align website repair claims with approved AI policies'
+          git commit -m 'Correct website repair copy and preserve promotions'
           git push
