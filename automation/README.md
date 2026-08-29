@@ -14,89 +14,91 @@ AI layer:
 Automation layer:
 - Make for lead routing, logging, notifications, and future POS/repair-system integrations
 
-Business source of truth:
-- https://megawirelessusa.com/
-- `automation/knowledge-base.md`
-- `automation/agent-instructions.md`
-- Current structured business data connected explicitly to the agent
+Operational data layer:
+- Google Sheet: **Mega Wireless Automation Hub**
+- Spreadsheet ID: `1-7UeqTO9DaUDjp1VNkI3k1GKCEjXFcC_t39J52HVTns`
+- Tabs: Leads, Repair Intake, Follow-up, Daily Report, Config, Automation Status
+
+Approved AI business source of truth:
+- `https://megawirelessusa.com/ai-knowledge.html`
+- Botpress Web Search must remain OFF for business facts.
 
 ## Current rollout status — 2026-08-28
 
-### Botpress agent
-Created in Botpress Vibe as **Mega Wireless**.
+### Botpress agent — LIVE
+The **Mega Wireless** Botpress agent is published.
 
-Draft capabilities created by Vibe:
-- FAQ / knowledge answers
-- Product recommendations
-- Lead qualification
-- Repair intake
-- Technical troubleshooting
-- Human-handoff intent/fallback logic
+Verified behavior:
+- Same-language replies tested in Arabic, English, and Spanish.
+- Unknown-device-problem flow offers the free initial diagnostic instead of forcing troubleshooting questions.
+- Customer is not required to give name/phone just to receive an answer.
+- Exact model-specific prices come only from approved knowledge.
+- Standard screen policy: high-quality aftermarket parts and 30-day warranty.
+- Human-handoff guardrails exist for complaints, refunds, disputes, payment, warranty exceptions, account-specific issues, staff approvals, and uncertainty.
 
-Known test status:
-- Store locations / business hours simulation: created; currently requires review.
-- Accessory Recommendation simulation: created; did not run automatically.
-- Remaining regression scenarios were not created/run automatically by Vibe.
+### Website Webchat — LIVE
+Botpress Webchat is installed in the production `public/index.html` used by Netlify and is visible on `megawirelessusa.com`.
 
-The agent must not be treated as production-verified until the full regression suite in `automation/botpress-simulation-suite.md` has been completed.
+### Knowledge — LIVE
+Botpress Website Knowledge contains only the approved public AI knowledge page:
+- `https://megawirelessusa.com/ai-knowledge.html`
 
-### Website deployment
-Do not add a guessed Botpress snippet to production.
+Whole-site legacy knowledge was removed and Web Search was disabled to prevent stale claims such as incorrect hours, generic `and up` pricing, unsupported timing promises, promotions, or 90-day warranty wording.
 
-Botpress requires the exact current Webchat embed snippet from the published agent. Current Botpress documentation places it under the agent's Webchat/Deploy settings. Once that exact snippet is available, it should be inserted into the public site's `index.html` immediately before the closing `</body>` tag.
+### Google Sheets automation hub — READY
+Created and configured:
+- Leads
+- Repair Intake
+- Follow-up
+- Daily Report
+- Config
+- Automation Status
 
-### WhatsApp
-Meta/WhatsApp authorization requires the account owner. After authorization, test inbound customer messages and handoff behavior before relying on the channel for production support.
+Validation lists and owner reporting formulas are configured. Follow-up reporting counts only Pending follow-ups.
 
-### Make automation
-The webhook data contract is prepared in:
-- `automation/make-lead-contract.json`
+### Make automation — PREPARED / OWNER AUTH REQUIRED
+Prepared files:
+- `automation/lead-payload-v2.json`
+- `automation/make-maia-prompt.md`
+- `automation/botpress-lead-tool-prompt.md`
+- legacy contract: `automation/make-lead-contract.json`
 
-Use it for:
-- sales leads
-- repair leads
-- human follow-up requests
+Required next owner-authorized actions:
+1. In Make, create/authorize the Google Sheets connection.
+2. Use `automation/make-maia-prompt.md` to build **Mega Wireless AI Lead Router**.
+3. Copy the generated Make Custom Webhook URL.
+4. In Botpress, use `automation/botpress-lead-tool-prompt.md` after replacing `{{MAKE_WEBHOOK_URL}}`.
+5. Test one sales lead, one repair lead, and one human handoff end-to-end.
+6. Publish the Botpress automation change only after those tests pass.
 
-No passwords, PINs, OTPs, payment-card data, OAuth tokens, or account credentials may be sent through the automation payload.
+### WhatsApp — OWNER AUTH REQUIRED
+Connect only after the website lead pipeline passes. Meta/WhatsApp authorization requires the account owner. Test inbound messages, multilingual replies, and human handoff before relying on it for production support.
 
-## Rollout phases
+## Core lead routing
 
-### Phase 1 — Agent
-- Create Botpress agent. **Done.**
-- Load/align behavioral policy with `automation/agent-instructions.md`. **Prepared.**
-- Use `automation/knowledge-base.md` and the public website as approved knowledge sources. **Prepared.**
-- Complete regression simulations. **In progress / blocked by Botpress simulation runner behavior.**
+### sales_lead
+Botpress → Make Webhook → Leads
 
-### Phase 2 — Website
-- Confirm latest working Botpress publish.
-- Copy exact Webchat embed code from Botpress.
-- Add exact snippet to `index.html` before `</body>`.
-- Test desktop and mobile launcher behavior.
+### repair_lead
+Botpress → Make Webhook → Leads + Repair Intake
 
-### Phase 3 — WhatsApp
-- Install Botpress official WhatsApp integration.
-- Authorize Mega Wireless WhatsApp Business through Meta.
-- Test inbound messages, multilingual replies, human escalation, and media handling.
+### human_handoff
+Botpress → Make Webhook → Leads (Human Handoff) + Follow-up only when contact consent is Yes
 
-### Phase 4 — Automation
-- Connect Botpress to Make by webhook.
-- Implement `automation/make-lead-contract.json`.
-- Route repair leads and sales leads separately.
-- Add staff notification.
-- Confirm webhook delivery before the agent claims any lead/handoff was submitted.
+## Consent rule
+Never create automatic outbound follow-up unless the customer clearly agrees to later contact. Store consent as Yes, No, or Not Asked.
 
-### Phase 5 — POS / repairs
-- Add a controlled backend integration before allowing the assistant to claim live inventory, repair status, order status, or completed actions.
-- Browser-local POS data is not a reliable multi-device source of truth and must not be exposed as live cloud data without a backend.
+## Production release gate for Make
+Do not consider the Make integration production-ready until:
+1. Custom Webhook receives the v2 payload.
+2. Google Sheets rows map correctly.
+3. Repair leads create both Leads and Repair Intake rows.
+4. Human handoff creates a Follow-up row only when consent is Yes.
+5. A failed Sheets write remains visible as a failed Make execution.
+6. Botpress never claims a lead was delivered when the webhook fails.
 
-## Production release gate
-Do not consider the automation production-ready until:
-1. Botpress regression simulations pass or have been manually reviewed.
-2. Human-handoff fallback behavior is verified.
-3. The exact Botpress Webchat snippet is installed and tested on megawirelessusa.com.
-4. WhatsApp is tested after Meta authorization if WhatsApp will be used.
-5. Make webhook routing confirms successful lead delivery.
-6. No agent response claims live inventory/order/repair status without a connected backend.
+## POS / repairs backend
+Do not claim live inventory, repair status, order status, or completed POS actions until a controlled cloud backend exists. Browser-local POS data is not a reliable multi-device source of truth.
 
 ## Security rule
-Credentials, access codes, OAuth codes/tokens, API keys, passwords, payment information, and one-time verification codes must never be committed to GitHub or pasted into public source files.
+Credentials, access codes, OAuth codes/tokens, API keys, passwords, PINs, OTPs, payment information, CVVs, and one-time verification codes must never be committed to GitHub, placed in customer-facing knowledge, or sent in automation lead payloads.
