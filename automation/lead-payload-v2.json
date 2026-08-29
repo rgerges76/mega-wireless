@@ -1,0 +1,43 @@
+{
+  "version": "2.0",
+  "event_type": "sales_lead | repair_lead | human_handoff",
+  "timestamp": "ISO-8601 UTC timestamp",
+  "source_channel": "webchat | whatsapp | facebook | instagram | other",
+  "language": "English | Arabic | Spanish | Other",
+  "customer": {
+    "name": "string or null",
+    "phone": "string or null",
+    "consent_to_contact": "Yes | No | Not Asked",
+    "preferred_contact_method": "sms | whatsapp | phone | email | webchat | other | null"
+  },
+  "request": {
+    "category": "sales | repair | activation | accessories | store_info | complaint | refund | warranty | payment | other",
+    "device_brand": "string or null",
+    "device_model": "string or null",
+    "service": "string or null",
+    "issue": "string or null",
+    "exact_price": "number or null",
+    "summary": "short plain-language summary"
+  },
+  "agent": {
+    "needs_human": "boolean",
+    "handoff_reason": "string or null",
+    "confidence": "high | medium | low | null"
+  },
+  "follow_up": {
+    "required": "boolean",
+    "due_at": "ISO-8601 timestamp or null",
+    "reason": "string or null"
+  },
+  "forbidden_fields": [
+    "password",
+    "pin",
+    "otp",
+    "one_time_code",
+    "payment_card_number",
+    "cvv",
+    "account_password",
+    "oauth_token",
+    "access_token"
+  ]
+}
