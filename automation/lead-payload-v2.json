@@ -2,13 +2,13 @@
   "version": "2.0",
   "event_type": "sales_lead | repair_lead | human_handoff",
   "timestamp": "ISO-8601 UTC timestamp",
-  "source_channel": "webchat | whatsapp | facebook | instagram | other",
+  "source_channel": "webchat | whatsapp | facebook_messenger | instagram | gmail | other",
   "language": "English | Arabic | Spanish | Other",
   "customer": {
     "name": "string or null",
     "phone": "string or null",
     "consent_to_contact": "Yes | No | Not Asked",
-    "preferred_contact_method": "sms | whatsapp | phone | email | webchat | other | null"
+    "preferred_contact_method": "sms | whatsapp | phone | email | webchat | instagram | facebook_messenger | other | null"
   },
   "request": {
     "category": "sales | repair | activation | accessories | store_info | complaint | refund | warranty | payment | other",
