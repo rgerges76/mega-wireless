@@ -17,7 +17,7 @@ jobs:
         with:
           fetch-depth: 0
 
-      - name: Correct repair copy without changing active promotion copy
+      - name: Finalize customer-facing repair consistency
         shell: bash
         run: |
           python - <<'PY'
@@ -28,20 +28,38 @@ jobs:
           repairs_js = 'var REPAIRS=' + json.dumps(repairs, ensure_ascii=False, separators=(',', ':')) + ';'
 
           replacements = {
-              '<div class="repair-gift" data-i18n="rp1g">Free Screen Protector</div>': '<div class="repair-gift" data-i18n="rp1g">Free Initial Diagnostic</div>',
-              'rp1g:"Free Screen Protector"': 'rp1g:"Free Initial Diagnostic"',
-              'iPhone Screen Repair in Service Time Varies': 'Free Initial Device Diagnostics',
-              'iPhone Screen: Service Time Varies': 'iPhone Screen Repair: Professional Service',
+              # English repair cards and ticker
+              '<div class="repair-time" data-i18n="rp2x">Same-Day Service</div><div class="repair-gift" data-i18n="rp2g">From $59</div>': '<div class="repair-time" data-i18n="rp2x">Service Time Varies</div><div class="repair-gift" data-i18n="rp2g">iPhone from $49.99</div>',
+              'Phones and tablets, from $69. Final quote confirmed after inspection.': 'Phones and tablets, from $39.99. Final quote confirmed after inspection.',
+              '<div class="offer-price">$69.99</div>': '<div class="offer-price">$79.99</div>',
+              'rp2x:"Same-Day Service",rp2g:"From $59"': 'rp2x:"Service Time Varies",rp2g:"iPhone from $49.99"',
+              'rp3x:"Same Day in Most Cases"': 'rp3x:"Service Time Varies"',
+              'rp3p:"Phones and tablets, from $69. Final quote confirmed after inspection."': 'rp3p:"Phones and tablets, from $39.99. Final quote confirmed after inspection."',
+              'xb2a:"Same-day service available"': 'xb2a:"Service time confirmed after inspection"',
+              'xb2c:"Repair warranty included"': 'xb2c:"Ask about warranty details"',
+              'Xbox HDMI Repair $69.99': 'Xbox HDMI Repair $79.99',
+              'Samsung Repair: Same-Day Options': 'Samsung Repair Available',
+              'iPad Repair: Same-Day Options': 'iPad Repair Available',
 
-              'bs1c:"Diagnóstico inicial gratis con pantalla de iPhone"': 'bs1c:"Protector gratis con pantalla de iPhone"',
-              'Pantalla de iPhone en Tiempo según el equipo': 'Diagnóstico inicial gratis',
-              'Pantalla iPhone: Tiempo según el equipo': 'Reparación profesional de pantalla iPhone',
-              'Diagnóstico inicial gratis con cambio de pantalla': 'Garantía de 30 días en cambio de pantalla estándar',
+              # Spanish
+              'rp2x:"Servicio el mismo día",rp2g:"Desde $59"': 'rp2x:"Tiempo según el equipo",rp2g:"iPhone desde $49.99"',
+              'rp3x:"Mismo día en la mayoría de casos"': 'rp3x:"Tiempo según el equipo"',
+              'rp3p:"Teléfonos y tabletas, desde $69. Cotización final tras la inspección."': 'rp3p:"Teléfonos y tabletas, desde $39.99. Cotización final tras la inspección."',
+              'xb2a:"Servicio el mismo día disponible"': 'xb2a:"Tiempo confirmado después de la inspección"',
+              'xb2c:"Garantía incluida"': 'xb2c:"Pregunte por los detalles de la garantía"',
+              'HDMI de Xbox $69.99': 'HDMI de Xbox $79.99',
+              'Samsung: opciones el mismo día': 'Reparación Samsung disponible',
+              'iPad: opciones el mismo día': 'Reparación iPad disponible',
 
-              'bs1c:"فحص مبدئي مجاني مع شاشة الآيفون"': 'bs1c:"واقي شاشة مجاني مع شاشة الآيفون"',
-              'تغيير شاشة آيفون في المدة حسب الجهاز': 'فحص مبدئي مجاني',
-              'شاشة آيفون: المدة حسب الجهاز': 'صيانة شاشة آيفون باحتراف',
-              'فحص مبدئي مجاني مع تغيير الشاشة': 'ضمان ٣٠ يوم على تغيير الشاشة القياسي',
+              # Arabic
+              'rp2x:"في نفس اليوم",rp2g:"يبدأ من ٥٩$"': 'rp2x:"المدة حسب الجهاز",rp2g:"بطارية آيفون تبدأ من 49.99$"',
+              'rp3x:"نفس اليوم في أغلب الحالات"': 'rp3x:"المدة حسب الجهاز"',
+              'rp3p:"هواتف وأجهزة لوحية، يبدأ من ٦٩$. السعر النهائي بعد الفحص."': 'rp3p:"هواتف وأجهزة لوحية، يبدأ من 39.99$. السعر النهائي بعد الفحص."',
+              'xb2a:"خدمة في نفس اليوم متاحة"': 'xb2a:"يتم تأكيد مدة الخدمة بعد الفحص"',
+              'xb2c:"ضمان على الصيانة"': 'xb2c:"اسأل عن تفاصيل الضمان"',
+              'تغيير HDMI إكس بوكس ٦٩.٩٩$': 'تغيير HDMI إكس بوكس ٧٩.٩٩$',
+              'سامسونج: خدمة نفس اليوم': 'صيانة سامسونج متاحة',
+              'آيباد: خدمة نفس اليوم': 'صيانة آيباد متاحة',
           }
 
           for filename in ('public/index.html', 'index.html'):
@@ -59,29 +77,23 @@ jobs:
                   p.write_text(text, encoding='utf-8')
 
           prod = Path('public/index.html').read_text(encoding='utf-8')
-
           forbidden = [
-              '90-day repair warranty',
-              'Garantía de 90 días',
-              'ضمان ٩٠ يوم على الصيانة',
-              'Fixed in 15 Minutes.',
-              'Reparada en 15 minutos.',
-              'نصلحها في ١٥ دقيقة.',
-              'iPhone Screen Repair in Service Time Varies',
-              'Pantalla de iPhone en Tiempo según el equipo',
-              'تغيير شاشة آيفون في المدة حسب الجهاز',
+              '90-day repair warranty', 'Garantía de 90 días', 'ضمان ٩٠ يوم على الصيانة',
+              'Fixed in 15 Minutes.', 'Reparada en 15 minutos.', 'نصلحها في ١٥ دقيقة.',
+              'Same-Day Service', 'Same Day in Most Cases',
+              'Servicio el mismo día', 'Mismo día en la mayoría de casos',
+              'rp2x:"في نفس اليوم"', 'rp3x:"نفس اليوم في أغلب الحالات"',
+              'Xbox HDMI Repair $69.99', 'HDMI de Xbox $69.99', 'تغيير HDMI إكس بوكس ٦٩.٩٩$',
           ]
           for phrase in forbidden:
               if phrase in prod:
-                  raise SystemExit(f'Stale or malformed production phrase remains: {phrase}')
+                  raise SystemExit(f'Stale or unsupported production phrase remains: {phrase}')
 
           required = [
               'Free initial diagnostic. Standard iPhone screen replacements include a 30-day warranty.',
-              'rp1g:"Free Initial Diagnostic"',
-              'rp1g:"Diagnóstico inicial gratis"',
-              'rp1g:"فحص مبدئي مجاني"',
-              'bs1c:"Protector gratis con pantalla de iPhone"',
-              'bs1c:"واقي شاشة مجاني مع شاشة الآيفون"',
+              'rp1g:"Free Initial Diagnostic"', 'rp1g:"Diagnóstico inicial gratis"', 'rp1g:"فحص مبدئي مجاني"',
+              'bs1c:"Protector gratis con pantalla de iPhone"', 'bs1c:"واقي شاشة مجاني مع شاشة الآيفون"',
+              'iPhone from $49.99', 'from $39.99', 'Xbox HDMI Repair $79.99',
               '$119.99', '$130', '$49.99', '$79.99', '$39.99'
           ]
           missing = [x for x in required if x not in prod]
@@ -89,7 +101,7 @@ jobs:
               raise SystemExit(f'Missing required production values: {missing}')
           PY
 
-      - name: Commit corrected site copy
+      - name: Commit final site consistency fixes
         shell: bash
         run: |
           if git diff --quiet -- public/index.html index.html; then
@@ -99,5 +111,5 @@ jobs:
           git config user.name 'Mega Wireless Automation'
           git config user.email 'actions@users.noreply.github.com'
           git add public/index.html index.html
-          git commit -m 'Correct website repair copy and preserve promotions'
+          git commit -m 'Finalize website repair pricing and timing consistency'
           git push
