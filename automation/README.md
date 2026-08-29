@@ -5,8 +5,9 @@
 Customer channels:
 - Website chat
 - WhatsApp Business
-- Facebook Messenger (later)
-- Instagram (later)
+- Facebook Messenger
+- Instagram
+- Gmail
 
 AI layer:
 - Botpress agent as the customer-facing assistant
@@ -39,6 +40,26 @@ Verified behavior:
 ### Website Webchat — LIVE
 Botpress Webchat is installed in the production `public/index.html` used by Netlify and is visible on `megawirelessusa.com`.
 
+### WhatsApp — CONNECTED / TESTED
+- Existing WhatsApp Business number was disconnected from Gabster and connected to Botpress using Meta OAuth / Business Platform.
+- Meta configuration completed successfully.
+- Botpress shows WhatsApp Connected.
+- Real inbound Arabic customer-style test message was received and the AI reply was verified.
+- Keep the WhatsApp Business app active and preserve the current Botpress guardrails.
+
+### Facebook Messenger — CONNECTED
+- Meta authorization completed.
+- Botpress configuration completed for the selected Facebook page.
+- Preserve current bot guardrails and approved knowledge behavior.
+
+### Instagram — CONNECTED
+- Botpress channel is connected.
+- Preserve current bot guardrails and approved knowledge behavior.
+
+### Gmail — CONNECTED
+- Botpress channel is connected.
+- Do not rely on autonomous email handling until real channel behavior is verified with controlled tests.
+
 ### Knowledge — LIVE
 Botpress Website Knowledge contains only the approved public AI knowledge page:
 - `https://megawirelessusa.com/ai-knowledge.html`
@@ -55,6 +76,7 @@ Created and configured:
 - Automation Status
 
 Validation lists and owner reporting formulas are configured. Follow-up reporting counts only Pending follow-ups.
+The Automation Status sheet was updated on 2026-08-29 to reflect the connected WhatsApp, Instagram, Messenger, and Gmail channels.
 
 ### Make automation — WEBHOOK CREATED / MAPPING PENDING
 Completed:
@@ -72,7 +94,7 @@ Prepared files:
 - `automation/desktop-finish-runbook.md`
 - legacy contract: `automation/make-lead-contract.json`
 
-Remaining desktop work:
+Remaining account-UI work:
 1. Authorize/configure Google Sheets in the existing Make scenario.
 2. Map webhook fields to `Mega Wireless Automation Hub`.
 3. Route `sales_lead`, `repair_lead`, and `human_handoff` by exact `event_type`.
@@ -80,11 +102,8 @@ Remaining desktop work:
 5. Confirm no duplicate rows and no follow-up without consent.
 6. Copy the private production Make webhook URL.
 7. Use `automation/botpress-lead-tool-prompt.md` to create the Botpress lead-delivery action.
-8. Test Botpress → Make → Sheets before publishing.
+8. Test Botpress → Make → Sheets before publishing the lead-delivery change.
 9. Activate Make with **Immediately as data arrives** only after all tests pass.
-
-### WhatsApp — OWNER AUTH REQUIRED
-Connect only after the website lead pipeline passes. Meta/WhatsApp authorization requires the account owner. Test inbound messages, multilingual replies, and human handoff before relying on it for production support.
 
 ## Core lead routing
 
