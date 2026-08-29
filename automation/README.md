@@ -23,7 +23,7 @@ Approved AI business source of truth:
 - `https://megawirelessusa.com/ai-knowledge.html`
 - Botpress Web Search must remain OFF for business facts.
 
-## Current rollout status — 2026-08-28
+## Current rollout status — 2026-08-29
 
 ### Botpress agent — LIVE
 The **Mega Wireless** Botpress agent is published.
@@ -56,20 +56,32 @@ Created and configured:
 
 Validation lists and owner reporting formulas are configured. Follow-up reporting counts only Pending follow-ups.
 
-### Make automation — PREPARED / OWNER AUTH REQUIRED
+### Make automation — WEBHOOK CREATED / MAPPING PENDING
+Completed:
+- Existing Make scenario opened/created for Mega Wireless AI leads.
+- Custom Webhook named **Mega Wireless AI Leads** created.
+- Mega Wireless v2 repair-lead test payload sent.
+- Make confirmed: **data structure captured**.
+- Scenario remains inactive, which is correct until mapping and end-to-end tests pass.
+
 Prepared files:
 - `automation/lead-payload-v2.json`
 - `automation/make-maia-prompt.md`
+- `automation/make-test-payloads.md`
 - `automation/botpress-lead-tool-prompt.md`
+- `automation/desktop-finish-runbook.md`
 - legacy contract: `automation/make-lead-contract.json`
 
-Required next owner-authorized actions:
-1. In Make, create/authorize the Google Sheets connection.
-2. Use `automation/make-maia-prompt.md` to build **Mega Wireless AI Lead Router**.
-3. Copy the generated Make Custom Webhook URL.
-4. In Botpress, use `automation/botpress-lead-tool-prompt.md` after replacing `{{MAKE_WEBHOOK_URL}}`.
-5. Test one sales lead, one repair lead, and one human handoff end-to-end.
-6. Publish the Botpress automation change only after those tests pass.
+Remaining desktop work:
+1. Authorize/configure Google Sheets in the existing Make scenario.
+2. Map webhook fields to `Mega Wireless Automation Hub`.
+3. Route `sales_lead`, `repair_lead`, and `human_handoff` by exact `event_type`.
+4. Run repair, sales, and human-handoff webhook tests.
+5. Confirm no duplicate rows and no follow-up without consent.
+6. Copy the private production Make webhook URL.
+7. Use `automation/botpress-lead-tool-prompt.md` to create the Botpress lead-delivery action.
+8. Test Botpress → Make → Sheets before publishing.
+9. Activate Make with **Immediately as data arrives** only after all tests pass.
 
 ### WhatsApp — OWNER AUTH REQUIRED
 Connect only after the website lead pipeline passes. Meta/WhatsApp authorization requires the account owner. Test inbound messages, multilingual replies, and human handoff before relying on it for production support.
@@ -96,6 +108,8 @@ Do not consider the Make integration production-ready until:
 4. Human handoff creates a Follow-up row only when consent is Yes.
 5. A failed Sheets write remains visible as a failed Make execution.
 6. Botpress never claims a lead was delivered when the webhook fails.
+7. Ordinary FAQ chats do not create leads.
+8. Sensitive credentials are never stored.
 
 ## POS / repairs backend
 Do not claim live inventory, repair status, order status, or completed POS actions until a controlled cloud backend exists. Browser-local POS data is not a reliable multi-device source of truth.
