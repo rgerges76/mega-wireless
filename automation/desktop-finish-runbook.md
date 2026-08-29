@@ -1,12 +1,23 @@
 # Mega Wireless — Desktop Finish Runbook
 
-## Current state
+## Current state — 2026-08-29
 - Botpress AI Agent is published and live on the website.
+- Website Webchat is live.
+- WhatsApp is connected to Botpress and a real Arabic inbound test passed.
+- Facebook Messenger is connected and Meta configuration completed.
+- Instagram is connected in Botpress.
+- Gmail is connected in Botpress; controlled behavior testing is still recommended before relying on autonomous email handling.
+- The approved Botpress knowledge source remains `https://megawirelessusa.com/ai-knowledge.html` and Web Search remains OFF.
 - Make custom webhook `Mega Wireless AI Leads` has been created.
 - Make captured the Mega Wireless v2 test payload successfully (`data structure captured`).
 - The Make scenario is NOT activated yet.
 - Google Sheet `Mega Wireless Automation Hub` already exists and is configured.
-- Do not change Botpress pricing, knowledge, webchat appearance, language rules, or published behavior while finishing this integration.
+- Google Sheets headers/configuration and Automation Status have been verified/updated.
+- Website repair copy and fallback pricing were aligned with the approved repair rules and `public/repairs.json`.
+- Do not change Botpress pricing, knowledge, webchat appearance, language rules, or published behavior while finishing the Make integration.
+
+## Only remaining production work
+The remaining work is inside the authenticated Make UI and then one Botpress Ask Vibe lead-delivery action. Do not recreate any existing channel, webhook, spreadsheet, or bot.
 
 ## Finish order on desktop
 
