@@ -1,41 +1,41 @@
 # Mega Wireless AI Automation
 
-## Target architecture
+## Production architecture
 
 Customer channels:
-- Website chat
+- Website Webchat
 - WhatsApp Business
 - Facebook Messenger
 - Instagram
-- Gmail
+- Gmail (connected, but autonomous outbound is NOT approved for production)
 
 AI layer:
 - Botpress agent as the customer-facing assistant
 
 Automation layer:
-- Make for lead routing, logging, notifications, and future POS/repair-system integrations
+- Make for qualified lead routing, logging, notifications, supplier intake and future POS/repair integrations
 
 Operational data layer:
 - Google Sheet: **Mega Wireless Automation Hub**
 - Spreadsheet ID: `1-7UeqTO9DaUDjp1VNkI3k1GKCEjXFcC_t39J52HVTns`
-- Tabs: Leads, Repair Intake, Follow-up, Daily Report, Config, Automation Status
+- Main tabs include Leads, Repair Intake, Follow-up, Daily Report, Config, Automation Status, Make Blueprint, Prompts, Test Payloads, Inventory, Purchases, Invoice Review, RMA Tracker, Repair Parts Map, Suppliers, Owner Dashboard, Stock Alerts, Ops Checklist, Inventory Movements, Customer Notifications, Purchase Orders, Expenses, Profit Summary, Disputes, Approval Queue, Automation Log, Email Safety Review, Bot Response Policy, Bot QA Tests and Price Gaps.
 
 Approved AI business source of truth:
 - `https://megawirelessusa.com/ai-knowledge.html`
 - Botpress Web Search must remain OFF for business facts.
 
-## Current rollout status — 2026-08-29
+## Current rollout status — 2026-08-30
 
 ### Botpress agent — LIVE
 The **Mega Wireless** Botpress agent is published.
 
 Verified behavior:
-- Same-language replies tested in Arabic, English, and Spanish.
+- Same-language replies tested in Arabic, English and Spanish.
 - Unknown-device-problem flow offers the free initial diagnostic instead of forcing troubleshooting questions.
 - Customer is not required to give name/phone just to receive an answer.
 - Exact model-specific prices come only from approved knowledge.
-- Standard screen policy: high-quality aftermarket parts and 30-day warranty.
-- Human-handoff guardrails exist for complaints, refunds, disputes, payment, warranty exceptions, account-specific issues, staff approvals, and uncertainty.
+- Standard approved screen policy uses high-quality aftermarket parts and a 30-day warranty where explicitly approved.
+- Human-handoff guardrails exist for complaints, refunds, disputes, payment, warranty exceptions, account-specific issues, staff approvals and uncertainty.
 
 ### Website Webchat — LIVE
 Botpress Webchat is installed in the production `public/index.html` used by Netlify and is visible on `megawirelessusa.com`.
@@ -45,93 +45,140 @@ Botpress Webchat is installed in the production `public/index.html` used by Netl
 - Meta configuration completed successfully.
 - Botpress shows WhatsApp Connected.
 - Real inbound Arabic customer-style test message was received and the AI reply was verified.
-- Keep the WhatsApp Business app active and preserve the current Botpress guardrails.
 
 ### Facebook Messenger — CONNECTED
 - Meta authorization completed.
 - Botpress configuration completed for the selected Facebook page.
-- Preserve current bot guardrails and approved knowledge behavior.
+- Meta native Instant Reply / Away / FAQ / Contact / Location / Hours automations were disabled to prevent duplicate or conflicting replies.
 
 ### Instagram — CONNECTED
 - Botpress channel is connected.
 - Preserve current bot guardrails and approved knowledge behavior.
 
-### Gmail — CONNECTED
-- Botpress channel is connected.
-- Do not rely on autonomous email handling until real channel behavior is verified with controlled tests.
+### Gmail — CONNECTED BUT AUTONOMOUS OUTBOUND IS UNSAFE
+A Gmail safety audit found AI support replies sent to non-customer automated recipients, including bank alerts, Google security alerts, mailer-daemon notices, newsletters, supplier broadcasts and other automated senders.
 
-### Knowledge — LIVE
-Botpress Website Knowledge contains only the approved public AI knowledge page:
-- `https://megawirelessusa.com/ai-knowledge.html`
+Current safety state:
+- Label `Mega Wireless/Automation Review` contains 111 messages as of the 2026-08-30 review.
+- No autonomous Gmail outbound should be considered production-safe until the Botpress Gmail channel is disabled or restricted to verified customer-only routing.
+- Non-customer email should be ignored or handled draft-first for owner review.
+- Never auto-reply to banks, financial alerts, account/security alerts, OTP/verification emails, mailer-daemon, no-reply senders, marketing/newsletters or supplier broadcasts.
 
-Whole-site legacy knowledge was removed and Web Search was disabled to prevent stale claims such as incorrect hours, generic `and up` pricing, unsupported timing promises, promotions, or 90-day warranty wording.
+### Bot response quality — PATCH PREPARED
+The Automation Hub contains `Bot Response Policy` and `Bot QA Tests`.
+Required production behavior:
+- Answer the actual question in the first sentence.
+- Default to 2–4 short sentences.
+- Do not push free diagnostic when the customer only asks for a straightforward known price.
+- Never guess an exact price.
+- Do not ask for contact information merely to answer a question.
+- One relevant next step maximum.
+- 30-day warranty only when explicitly approved for the exact standard screen service.
 
-### Google Sheets automation hub — READY
+The prepared prompt is in the `Prompts` sheet and must be applied inside Botpress before final QA/publish.
+
+## Inventory / purchasing operations hub — CORE BUILT
 Created and configured:
-- Leads
-- Repair Intake
-- Follow-up
-- Daily Report
-- Config
-- Automation Status
+- Inventory
+- Purchases
+- Invoice Review
+- RMA Tracker
+- Repair Parts Map
+- Suppliers
+- Owner Dashboard
+- Stock Alerts
+- Ops Checklist
+- Inventory Movements
+- Customer Notifications
+- Purchase Orders
+- Expenses
+- Profit Summary
+- Disputes
+- Approval Queue
+- Automation Log
 
-Validation lists and owner reporting formulas are configured. Follow-up reporting counts only Pending follow-ups.
-The Automation Status sheet was updated on 2026-08-29 to reflect the connected WhatsApp, Instagram, Messenger, and Gmail channels.
+Safety gates:
+- Historical supplier invoices never increase current stock automatically.
+- Seeded supplier SKUs require a physical baseline count first.
+- Repair-parts deduction must use the exact SKU actually installed; never infer when multiple grades exist.
+- Purchasing, payments, banking/vendor onboarding and other money-risk actions remain owner-approved.
 
-### Make automation — WEBHOOK CREATED / MAPPING PENDING
-Completed:
-- Existing Make scenario opened/created for Mega Wireless AI leads.
-- Custom Webhook named **Mega Wireless AI Leads** created.
-- Mega Wireless v2 repair-lead test payload sent.
-- Make confirmed: **data structure captured**.
-- Scenario remains inactive, which is correct until mapping and end-to-end tests pass.
+### Supplier invoice intake — STAGED
+Three Mobilenzo invoices were extracted and staged.
+- `INV/2026/22731`: source PDF verified on 2026-08-30. Invoice dated 08/17/2026 is Open; Total $301.58; Paid $186.31; Balance Due $115.27. No automatic payment is allowed.
+- `INV/2026/20782`: historical / paid; quantities must not change current stock until physical count.
+- `INV/2026/20077`: historical / paid; quantities must not change current stock until physical count.
 
-Prepared files:
-- `automation/lead-payload-v2.json`
-- `automation/make-maia-prompt.md`
-- `automation/make-test-payloads.md`
-- `automation/botpress-lead-tool-prompt.md`
-- `automation/desktop-finish-runbook.md`
-- legacy contract: `automation/make-lead-contract.json`
+### Price gaps
+Approved exact model prices remain authoritative. Missing prices are intentionally left blank.
+Current high-priority gap:
+- iPhone 13 Pro Max Screen Replacement — no approved exact selling price. Bot must not guess or derive retail price from supplier part cost.
 
-Remaining account-UI work:
-1. Authorize/configure Google Sheets in the existing Make scenario.
-2. Map webhook fields to `Mega Wireless Automation Hub`.
-3. Route `sales_lead`, `repair_lead`, and `human_handoff` by exact `event_type`.
-4. Run repair, sales, and human-handoff webhook tests.
-5. Confirm no duplicate rows and no follow-up without consent.
-6. Copy the private production Make webhook URL.
-7. Use `automation/botpress-lead-tool-prompt.md` to create the Botpress lead-delivery action.
-8. Test Botpress → Make → Sheets before publishing the lead-delivery change.
-9. Activate Make with **Immediately as data arrives** only after all tests pass.
+## Make automation — TEST PROTOTYPE EXISTS / DO NOT ACTIVATE
+A safe inactive clone exists:
+- **Mega Wireless AI Leads - TEST**
 
-## Core lead routing
+Actual TEST state reached on 2026-08-30:
+- Webhook: `mega-wireless-leads-test`
+- Captured fields: `customer_name`, `phone`, `email`, `message`, `source`
+- Router with three keyword-filter branches:
+  - sales-like messages
+  - repair-like messages
+  - human-handoff-like messages
+- Sales branch contains OpenAI `Create a Completion`
+  - Connection: `OpenAI account`
+  - Model: `gpt-4o-mini`
+  - Temperature: `0.2`
+  - Max Tokens: `250`
 
-### sales_lead
-Botpress → Make Webhook → Leads
+This current keyword prototype is **NOT production-compatible** with the approved contract v2 and must remain inactive.
 
-### repair_lead
-Botpress → Make Webhook → Leads + Repair Intake
-
-### human_handoff
-Botpress → Make Webhook → Leads (Human Handoff) + Follow-up only when contact consent is Yes
+### Required Make cutover
+Before activation, convert the TEST scenario to the documented contract v2:
+1. Webhook must capture the structured v2 payload.
+2. Router must compare `event_type` exactly:
+   - `sales_lead`
+   - `repair_lead`
+   - `human_handoff`
+3. Map exact v2 fields to `Mega Wireless Automation Hub`.
+4. Repair leads create Leads + Repair Intake rows.
+5. Human handoff creates Follow-up only when consent rules pass.
+6. Run the three payloads in the `Test Payloads` sheet.
+7. Confirm no duplicates, no unconsented follow-up and no failed Sheet writes.
+8. Only then copy the private production webhook URL.
+9. Apply the Botpress lead-delivery prompt from the `Prompts` sheet.
+10. Test Botpress → Make → Sheets end to end.
+11. Activate Make only after every release gate passes.
 
 ## Consent rule
-Never create automatic outbound follow-up unless the customer clearly agrees to later contact. Store consent as Yes, No, or Not Asked.
+Never create automatic outbound follow-up unless the customer clearly agrees to later contact. Store consent as Yes, No or Not Asked.
 
 ## Production release gate for Make
 Do not consider the Make integration production-ready until:
 1. Custom Webhook receives the v2 payload.
-2. Google Sheets rows map correctly.
-3. Repair leads create both Leads and Repair Intake rows.
-4. Human handoff creates a Follow-up row only when consent is Yes.
-5. A failed Sheets write remains visible as a failed Make execution.
-6. Botpress never claims a lead was delivered when the webhook fails.
-7. Ordinary FAQ chats do not create leads.
-8. Sensitive credentials are never stored.
+2. Router uses exact `event_type` values, not keyword matching.
+3. Google Sheets rows map correctly.
+4. Repair leads create both Leads and Repair Intake rows.
+5. Human handoff creates a Follow-up row only when consent is Yes.
+6. A failed Sheets write remains visible as a failed Make execution.
+7. Botpress never claims a lead was delivered when the webhook fails.
+8. Ordinary FAQ chats do not create leads.
+9. Sensitive credentials are never stored.
+10. All three TEST payloads pass without duplicates.
+
+## Owner / account-UI gates still open
+These cannot be auto-approved:
+- Physical inventory baseline count for seeded SKUs.
+- Make TEST conversion/mapping/testing inside authenticated Make UI.
+- Botpress Response Quality Patch + Bot QA Tests inside authenticated Botpress UI.
+- Botpress lead-delivery action after Make v2 tests pass.
+- Disable/restrict Botpress Gmail autonomous outbound.
+- Confirm whether Mobilenzo balance $115.27 is still unpaid before any payment.
+- Set an exact iPhone 13 Pro Max screen selling price only if the owner chooses to approve one.
+- Wireless Masters ACH/vendor onboarding remains manual because it involves banking data.
 
 ## POS / repairs backend
-Do not claim live inventory, repair status, order status, or completed POS actions until a controlled cloud backend exists. Browser-local POS data is not a reliable multi-device source of truth.
+Do not claim live inventory, repair status, order status or completed POS actions until a controlled cloud backend exists. Browser-local POS data is not a reliable multi-device source of truth.
 
 ## Security rule
-Credentials, access codes, OAuth codes/tokens, API keys, passwords, PINs, OTPs, payment information, CVVs, and one-time verification codes must never be committed to GitHub, placed in customer-facing knowledge, or sent in automation lead payloads.
+Credentials, access codes, OAuth codes/tokens, API keys, passwords, PINs, OTPs, payment information, CVVs and one-time verification codes must never be committed to GitHub, placed in customer-facing knowledge or sent in automation lead payloads.
