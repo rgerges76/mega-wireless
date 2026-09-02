@@ -201,10 +201,6 @@
       "visible": true
     }
   ],
-  "adminAuth": {
-    "email": "ramyook@gmail.com",
-    "passwordHash": "5475c29a4fc94402e689f201ca79067c56cb62696a9f5765863d4b3a9401aa81"
-  },
   "speakers": [
     {
       "id": "s1",
