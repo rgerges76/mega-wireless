@@ -1,0 +1,9 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 420 720" role="img" aria-label="Android phone">
+<defs><linearGradient id="g" x1="0" y1="0" x2="1" y2="1"><stop stop-color="#00e5ff"/><stop offset=".5" stop-color="#2f6bff"/><stop offset="1" stop-color="#a855f7"/></linearGradient></defs>
+<rect x="72" y="18" width="276" height="684" rx="54" fill="#07102d" stroke="#b9c4ee" stroke-width="8"/>
+<rect x="87" y="50" width="246" height="620" rx="38" fill="url(#g)"/>
+<circle cx="210" cy="74" r="11" fill="#07102d"/>
+<circle cx="165" cy="310" r="78" fill="#ffffff" opacity=".12"/>
+<circle cx="255" cy="410" r="110" fill="#ffffff" opacity=".08"/>
+<rect x="175" y="642" width="70" height="8" rx="4" fill="#ffffff" opacity=".72"/>
+</svg>

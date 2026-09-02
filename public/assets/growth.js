@@ -1,48 +1,399 @@
 (function(){
   'use strict';
+
   var ENDPOINT='/.netlify/functions/track-event';
   var UTM_KEYS=['utm_source','utm_medium','utm_campaign','utm_content','utm_term'];
-  function clean(value,max){return String(value||'').replace(/[<>\u0000-\u001f]/g,' ').replace(/\s+/g,' ').trim().slice(0,max||120)}
-  function randomId(){try{return crypto.randomUUID().replace(/-/g,'')}catch(e){return Date.now().toString(36)+Math.random().toString(36).slice(2)}}
-  function attribution(){var params=new URLSearchParams(location.search),saved={};try{saved=JSON.parse(localStorage.getItem('mw_attribution')||'{}')}catch(e){}
-    var fresh={};UTM_KEYS.forEach(function(key){if(params.get(key))fresh[key]=clean(params.get(key),120)});
-    if(Object.keys(fresh).length){fresh.landing_page=location.pathname;fresh.saved_at=Date.now();try{localStorage.setItem('mw_attribution',JSON.stringify(fresh))}catch(e){}saved=fresh}
-    var ref=document.referrer||'',source=saved.utm_source||(/google\./i.test(ref)?'google':/facebook\.com/i.test(ref)?'facebook':/instagram\.com/i.test(ref)?'instagram':ref?'referral':'direct');
-    return {source:source,medium:saved.utm_medium||(/google\./i.test(ref)?'organic':ref?'referral':'none'),campaign:saved.utm_campaign||'',landing_page:saved.landing_page||location.pathname};
+
+  function clean(value,max){
+    return String(value||'').replace(/[<>\u0000-\u001f]/g,' ').replace(/\s+/g,' ').trim().slice(0,max||120);
   }
-  var attr=attribution(),sessionId;try{sessionId=sessionStorage.getItem('mw_session_id')||randomId();sessionStorage.setItem('mw_session_id',sessionId)}catch(e){sessionId=randomId()}
+  function randomId(){
+    try{return crypto.randomUUID().replace(/-/g,'')}
+    catch(e){return Date.now().toString(36)+Math.random().toString(36).slice(2)}
+  }
+  function safeImageUrl(value){
+    var raw=String(value||'').trim();
+    if(!raw) return '';
+    try{
+      var url=new URL(raw,location.origin);
+      if(url.origin!==location.origin) return '';
+      if(!/^\/assets\/phones\/[A-Za-z0-9._/-]+$/.test(url.pathname)) return '';
+      return url.pathname;
+    }catch(e){return ''}
+  }
+  function node(tag,className,text){
+    var el=document.createElement(tag);
+    if(className) el.className=className;
+    if(text!==undefined) el.textContent=String(text);
+    return el;
+  }
+  function getRepairs(){
+    var r=window.REPAIRS||{};
+    return {
+      screens:Array.isArray(r.screens)?r.screens:[],
+      services:Array.isArray(r.services)?r.services:[]
+    };
+  }
+
+  function renderPhones(){
+    var g=document.getElementById('phonegrid');
+    if(!g) return;
+    g.replaceChildren();
+    var phones=Array.isArray(window.PHONES)?window.PHONES:[];
+    if(!phones.length){
+      var empty=node('div','catalog-empty','No phones are currently listed. Call Mega Wireless for today’s availability.');
+      empty.style.gridColumn='1/-1';
+      g.appendChild(empty);
+      return;
+    }
+    phones.forEach(function(p){
+      if(!p||p.active===false) return;
+      var name=clean(p.name,100)||'Phone';
+      var specs=clean(p.specs,120);
+      var brand=clean(p.brand,40)||(/^iPhone/i.test(name)?'Apple':/^Samsung/i.test(name)?'Samsung':/^BLU/i.test(name)?'BLU':'Other');
+      var condition=clean(p.condition,60)||'Used · Tested';
+      var availability=clean(p.availability,40)||'Call to confirm';
+      var price=clean(p.price,40)||'Call for price';
+      var el=node('article','phone-card');
+      el.dataset.phone=name;
+      el.dataset.brand=brand;
+
+      var imageUrl=safeImageUrl(p.image);
+      if(imageUrl){
+        var img=node('img','phimg');
+        img.src=imageUrl;
+        img.alt=name;
+        img.loading='lazy';
+        img.decoding='async';
+        img.addEventListener('error',function(){
+          var fallback=node('div','device-shape');
+          fallback.appendChild(node('span','',brand==='Samsung'?'S':'MW'));
+          img.replaceWith(fallback);
+        },{once:true});
+        el.appendChild(img);
+      }else{
+        var fallback=node('div','device-shape');
+        fallback.appendChild(node('span','',brand==='Samsung'?'S':'MW'));
+        el.appendChild(fallback);
+      }
+
+      el.appendChild(node('h3','',name));
+      el.appendChild(node('p','phone-meta',brand+' · '+specs+' · '+condition+' · Unlocked'));
+      el.appendChild(node('div','price',price));
+      el.appendChild(node('div','availability','Availability: '+availability));
+
+      var badges=node('div','badges');
+      badges.appendChild(node('span','','3-month limited warranty'));
+      badges.appendChild(node('span','',p.bundle?'Free case + screen protector':'Call for bundle details'));
+      el.appendChild(badges);
+
+      var message=node('a','action action-green','Message');
+      message.href='https://wa.me/16156785849?text='+encodeURIComponent('Hello Mega Wireless, is '+name+' available?');
+      message.dataset.growth='phone-interest';
+      message.dataset.phone=name;
+
+      var call=node('a','action action-blue','Call');
+      call.href='tel:+16156785849';
+      call.dataset.growth='phone-call';
+      call.dataset.phone=name;
+
+      var row=node('div','interest-row');
+      row.append(message,call);
+      el.appendChild(row);
+      g.appendChild(el);
+    });
+  }
+
+  function makeRow(left,right,header){
+    var tr=document.createElement('tr');
+    var a=document.createElement(header?'th':'td');
+    var b=document.createElement(header?'th':'td');
+    a.textContent=String(left||'');
+    b.textContent=String(right||'');
+    tr.append(a,b);
+    return tr;
+  }
+
+  function renderRepairs(){
+    var repairs=getRepairs();
+    var s=document.getElementById('tbl-screens');
+    var v=document.getElementById('tbl-services');
+    if(s){
+      s.replaceChildren(makeRow('Model','Starting at',true));
+      repairs.screens.forEach(function(r){
+        if(!r||r.active===false) return;
+        s.appendChild(makeRow(clean(r.model,90),clean(r.price,40),false));
+      });
+      s.appendChild(makeRow('Other models','Call for quote',false));
+    }
+    if(v){
+      v.replaceChildren(makeRow('Service','Starting at',true));
+      repairs.services.forEach(function(r){
+        if(!r||r.active===false) return;
+        v.appendChild(makeRow(clean(r.service,100),clean(r.price,40),false));
+      });
+    }
+  }
+
+  window.buildPhones=renderPhones;
+  window.buildRepairs=renderRepairs;
+
+  async function fetchAdminJson(path){
+    var response=await fetch(path+'?v='+Date.now(),{
+      cache:'no-store',
+      credentials:'same-origin',
+      headers:{accept:'application/json'}
+    });
+    if(!response.ok) throw new Error(path+' '+response.status);
+    return response.json();
+  }
+  async function loadAdminData(){
+    var phonePromise=fetchAdminJson('/phones.json')
+      .then(function(data){
+        if(!data||!Array.isArray(data.phones)) throw new Error('invalid phones');
+        window.PHONES=data.phones;
+        renderPhones();
+      })
+      .catch(function(){ renderPhones(); });
+    var repairPromise=fetchAdminJson('/repairs.json')
+      .then(function(data){
+        if(!data||!Array.isArray(data.screens)||!Array.isArray(data.services)) throw new Error('invalid repairs');
+        window.REPAIRS=data;
+        renderRepairs();
+        refreshModels();
+      })
+      .catch(function(){ renderRepairs(); });
+    await Promise.allSettled([phonePromise,repairPromise]);
+  }
+
+  function ensureAdminLink(){
+    var box=document.querySelector('.navbuttons');
+    if(!box||box.querySelector('.secure-admin-link')) return;
+    var link=node('a','action action-outline secure-admin-link','Secure Admin');
+    link.href='/admin/';
+    link.setAttribute('aria-label','Open secure Mega Wireless admin');
+    box.appendChild(link);
+  }
+
+  function attribution(){
+    var params=new URLSearchParams(location.search),saved={};
+    try{saved=JSON.parse(localStorage.getItem('mw_attribution')||'{}')}catch(e){}
+    var fresh={};
+    UTM_KEYS.forEach(function(key){if(params.get(key))fresh[key]=clean(params.get(key),120)});
+    if(Object.keys(fresh).length){
+      fresh.landing_page=location.pathname;fresh.saved_at=Date.now();
+      try{localStorage.setItem('mw_attribution',JSON.stringify(fresh))}catch(e){}
+      saved=fresh;
+    }
+    var ref=document.referrer||'';
+    var source=saved.utm_source||(/google\./i.test(ref)?'google':/facebook\.com/i.test(ref)?'facebook':/instagram\.com/i.test(ref)?'instagram':ref?'referral':'direct');
+    return {
+      source:source,
+      medium:saved.utm_medium||(/google\./i.test(ref)?'organic':ref?'referral':'none'),
+      campaign:saved.utm_campaign||'',
+      landing_page:saved.landing_page||location.pathname
+    };
+  }
+
+  var attr=attribution(),sessionId;
+  try{
+    sessionId=sessionStorage.getItem('mw_session_id')||randomId();
+    sessionStorage.setItem('mw_session_id',sessionId);
+  }catch(e){sessionId=randomId()}
   var recent={};
-  function track(name,properties,options){var signature=name+':'+JSON.stringify(properties||{}),now=Date.now();if(!options?.force&&recent[signature]&&now-recent[signature]<1500)return;recent[signature]=now;
-    var payload={event_id:sessionId+'_'+randomId().slice(0,20),name:name,source:attr.source,medium:attr.medium,campaign:attr.campaign,landing_page:attr.landing_page,properties:properties||{}};
-    if(typeof window.gtag==='function')window.gtag('event',name,Object.assign({event_id:payload.event_id,traffic_source:attr.source,traffic_medium:attr.medium,campaign_name:attr.campaign},properties||{}));
-    var body=JSON.stringify(payload);if(navigator.sendBeacon){navigator.sendBeacon(ENDPOINT,new Blob([body],{type:'application/json'}))}else fetch(ENDPOINT,{method:'POST',credentials:'same-origin',keepalive:true,headers:{'content-type':'application/json'},body:body}).catch(function(){});
+  function track(name,properties,options){
+    var signature=name+':'+JSON.stringify(properties||{}),now=Date.now();
+    if(!(options&&options.force)&&recent[signature]&&now-recent[signature]<1500)return;
+    recent[signature]=now;
+    var payload={
+      event_id:sessionId+'_'+randomId().slice(0,20),
+      name:name,
+      source:attr.source,
+      medium:attr.medium,
+      campaign:attr.campaign,
+      landing_page:attr.landing_page,
+      properties:properties||{}
+    };
+    if(typeof window.gtag==='function'){
+      window.gtag('event',name,Object.assign({
+        event_id:payload.event_id,
+        traffic_source:attr.source,
+        traffic_medium:attr.medium,
+        campaign_name:attr.campaign
+      },properties||{}));
+    }
+    var body=JSON.stringify(payload);
+    if(navigator.sendBeacon){
+      navigator.sendBeacon(ENDPOINT,new Blob([body],{type:'application/json'}));
+    }else{
+      fetch(ENDPOINT,{
+        method:'POST',
+        credentials:'same-origin',
+        keepalive:true,
+        headers:{'content-type':'application/json'},
+        body:body
+      }).catch(function(){});
+    }
   }
   window.MegaGrowth={track:track,attribution:attr};
   track('page_view',{page:location.pathname},{force:true});
-  var engaged=false;function markEngaged(){if(engaged)return;engaged=true;track('engaged_visitor',{page:location.pathname})}setTimeout(markEngaged,10000);addEventListener('scroll',function(){if(scrollY>500)markEngaged()},{passive:true,once:true});
+  var engaged=false;
+  function markEngaged(){if(engaged)return;engaged=true;track('engaged_visitor',{page:location.pathname})}
+  setTimeout(markEngaged,10000);
+  addEventListener('scroll',function(){if(scrollY>500)markEngaged()},{passive:true,once:true});
 
-  var brand=document.getElementById('quoteBrand'),model=document.getElementById('quoteModel'),problem=document.getElementById('quoteProblem'),result=document.getElementById('quoteResult'),progress=[].slice.call(document.querySelectorAll('.quote-progress span'));
-  var screens=(window.REPAIRS&&window.REPAIRS.screens)||[];
-  function updateProgress(){var values=[brand&&brand.value,model&&model.value,problem&&problem.value];progress.forEach(function(step,index){step.classList.toggle('on',!!values[index])})}
-  function refreshModels(){if(!model)return;var value=brand.value;var choices=value==='Apple'?screens.map(function(r){return r.model}):[];model.innerHTML='<option value="">Select exact model</option>'+choices.map(function(x){return '<option>'+clean(x,80)+'</option>'}).join('')+'<option value="Other model">Other model</option>';model.disabled=!value;problem.value='';result.classList.remove('show');updateProgress();track('repair_quote_started',{step:'brand',brand:value})}
-  function approvedRepair(){var selected=problem.value,found=null,label='Contact Mega Wireless for an exact quote.',price='',time='Repair time confirmed after inspection.';
-    if(selected==='Cracked Screen'&&brand.value==='Apple')found=screens.find(function(item){return item.model===model.value&&item.active!==false});
-    if(found){price=found.price;label='Approved starting screen price';}
-    else if(selected==='Battery'&&brand.value==='Apple'){var battery=(window.REPAIRS.services||[]).find(function(item){return /iphone battery/i.test(item.service)&&item.active!==false});if(battery){price=battery.price;label='Approved starting battery price'}}
-    else if(selected==='Charging'){var charging=(window.REPAIRS.services||[]).find(function(item){return /charging port/i.test(item.service)&&item.active!==false});if(charging){price=charging.price;label='Approved starting charging-port price'}}
-    else if(selected==='Water Damage'){var water=(window.REPAIRS.services||[]).find(function(item){return /water damage/i.test(item.service)&&item.active!==false});if(water){price=water.price;label='Approved diagnostic price'}}
+  var brand=document.getElementById('quoteBrand');
+  var model=document.getElementById('quoteModel');
+  var problem=document.getElementById('quoteProblem');
+  var result=document.getElementById('quoteResult');
+  var progress=[].slice.call(document.querySelectorAll('.quote-progress span'));
+
+  function updateProgress(){
+    var values=[brand&&brand.value,model&&model.value,problem&&problem.value];
+    progress.forEach(function(step,index){step.classList.toggle('on',!!values[index])});
+  }
+
+  function refreshModels(){
+    if(!model||!brand) return;
+    var screens=getRepairs().screens;
+    var value=brand.value;
+    var choices=value==='Apple'?screens.filter(function(r){return r&&r.active!==false}).map(function(r){return clean(r.model,80)}):[];
+    var current=model.value;
+    model.replaceChildren();
+    var first=document.createElement('option');
+    first.value='';
+    first.textContent='Select exact model';
+    model.appendChild(first);
+    choices.forEach(function(x){
+      var option=document.createElement('option');
+      option.value=x;
+      option.textContent=x;
+      model.appendChild(option);
+    });
+    var other=document.createElement('option');
+    other.value='Other model';
+    other.textContent='Other model';
+    model.appendChild(other);
+    model.disabled=!value;
+    if(choices.indexOf(current)>-1||current==='Other model') model.value=current;
+    updateProgress();
+  }
+
+  function approvedRepair(){
+    var repairs=getRepairs();
+    var selected=problem&&problem.value,found=null;
+    var label='Contact Mega Wireless for an exact quote.',price='',time='Repair time confirmed after inspection.';
+    if(!brand||!model) return {price:price,label:label,time:time};
+    if(selected==='Cracked Screen'&&brand.value==='Apple'){
+      found=repairs.screens.find(function(item){return item&&item.model===model.value&&item.active!==false});
+    }
+    if(found){price=clean(found.price,40);label='Approved starting screen price';}
+    else if(selected==='Battery'&&brand.value==='Apple'){
+      var battery=repairs.services.find(function(item){return item&&/iphone battery/i.test(item.service||'')&&item.active!==false});
+      if(battery){price=clean(battery.price,40);label='Approved starting battery price'}
+    }else if(selected==='Charging'){
+      var charging=repairs.services.find(function(item){return item&&/charging port/i.test(item.service||'')&&item.active!==false});
+      if(charging){price=clean(charging.price,40);label='Approved starting charging-port price'}
+    }else if(selected==='Water Damage'){
+      var water=repairs.services.find(function(item){return item&&/water damage/i.test(item.service||'')&&item.active!==false});
+      if(water){price=clean(water.price,40);label='Approved diagnostic price'}
+    }
     return {price:price,label:label,time:time};
   }
-  function showQuote(){updateProgress();if(!brand.value||!model.value||!problem.value){result.classList.remove('show');return}var quote=approvedRepair(),repair=brand.value+' '+model.value+' '+problem.value;
-    result.innerHTML='<h3>'+clean(repair,140)+'</h3><div>'+clean(quote.label,120)+'</div>'+(quote.price?'<div class="quote-price">'+clean(quote.price,40)+'</div>':'<div class="quote-price" style="font-size:20px">Contact Mega Wireless for an exact quote.</div>')+'<p>'+quote.time+'</p><div class="quote-result-actions"><a class="action action-green" data-growth="quote-complete" data-repair="'+clean(repair,140)+'" href="https://wa.me/16156785849?text='+encodeURIComponent('Hello Mega Wireless, I need a quote for '+repair+'.')+'">Get Quote</a><a class="action action-blue" data-growth="quote-call" data-repair="'+clean(repair,140)+'" href="tel:+16156785849">Call Now</a><a class="action action-outline" data-growth="directions" href="https://www.google.com/maps/search/?api=1&query=4717+Nolensville+Pike+Nashville+TN+37211">Directions</a></div>';
-    result.classList.add('show');track('repair_model_viewed',{brand:brand.value,model:model.value,repair:problem.value});track('repair_quote_completed',{repair:repair,price_available:quote.price?'yes':'no'});
-  }
-  brand&&brand.addEventListener('change',refreshModels);model&&model.addEventListener('change',function(){updateProgress();if(model.value)track('repair_quote_started',{step:'model',brand:brand.value,model:model.value});showQuote()});problem&&problem.addEventListener('change',function(){track('repair_quote_started',{step:'problem',repair:problem.value,model:model.value});showQuote()});
 
-  var observed=new WeakSet(),viewer=new IntersectionObserver(function(entries){entries.forEach(function(entry){if(entry.isIntersecting){var card=entry.target,phone=card.querySelector('h3')?.textContent||'';track('phone_viewed',{phone:phone});viewer.unobserve(card)}})},{threshold:.55});
-  function decoratePhones(){document.querySelectorAll('.phone-card').forEach(function(card){if(observed.has(card))return;observed.add(card);card.dataset.growthReady='true';var phone=clean(card.querySelector('h3')?.textContent,100),link=card.querySelector('a[href*="wa.me"]');if(link){link.dataset.growth='phone-interest';link.dataset.phone=phone;link.textContent='Message';var call=document.createElement('a');call.className='action action-blue';call.href='tel:+16156785849';call.dataset.growth='phone-call';call.dataset.phone=phone;call.textContent='Call';var row=document.createElement('div');row.className='interest-row';link.parentNode.insertBefore(row,link);row.append(link,call);var availability=document.createElement('div');availability.className='availability';availability.textContent='Availability: Call to confirm';row.parentNode.insertBefore(availability,row)}viewer.observe(card)})}
-  decoratePhones();var phoneGrid=document.getElementById('phonegrid');if(phoneGrid)new MutationObserver(decoratePhones).observe(phoneGrid,{childList:true});
-  document.addEventListener('click',function(event){var target=event.target.closest('[data-growth],[data-promotion],a[href^="tel:"],a[href*="google.com/maps"],a[href*="wa.me"],#mega-ai-chat-button');if(!target)return;var kind=target.dataset.growth||'';
-    if(target.dataset.promotion)track('promotion_clicked',{promotion:target.dataset.promotion});else if(kind==='phone-interest')track('phone_interest',{phone:target.dataset.phone||''});else if(kind==='phone-call')track('call_about_phone',{phone:target.dataset.phone||''});else if(kind==='quote-complete')track('repair_booking_started',{repair:target.dataset.repair||''});else if(kind==='quote-call')track('call_clicked',{repair:target.dataset.repair||''});else if(kind==='repair-status')track('repair_tracking_used',{context:'mobile_action'});else if(kind==='mobile-quote')track('repair_quote_started',{step:'mobile_action'});else if(kind==='directions'||/google\.com\/maps/.test(target.href))track('directions_clicked',{context:kind||'site'});else if(target.id==='mega-ai-chat-button')track('ai_chat_started',{context:'launcher'});else if(target.href&&target.href.indexOf('tel:')===0)track('call_clicked',{context:kind||clean(target.textContent,60)});else if(target.href&&target.href.indexOf('wa.me')>-1)track(kind==='human-help'?'human_help_requested':'contact_clicked',{context:kind||clean(target.textContent,60)});
+  function showQuote(){
+    updateProgress();
+    if(!brand||!model||!problem||!result||!brand.value||!model.value||!problem.value){
+      if(result) result.classList.remove('show');
+      return;
+    }
+    var quote=approvedRepair();
+    var repair=clean(brand.value+' '+model.value+' '+problem.value,140);
+    result.replaceChildren();
+    result.appendChild(node('h3','',repair));
+    result.appendChild(node('div','',quote.label));
+    result.appendChild(node('div','quote-price',quote.price||'Contact Mega Wireless for an exact quote.'));
+    result.appendChild(node('p','',quote.time));
+
+    var actions=node('div','quote-result-actions');
+    var quoteLink=node('a','action action-green','Get Quote');
+    quoteLink.dataset.growth='quote-complete';
+    quoteLink.dataset.repair=repair;
+    quoteLink.href='https://wa.me/16156785849?text='+encodeURIComponent('Hello Mega Wireless, I need a quote for '+repair+'.');
+
+    var call=node('a','action action-blue','Call Now');
+    call.dataset.growth='quote-call';
+    call.dataset.repair=repair;
+    call.href='tel:+16156785849';
+
+    var directions=node('a','action action-outline','Directions');
+    directions.dataset.growth='directions';
+    directions.href='https://www.google.com/maps/search/?api=1&query=4717+Nolensville+Pike+Nashville+TN+37211';
+
+    actions.append(quoteLink,call,directions);
+    result.appendChild(actions);
+    result.classList.add('show');
+    track('repair_model_viewed',{brand:brand.value,model:model.value,repair:problem.value});
+    track('repair_quote_completed',{repair:repair,price_available:quote.price?'yes':'no'});
+  }
+
+  if(brand) brand.addEventListener('change',function(){
+    refreshModels();
+    if(problem) problem.value='';
+    if(result) result.classList.remove('show');
+    track('repair_quote_started',{step:'brand',brand:brand.value});
   });
+  if(model) model.addEventListener('change',function(){
+    updateProgress();
+    if(model.value)track('repair_quote_started',{step:'model',brand:brand?brand.value:'',model:model.value});
+    showQuote();
+  });
+  if(problem) problem.addEventListener('change',function(){
+    track('repair_quote_started',{step:'problem',repair:problem.value,model:model?model.value:''});
+    showQuote();
+  });
+
+  var observed=new WeakSet();
+  var viewer=('IntersectionObserver' in window)?new IntersectionObserver(function(entries){
+    entries.forEach(function(entry){
+      if(entry.isIntersecting){
+        var card=entry.target;
+        var title=card.querySelector('h3');
+        track('phone_viewed',{phone:title?clean(title.textContent,100):''});
+        viewer.unobserve(card);
+      }
+    });
+  },{threshold:.55}):null;
+
+  function decoratePhones(){
+    document.querySelectorAll('.phone-card').forEach(function(card){
+      if(observed.has(card)) return;
+      observed.add(card);
+      card.dataset.growthReady='true';
+      if(viewer) viewer.observe(card);
+    });
+  }
+  decoratePhones();
+  var phoneGrid=document.getElementById('phonegrid');
+  if(phoneGrid)new MutationObserver(decoratePhones).observe(phoneGrid,{childList:true});
+
+  document.addEventListener('click',function(event){
+    var target=event.target.closest('[data-growth],[data-promotion],a[href^="tel:"],a[href*="google.com/maps"],a[href*="wa.me"],#mega-ai-chat-button');
+    if(!target)return;
+    var kind=target.dataset.growth||'';
+    if(target.dataset.promotion)track('promotion_clicked',{promotion:target.dataset.promotion});
+    else if(kind==='phone-interest')track('phone_interest',{phone:target.dataset.phone||''});
+    else if(kind==='phone-call')track('call_about_phone',{phone:target.dataset.phone||''});
+    else if(kind==='quote-complete')track('repair_booking_started',{repair:target.dataset.repair||''});
+    else if(kind==='quote-call')track('call_clicked',{repair:target.dataset.repair||''});
+    else if(kind==='repair-status')track('repair_tracking_used',{context:'mobile_action'});
+    else if(kind==='mobile-quote')track('repair_quote_started',{step:'mobile_action'});
+    else if(kind==='directions'||(target.href&&/google\.com\/maps/.test(target.href)))track('directions_clicked',{context:kind||'site'});
+    else if(target.id==='mega-ai-chat-button')track('ai_chat_started',{context:'launcher'});
+    else if(target.href&&target.href.indexOf('tel:')===0)track('call_clicked',{context:kind||clean(target.textContent,60)});
+    else if(target.href&&target.href.indexOf('wa.me')>-1)track(kind==='human-help'?'human_help_requested':'contact_clicked',{context:kind||clean(target.textContent,60)});
+  });
+
+  ensureAdminLink();
+  loadAdminData();
 })();
