@@ -1,2 +1,9 @@
 [build]
   publish = "public"
+  functions = "netlify/functions"
+
+[functions."daily-report"]
+  schedule = "@hourly"
+
+[functions."provider-sync"]
+  schedule = "@hourly"

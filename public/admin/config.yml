@@ -53,6 +53,9 @@ collections:
             fields:
               - { name: "name", label: "Phone Name", widget: "string", hint: "Example: iPhone 13 Pro Max" }
               - { name: "specs", label: "Storage / Details", widget: "string", required: false, hint: "Example: 256GB · Unlocked" }
+              - { name: "brand", label: "Brand", widget: "string", required: false }
+              - { name: "condition", label: "Public Condition", widget: "string", required: false, default: "Used · Tested" }
+              - { name: "availability", label: "Public Availability", widget: "select", options: ["Call to confirm", "Available", "Sold"], default: "Call to confirm" }
               - { name: "price", label: "Displayed Price", widget: "string", hint: "Example: $399.99" }
               - { name: "image", label: "Product Photo", widget: "image", required: false }
               - { name: "bundle", label: "Free case + screen protector", widget: "boolean", default: true }

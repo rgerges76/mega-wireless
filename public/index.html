@@ -9,6 +9,7 @@
 <meta name="apple-mobile-web-app-title" content="Mega Wireless">
 <link rel="manifest" href="/manifest.webmanifest">
 <link rel="apple-touch-icon" href="/icons/icon-192.png">
+<link rel="stylesheet" href="/assets/growth.css">
 <title>Phone Repair Nashville | Mega Wireless — iPhone Screen Repair from $59.99</title>
 <meta name="description" content="Fast iPhone and Samsung screen repair in Nashville. Unlocked phones, prepaid plans, computer repair and Xbox HDMI repair. 4717 Nolensville Pike. Walk-ins welcome, open 7 days.">
 <link rel="canonical" href="https://megawirelessusa.com/">
@@ -38,7 +39,17 @@
     {"@type":"OpeningHoursSpecification","dayOfWeek":["Monday","Tuesday","Wednesday","Thursday","Friday","Saturday","Sunday"],"opens":"10:00","closes":"20:00"}
   ],
   "priceRange": "$$",
-  "availableLanguage": ["English","Spanish","Arabic"]
+  "availableLanguage": ["English","Spanish","Arabic"],
+  "hasOfferCatalog": {
+    "@type": "OfferCatalog",
+    "name": "Phone and Device Repair Services",
+    "itemListElement": [
+      {"@type":"OfferCatalog","name":"iPhone Repair"},
+      {"@type":"OfferCatalog","name":"Samsung Repair"},
+      {"@type":"OfferCatalog","name":"Phone Screen Repair"},
+      {"@type":"OfferCatalog","name":"Used Phones"}
+    ]
+  }
 }
 </script>
 
@@ -49,6 +60,7 @@ function gtag(){dataLayer.push(arguments)}
 gtag('js',new Date());
 gtag('config','G-LR9H4N0S98');
 </script>
+<script src="/assets/growth.js" defer></script>
 <style>
 :root{--bg:#0a0f2e;--panel:#141a4a;--panel2:#1d2660;--line:#3d4bb0;--blue:#2f6bff;--green:#00d97e;--gold:#ffd23f;--cyan:#00e5ff;--pink:#ff4d9d;--purple:#a855f7;--text:#ffffff;--muted:#b9c4ee}
 *{box-sizing:border-box}html{scroll-behavior:smooth}body{margin:0;background:linear-gradient(165deg,#0a0f2e 0%,#151b52 30%,#1a1250 55%,#0d1138 100%);background-attachment:fixed;color:var(--text);font-family:Arial,Helvetica,sans-serif}a{color:inherit;text-decoration:none}img{max-width:100%;display:block}.container{width:min(1180px,94%);margin:auto}
@@ -126,7 +138,7 @@ html[dir="rtl"] .floating{right:auto;left:16px}
 <h1><span data-i18n="hero_h1a">Cracked Screen?</span><br><span class="gold" data-i18n="hero_h1b" style="color:var(--gold)">Professional Repair.</span></h1>
 <p data-i18n="hero_p">Professional iPhone and device repair with a free initial diagnostic. We confirm the required repair and price before any work begins.</p>
 <div class="hero-actions">
-<a class="action action-blue" href="#pricing" data-i18n="hero_btn1">See Repair Prices</a>
+<a class="action action-blue" href="#repair-quote">Get Repair Quote</a>
 <a class="action action-green" href="https://wa.me/16156785849?text=Hello%20Mega%20Wireless%2C%20I%20need%20a%20repair%20quote." data-i18n="hero_btn2">WhatsApp a Photo</a>
 <a class="action action-outline" href="#phones" data-i18n="hero_btn3">Shop Phones</a>
 </div>
@@ -147,6 +159,15 @@ html[dir="rtl"] .floating{right:auto;left:16px}
 <section id="daily-offers" class="section alt" style="display:none"><div class="container">
 <div class="section-head"><div><div class="kicker" data-i18n="do_kicker">UPDATED DAILY</div><h2 data-i18n="do_h2">Today's Offers</h2></div><a class="action action-blue" href="tel:+16156785849" data-i18n="do_btn">Call to Claim</a></div>
 <div id="offers-grid" class="offer-grid"></div>
+</div></section>
+
+<section id="repair-quote" class="section growth-glow"><div class="container quote-shell">
+<div class="quote-intro"><div class="kicker">FAST • PRIVATE • NO GUESSING</div><h2>What's Wrong With Your Phone?</h2><p class="lead">Choose the exact device and problem. We only display a price when it exists in Mega Wireless's approved repair list. No customer information is required to see the result.</p><div class="conversion-strip"><div class="conversion-card"><strong>1. Choose</strong>Brand, model and problem</div><div class="conversion-card"><strong>2. See</strong>Approved price when available</div><div class="conversion-card"><strong>3. Act</strong>Message, call or get directions</div></div></div>
+<div class="quote-card"><div class="quote-progress" aria-hidden="true"><span></span><span></span><span></span></div><div class="quote-grid">
+<div class="quote-field"><label for="quoteBrand">Brand</label><select id="quoteBrand"><option value="">Select brand</option><option>Apple</option><option>Samsung</option><option>Motorola</option><option>Google Pixel</option><option>Other</option></select></div>
+<div class="quote-field"><label for="quoteModel">Model</label><select id="quoteModel" disabled><option value="">Select brand first</option></select></div>
+<div class="quote-field full"><label for="quoteProblem">Problem</label><select id="quoteProblem"><option value="">Select problem</option><option>Cracked Screen</option><option>Battery</option><option value="Charging">Charging</option><option>Camera</option><option>Speaker</option><option>Microphone</option><option>Water Damage</option><option>Not Turning On</option><option>Software</option><option>Other</option></select></div>
+</div><div id="quoteResult" class="quote-result" aria-live="polite"></div></div>
 </div></section>
 
 <section id="pricing" class="section"><div class="container">
@@ -494,10 +515,15 @@ function buildPhones(){
     var visual = p.image
       ? '<img class="phimg" src="'+p.image+'" alt="'+p.name+'" onerror="this.outerHTML=\'<div class=&quot;device-shape&quot;><span>MW</span></div>\'">'
       : '<div class="device-shape"><span>MW</span></div>';
+    var brand=p.brand||(/^iPhone/i.test(p.name)?'Apple':/^Samsung/i.test(p.name)?'Samsung':/^BLU/i.test(p.name)?'BLU':'Other');
+    var condition=p.condition||'Used · Tested';
+    var availability=p.availability||'Call to confirm';
+    el.dataset.phone=p.name;el.dataset.brand=brand;
     el.innerHTML=visual+
       '<h3>'+p.name+'</h3>'+
-      '<p>'+(p.specs||'')+' / '+t.ph_unlocked+'</p>'+
+      '<p>'+brand+' · '+(p.specs||'')+' · '+condition+' · '+t.ph_unlocked+'</p>'+
       '<div class="price">'+p.price+'</div>'+
+      '<div class="availability">Availability: '+availability+'</div>'+
       '<div class="badges"><span>'+t.ph_warranty+'</span><span>'+b2+'</span></div>'+
       '<a class="action action-green" href="https://wa.me/16156785849?text='+
       encodeURIComponent('Hello Mega Wireless, is '+p.name+' available?')+'">'+t.ph_check+'</a>';
@@ -632,13 +658,6 @@ if(rf){
   });
 }
 
-/* Track calls and WhatsApp clicks */
-document.addEventListener('click', function(e){
-  var a=e.target.closest('a'); if(!a||typeof gtag!=='function') return;
-  var h=a.getAttribute('href')||'';
-  if(h.indexOf('tel:')===0) gtag('event','call_click');
-  else if(h.indexOf('wa.me')>-1) gtag('event','whatsapp_click');
-});
 </script>
 
 <!-- Mega Wireless AI Chat launcher -->
@@ -700,5 +719,11 @@ document.addEventListener('click', function(e){
  document.getElementById('installApp').addEventListener('click',function(){if(promptEvent){promptEvent.prompt();promptEvent.userChoice.finally(function(){banner.classList.remove('show');promptEvent=null})}});document.getElementById('dismissInstall').addEventListener('click',function(){sessionStorage.setItem('mw-install-dismissed','1');banner.classList.remove('show')});
 })();
 </script>
+<nav class="mobile-actions" aria-label="Fast actions">
+<a href="tel:+16156785849" data-growth="mobile-call">CALL</a>
+<a class="primary" href="#repair-quote" data-growth="mobile-quote">QUOTE</a>
+<a href="https://www.google.com/maps/search/?api=1&amp;query=4717+Nolensville+Pike+Nashville+TN+37211" data-growth="directions">DIRECTIONS</a>
+<a href="https://wa.me/16156785849?text=Hello%20Mega%20Wireless%2C%20I%20want%20to%20check%20my%20repair%20status.%20I%20have%20my%20receipt%20number." data-growth="repair-status">REPAIR STATUS</a>
+</nav>
 </body>
 </html>
