@@ -3,6 +3,12 @@
 <head>
 <meta charset="utf-8">
 <meta name="viewport" content="width=device-width, initial-scale=1">
+<meta name="theme-color" content="#0a0f2e">
+<meta name="apple-mobile-web-app-capable" content="yes">
+<meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
+<meta name="apple-mobile-web-app-title" content="Mega Wireless">
+<link rel="manifest" href="/manifest.webmanifest">
+<link rel="apple-touch-icon" href="/icons/icon-192.png">
 <title>Phone Repair Nashville | Mega Wireless — iPhone Screen Repair from $59.99</title>
 <meta name="description" content="Fast iPhone and Samsung screen repair in Nashville. Unlocked phones, prepaid plans, computer repair and Xbox HDMI repair. 4717 Nolensville Pike. Walk-ins welcome, open 7 days.">
 <link rel="canonical" href="https://megawirelessusa.com/">
@@ -68,6 +74,7 @@ nav{position:sticky;top:0;z-index:50;background:rgba(10,15,46,.88);border-bottom
 .photo-grid{display:grid;grid-template-columns:repeat(3,1fr);gap:16px}.photo-card{overflow:hidden;padding:0}.photo-card img{width:100%;height:250px;object-fit:cover;background:#061225}.photo-card .copy{padding:18px}
 .review-grid{display:grid;grid-template-columns:repeat(3,1fr);gap:16px}.review-card .stars{color:var(--gold);font-size:19px;letter-spacing:2px;text-shadow:0 0 16px rgba(255,210,63,.55)}.review-card p{line-height:1.6;color:#dce9f8}.review-card .who{color:var(--cyan);font-weight:900;font-size:14px}
 .two-col{display:grid;grid-template-columns:1fr 1fr;gap:18px}.hours{width:100%;border-collapse:collapse}.hours td{padding:10px;border-bottom:1px solid rgba(255,255,255,.09)}.rewards-form{display:grid;gap:10px}.rewards-form input{padding:12px;border:1px solid rgba(0,229,255,.3);border-radius:10px;background:rgba(10,15,46,.7);color:#fff;font-family:inherit}.notice{display:none;background:#0e6438;padding:12px;border-radius:9px}
+.trust-strip{background:#07102d;border-bottom:1px solid rgba(0,229,255,.25)}.trust-grid{display:grid;grid-template-columns:repeat(4,1fr);gap:1px}.trust-item{padding:15px 10px;text-align:center;font-weight:900;font-size:13px;color:#dcecff}.trust-item strong{display:block;color:var(--cyan);font-size:17px;margin-bottom:3px}.catalog-tools{display:flex;gap:10px;flex-wrap:wrap;margin:0 0 18px}.catalog-tools input,.catalog-tools select{min-height:46px;border:1px solid rgba(0,229,255,.35);border-radius:12px;background:#0a0f2e;color:#fff;padding:0 14px;font:inherit}.catalog-tools input{flex:1;min-width:220px}.phone-card[hidden]{display:none}.install-banner{display:none;position:fixed;left:50%;bottom:18px;transform:translateX(-50%);z-index:120;width:min(560px,calc(100% - 24px));background:#10194a;border:1px solid var(--cyan);border-radius:16px;padding:14px;box-shadow:0 18px 55px rgba(0,0,0,.6);align-items:center;gap:12px}.install-banner.show{display:flex}.install-banner p{margin:0;flex:1;font-size:13px}.install-banner button{white-space:nowrap}
 footer{padding:35px 0;border-top:2px solid rgba(0,229,255,.35);color:#9bb0cc;line-height:1.8;font-size:14px}
 .floating{position:fixed;right:16px;bottom:18px;display:grid;gap:9px;z-index:80}.floating a{width:56px;height:56px;border-radius:50%;display:grid;place-items:center;background:linear-gradient(135deg,#2f6bff,#a855f7);border:2px solid var(--cyan);font-weight:1000;box-shadow:0 10px 32px rgba(47,107,255,.6);font-size:12px;transition:transform .2s}
 .floating a:hover{transform:scale(1.1)}.floating .whatsapp{background:linear-gradient(135deg,#00b368,#00d97e);border-color:#7dffc4;color:#04210f}
@@ -79,7 +86,7 @@ html[dir="rtl"] .pricetable th:last-child,html[dir="rtl"] .pricetable td:last-ch
 html[dir="rtl"] .offer-card ul{padding-left:0;padding-right:20px}
 html[dir="rtl"] .floating{right:auto;left:16px}
 @media(max-width:980px){.navlinks{display:none}.phone-grid{grid-template-columns:repeat(2,1fr)}.quick-grid{grid-template-columns:repeat(2,1fr)}.offer-grid,.repair-grid,.photo-grid,.two-col,.review-grid{grid-template-columns:repeat(2,1fr)}}
-@media(max-width:640px){.hero{min-height:520px;background-position:62% center}.hero-inner{min-height:520px}.hero-copy{max-width:92%}.navbuttons .action-outline{display:none}.phone-grid,.offer-grid,.repair-grid,.photo-grid,.two-col,.review-grid{grid-template-columns:1fr}.section{padding:44px 0}h1{font-size:42px}.navrow{gap:8px}}
+@media(max-width:640px){.hero{min-height:520px;background-position:62% center}.hero-inner{min-height:520px}.hero-copy{max-width:92%}.navbuttons .action-outline{display:none}.phone-grid,.offer-grid,.repair-grid,.photo-grid,.two-col,.review-grid{grid-template-columns:1fr}.trust-grid{grid-template-columns:repeat(2,1fr)}.section{padding:44px 0}h1{font-size:42px}.navrow{gap:8px}}
 </style>
 
 <!-- Botpress Webchat -->
@@ -125,6 +132,7 @@ html[dir="rtl"] .floating{right:auto;left:16px}
 </div>
 <div id="status" class="open-status">&nbsp;</div>
 </div></div></header>
+<section class="trust-strip" aria-label="Why customers choose Mega Wireless"><div class="container trust-grid"><div class="trust-item"><strong>Free</strong>Initial Diagnostic</div><div class="trust-item"><strong>Same Day</strong>Most Repairs</div><div class="trust-item"><strong>30-Day</strong>Screen Warranty</div><div class="trust-item"><strong>3 Languages</strong>English · Español · العربية</div></div></section>
 
 <div class="speedbar"><div class="ticker" id="speedticker"></div></div>
 
@@ -159,7 +167,8 @@ html[dir="rtl"] .floating{right:auto;left:16px}
 
 <section id="phones" class="section alt"><div class="container">
 <div class="section-head"><div><div class="kicker" data-i18n="ph_kicker">UNLOCKED / TESTED / WARRANTIED</div><h2 data-i18n="ph_h2">Phones Available Now</h2><p class="lead" data-i18n="ph_lead">Every phone is tested before sale and includes a limited 3-month warranty. Phones $199 and up include a free case and screen protector while supplies last.</p></div><a class="action action-blue" href="tel:+16156785849" data-i18n="ph_btn">Call for Availability</a></div>
-<div class="phone-grid" id="phonegrid"></div>
+<div class="catalog-tools"><input id="phoneSearch" type="search" placeholder="Search phones, storage or price" aria-label="Search phones"><select id="phoneSort" aria-label="Sort phones"><option value="featured">Featured</option><option value="price-low">Price: Low to High</option><option value="price-high">Price: High to Low</option><option value="name">Name</option></select></div>
+<div class="phone-grid" id="phonegrid" aria-live="polite"></div>
 <p class="disclaimer" data-i18n="ph_note">Inventory changes daily. Call or WhatsApp to confirm a specific model before visiting. Additional models available in store.</p>
 </div></section>
 
@@ -266,6 +275,7 @@ html[dir="rtl"] .floating{right:auto;left:16px}
 <span data-i18n="ft_services">Phone Repair · Computer Repair · Xbox HDMI Repair · Unlocked Phones · Prepaid Activations · Accessories</span><br>
 <span data-i18n="ft_hours">Open every day 10:00 AM – 8:00 PM · Walk-ins welcome</span>
 </div></footer>
+<div id="installBanner" class="install-banner" role="status"><p><strong>Install Mega Wireless</strong><br>Open prices, offers and directions faster from your Home Screen.</p><button id="installApp" class="action action-blue" type="button">Install</button><button id="dismissInstall" class="action action-outline" type="button" aria-label="Dismiss">Later</button></div>
 
 <div class="floating">
 <a class="whatsapp" href="https://wa.me/16156785849?text=Hello%20Mega%20Wireless%2C%20I%20need%20help." aria-label="WhatsApp">WA</a>
@@ -680,5 +690,15 @@ document.addEventListener('click', function(e){
 </script>
 <!-- /Mega Wireless AI Chat launcher -->
 
+<script>
+(function(){
+ var search=document.getElementById('phoneSearch'),sort=document.getElementById('phoneSort'),grid=document.getElementById('phonegrid');
+ function filterPhones(){if(!grid)return;var q=(search&&search.value||'').trim().toLowerCase(),cards=[].slice.call(grid.children);cards.forEach(function(card){card.hidden=!!(q&&!card.textContent.toLowerCase().includes(q))});if(sort&&sort.value!=='featured'){cards.sort(function(a,b){if(sort.value==='name')return a.textContent.localeCompare(b.textContent);var am=a.textContent.match(/\$([\d,.]+)/),bm=b.textContent.match(/\$([\d,.]+)/),ap=am?parseFloat(am[1].replace(',','')):0,bp=bm?parseFloat(bm[1].replace(',','')):0;return sort.value==='price-low'?ap-bp:bp-ap}).forEach(function(c){grid.appendChild(c)})}}
+ search&&search.addEventListener('input',filterPhones);sort&&sort.addEventListener('change',filterPhones);if(grid)new MutationObserver(filterPhones).observe(grid,{childList:true});
+ if('serviceWorker' in navigator)window.addEventListener('load',function(){navigator.serviceWorker.register('/sw.js').catch(function(){})});
+ var promptEvent,banner=document.getElementById('installBanner');window.addEventListener('beforeinstallprompt',function(e){e.preventDefault();promptEvent=e;if(!sessionStorage.getItem('mw-install-dismissed'))banner.classList.add('show')});
+ document.getElementById('installApp').addEventListener('click',function(){if(promptEvent){promptEvent.prompt();promptEvent.userChoice.finally(function(){banner.classList.remove('show');promptEvent=null})}});document.getElementById('dismissInstall').addEventListener('click',function(){sessionStorage.setItem('mw-install-dismissed','1');banner.classList.remove('show')});
+})();
+</script>
 </body>
 </html>

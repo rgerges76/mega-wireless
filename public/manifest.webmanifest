@@ -1,0 +1,21 @@
+{
+  "name": "Mega Wireless Nashville",
+  "short_name": "Mega Wireless",
+  "description": "Phone repair, devices, prepaid plans and current offers in Nashville.",
+  "id": "/",
+  "start_url": "/?source=pwa",
+  "scope": "/",
+  "display": "standalone",
+  "background_color": "#0a0f2e",
+  "theme_color": "#0a0f2e",
+  "orientation": "portrait-primary",
+  "icons": [
+    {"src":"/icons/icon-192.png","sizes":"192x192","type":"image/png","purpose":"any maskable"},
+    {"src":"/icons/icon-512.png","sizes":"512x512","type":"image/png","purpose":"any maskable"}
+  ],
+  "shortcuts": [
+    {"name":"Repair Prices","url":"/#pricing"},
+    {"name":"Call Mega Wireless","url":"tel:+16156785849"},
+    {"name":"Directions","url":"https://www.google.com/maps/search/?api=1&query=4717+Nolensville+Pike+Nashville+TN+37211"}
+  ]
+}

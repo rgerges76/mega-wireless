@@ -6,6 +6,9 @@ site_url: "https://megawirelessusa.com"
 display_url: "https://megawirelessusa.com"
 locale: "en"
 publish_mode: simple
+show_preview_links: true
+editor:
+  preview: false
 media_folder: "public/assets/phones"
 public_folder: "/assets/phones"
 
