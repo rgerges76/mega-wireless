@@ -35,13 +35,35 @@
     };
   }
 
+  function labels(){
+    var lang=window.LANG||'en';
+    var dict=(window.T&&window.T[lang])||{};
+    return {
+      warranty:dict.ph_warranty||'3-month limited warranty',
+      gift:dict.ph_gift||'Free case + screen protector',
+      first:dict.ph_first||'Call for bundle details',
+      message:dict.ph_check||'Message',
+      call:dict.q5s||'Call Now',
+      unlocked:dict.ph_unlocked||'Unlocked',
+      availability:lang==='ar'?'التوفر':lang==='es'?'Disponibilidad':'Availability',
+      condition:lang==='ar'?'مستعمل · تم فحصه':lang==='es'?'Usado · Revisado':'Used · Tested',
+      empty:lang==='ar'?'لا توجد هواتف معروضة حاليًا. اتصل بميجا وايرليس لمعرفة المتاح اليوم.':lang==='es'?'No hay teléfonos publicados ahora. Llame a Mega Wireless para conocer la disponibilidad de hoy.':'No phones are currently listed. Call Mega Wireless for today’s availability.',
+      model:dict.pr_model||'Model',
+      from:dict.pr_from||'Starting at',
+      service:dict.pr_service||'Service',
+      other:dict.pr_other||'Other models',
+      callQuote:dict.pr_call||'Call for quote'
+    };
+  }
+
   function renderPhones(){
     var g=document.getElementById('phonegrid');
     if(!g) return;
     g.replaceChildren();
     var phones=Array.isArray(window.PHONES)?window.PHONES:[];
+    var l=labels();
     if(!phones.length){
-      var empty=node('div','catalog-empty','No phones are currently listed. Call Mega Wireless for today’s availability.');
+      var empty=node('div','catalog-empty',l.empty);
       empty.style.gridColumn='1/-1';
       g.appendChild(empty);
       return;
@@ -51,7 +73,7 @@
       var name=clean(p.name,100)||'Phone';
       var specs=clean(p.specs,120);
       var brand=clean(p.brand,40)||(/^iPhone/i.test(name)?'Apple':/^Samsung/i.test(name)?'Samsung':/^BLU/i.test(name)?'BLU':'Other');
-      var condition=clean(p.condition,60)||'Used · Tested';
+      var condition=clean(p.condition,60)||l.condition;
       var availability=clean(p.availability,40)||'Call to confirm';
       var price=clean(p.price,40)||'Call for price';
       var el=node('article','phone-card');
@@ -78,21 +100,21 @@
       }
 
       el.appendChild(node('h3','',name));
-      el.appendChild(node('p','phone-meta',brand+' · '+specs+' · '+condition+' · Unlocked'));
+      el.appendChild(node('p','phone-meta',brand+' · '+specs+' · '+condition+' · '+l.unlocked));
       el.appendChild(node('div','price',price));
-      el.appendChild(node('div','availability','Availability: '+availability));
+      el.appendChild(node('div','availability',l.availability+': '+availability));
 
       var badges=node('div','badges');
-      badges.appendChild(node('span','','3-month limited warranty'));
-      badges.appendChild(node('span','',p.bundle?'Free case + screen protector':'Call for bundle details'));
+      badges.appendChild(node('span','',l.warranty));
+      badges.appendChild(node('span','',p.bundle?l.gift:l.first));
       el.appendChild(badges);
 
-      var message=node('a','action action-green','Message');
+      var message=node('a','action action-green',l.message);
       message.href='https://wa.me/16156785849?text='+encodeURIComponent('Hello Mega Wireless, is '+name+' available?');
       message.dataset.growth='phone-interest';
       message.dataset.phone=name;
 
-      var call=node('a','action action-blue','Call');
+      var call=node('a','action action-blue',l.call);
       call.href='tel:+16156785849';
       call.dataset.growth='phone-call';
       call.dataset.phone=name;
@@ -116,18 +138,19 @@
 
   function renderRepairs(){
     var repairs=getRepairs();
+    var l=labels();
     var s=document.getElementById('tbl-screens');
     var v=document.getElementById('tbl-services');
     if(s){
-      s.replaceChildren(makeRow('Model','Starting at',true));
+      s.replaceChildren(makeRow(l.model,l.from,true));
       repairs.screens.forEach(function(r){
         if(!r||r.active===false) return;
         s.appendChild(makeRow(clean(r.model,90),clean(r.price,40),false));
       });
-      s.appendChild(makeRow('Other models','Call for quote',false));
+      s.appendChild(makeRow(l.other,l.callQuote,false));
     }
     if(v){
-      v.replaceChildren(makeRow('Service','Starting at',true));
+      v.replaceChildren(makeRow(l.service,l.from,true));
       repairs.services.forEach(function(r){
         if(!r||r.active===false) return;
         v.appendChild(makeRow(clean(r.service,100),clean(r.price,40),false));
