@@ -1,0 +1,20 @@
+/*
+  Strict-Transport-Security: max-age=63072000; includeSubDomains; preload
+  X-Content-Type-Options: nosniff
+  X-Frame-Options: DENY
+  Referrer-Policy: strict-origin-when-cross-origin
+  Permissions-Policy: camera=(), microphone=(), geolocation=(), payment=(), usb=(), interest-cohort=()
+  Content-Security-Policy: default-src 'self'; base-uri 'self'; object-src 'none'; frame-ancestors 'none'; form-action 'self'; script-src 'self' 'unsafe-inline' https://www.googletagmanager.com https://cdn.botpress.cloud https://files.bpcontent.cloud; style-src 'self' 'unsafe-inline' https://cdn.botpress.cloud; img-src 'self' data: https:; font-src 'self' data: https:; connect-src 'self' https://www.google-analytics.com https://*.google-analytics.com https://cdn.botpress.cloud https://*.botpress.cloud https://*.bpcontent.cloud wss://*.botpress.cloud; frame-src https://*.botpress.cloud; upgrade-insecure-requests
+  Cross-Origin-Opener-Policy: same-origin-allow-popups
+  X-Permitted-Cross-Domain-Policies: none
+
+/admin/*
+  Cache-Control: no-store, private, max-age=0
+  X-Robots-Tag: noindex, nofollow, noarchive
+
+/*.html
+  Cache-Control: public, max-age=0, must-revalidate
+
+/assets/*
+  Cache-Control: public, max-age=86400
+
