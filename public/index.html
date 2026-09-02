@@ -36,7 +36,6 @@
 }
 </script>
 
-<script src="https://identity.netlify.com/v1/netlify-identity-widget.js"></script>
 <script async src="https://www.googletagmanager.com/gtag/js?id=G-LR9H4N0S98"></script>
 <script>
 window.dataLayer=window.dataLayer||[];
@@ -239,12 +238,14 @@ html[dir="rtl"] .floating{right:auto;left:16px}
 <tr><td data-i18n="rw8">1,500 points</td><td data-i18n="rw8b">Premium case</td></tr>
 </table></article>
 <article class="card"><h3 data-i18n="rw_form">Register for Mega Rewards</h3>
-<form id="rewardsForm" name="mega-rewards" method="POST" data-netlify="true" class="rewards-form">
+<form id="rewardsForm" name="mega-rewards" method="POST" data-netlify="true" netlify-honeypot="company" class="rewards-form" autocomplete="on">
 <input type="hidden" name="form-name" value="mega-rewards">
-<input name="name" placeholder="Name" data-i18n-ph="ph_name" required>
-<input name="phone" placeholder="Phone number" data-i18n-ph="ph_phone" required>
-<input name="email" type="email" placeholder="Email (optional)" data-i18n-ph="ph_email">
-<label style="font-size:13px;color:#cddcee"><input type="checkbox" required> <span data-i18n="rw_agree">I agree to receive rewards account messages from Mega Wireless.</span></label>
+<p hidden><label>Do not fill this out: <input name="company" autocomplete="off" tabindex="-1"></label></p>
+<input name="name" placeholder="Name" data-i18n-ph="ph_name" autocomplete="name" maxlength="100" required>
+<input name="phone" type="tel" placeholder="Phone number" data-i18n-ph="ph_phone" autocomplete="tel" inputmode="tel" maxlength="25" required>
+<input name="email" type="email" placeholder="Email (optional)" data-i18n-ph="ph_email" autocomplete="email" maxlength="254">
+<label style="font-size:13px;color:#cddcee"><input type="checkbox" name="consent" value="yes" required> <span data-i18n="rw_agree">I agree to receive rewards account messages from Mega Wireless.</span></label>
+<small>We use this information only to manage Mega Rewards. See our <a href="/privacy.html" style="text-decoration:underline">Privacy Policy</a>.</small>
 <button class="action action-blue" type="submit" data-i18n="rw_submit">Join Mega Rewards</button>
 </form>
 <div id="notice" class="notice" data-i18n="rw_ok">Registration received. Welcome to Mega Rewards.</div></article>
@@ -595,8 +596,14 @@ if(rf){
   rf.addEventListener('submit', function(e){
     e.preventDefault();
     var form=e.currentTarget;
+    if(form.dataset.submitting==='true') return;
+    var submit=form.querySelector('[type="submit"]');
+    form.dataset.submitting='true';
+    submit.disabled=true;
+    var oldText=submit.textContent;
+    submit.textContent='Sending…';
     var body=new URLSearchParams(new FormData(form));
-    fetch('/',{method:'POST',headers:{'Content-Type':'application/x-www-form-urlencoded'},body:body.toString()})
+    fetch('/',{method:'POST',credentials:'same-origin',headers:{'Content-Type':'application/x-www-form-urlencoded'},body:body.toString()})
       .then(function(r){
         if(!r.ok) throw new Error('submit');
         form.reset();
@@ -604,17 +611,14 @@ if(rf){
         if(typeof gtag==='function') gtag('event','rewards_signup');
       })
       .catch(function(){
-        window.location.href='https://wa.me/16156785849?text='+encodeURIComponent('Hello Mega Wireless, I want to join Mega Rewards.');
+        document.getElementById('notice').style.display='block';
+        document.getElementById('notice').textContent='Unable to register right now. Please retry or call (615) 678-5849.';
+      })
+      .finally(function(){
+        form.dataset.submitting='false';
+        submit.disabled=false;
+        submit.textContent=oldText;
       });
-  });
-}
-
-/* Netlify Identity: send admin to the panel after accepting an invite */
-if (window.netlifyIdentity) {
-  window.netlifyIdentity.on('init', function(user){
-    if(!user){
-      window.netlifyIdentity.on('login', function(){ document.location.href='/admin/'; });
-    }
   });
 }
 
