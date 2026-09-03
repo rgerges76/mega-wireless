@@ -3,8 +3,8 @@
 @tailwind utilities;
 
 :root {
-  color: #f1efdf;
-  background: #050506;
+  color: #fff9e8;
+  background: #0b1622;
   font-synthesis: none;
   text-rendering: optimizeLegibility;
 }
@@ -16,105 +16,90 @@
 
 html {
   scroll-behavior: smooth;
-  background: #050506;
+  background: #0b1622;
 }
 
 body {
   margin: 0;
   min-width: 320px;
-  background: #050506;
-  color: #f1efdf;
+  background: #0b1622;
+  color: #fff9e8;
   overflow-x: hidden;
 }
 
-a {
-  color: inherit;
-  text-decoration: none;
-}
-
-button,
-input,
-select {
-  font: inherit;
-}
-
-button {
-  cursor: pointer;
-}
-
-::selection {
-  background: #7cf7d4;
-  color: #050506;
-}
+a { color: inherit; text-decoration: none; }
+button,input,select { font: inherit; }
+button { cursor: pointer; }
+::selection { background: #7cf7d4; color: #051019; }
 
 .hero-gradient-text {
-  background: linear-gradient(92deg, #f1efdf 0%, #7cf7d4 38%, #b59cff 68%, #ffb77d 100%);
+  background: linear-gradient(92deg, #fff0ad 0%, #75f5d0 34%, #80c8ff 67%, #ff9f66 100%);
   -webkit-background-clip: text;
   background-clip: text;
   color: transparent;
-  filter: saturate(1.05);
+  filter: saturate(1.2) brightness(1.12);
 }
 
-.marquee-shell {
-  overflow: hidden;
-}
+.marquee-shell { overflow: hidden; }
+.marquee-track { width: max-content; animation: mega-marquee 28s linear infinite; }
+@keyframes mega-marquee { from { transform: translateX(0); } to { transform: translateX(-50%); } }
 
-.marquee-track {
-  width: max-content;
-  animation: mega-marquee 28s linear infinite;
-}
-
-@keyframes mega-marquee {
-  from { transform: translateX(0); }
-  to { transform: translateX(-50%); }
-}
-
-.phone-render,
-.service-3d {
-  transform-style: preserve-3d;
-}
-
-.phone-back,
-.phone-front {
-  transform-style: preserve-3d;
-  backface-visibility: hidden;
-  will-change: transform;
-}
-
+.phone-render,.service-3d { transform-style: preserve-3d; }
+.phone-back,.phone-front { transform-style: preserve-3d; backface-visibility: hidden; will-change: transform; }
 .phone-back::after {
   content: '';
   position: absolute;
   inset: 0;
   border-radius: inherit;
   pointer-events: none;
-  background: linear-gradient(115deg, rgba(255,255,255,.18), transparent 22%, transparent 68%, rgba(255,255,255,.05));
+  background: linear-gradient(115deg, rgba(255,255,255,.26), transparent 22%, transparent 68%, rgba(255,255,255,.09));
   mix-blend-mode: screen;
 }
-
 .phone-front::after {
   content: '';
   position: absolute;
   inset: 5px;
   border-radius: 29px;
   pointer-events: none;
-  box-shadow: inset 0 0 0 1px rgba(255,255,255,.06);
+  box-shadow: inset 0 0 0 1px rgba(255,255,255,.1);
 }
 
 .service-3d {
   transform-origin: center center;
-  box-shadow: 0 24px 70px rgba(0,0,0,.28);
+  box-shadow: 0 24px 70px rgba(0,0,0,.2);
+  background: linear-gradient(145deg, rgba(35,62,82,.88), rgba(18,36,52,.94)) !important;
+  border-color: rgba(151,220,255,.17) !important;
 }
-
 .service-3d::before {
   content: '';
   position: absolute;
   inset: 0;
   border-radius: inherit;
   pointer-events: none;
-  background: linear-gradient(125deg, rgba(255,255,255,.055), transparent 28%, transparent 70%, rgba(124,247,212,.035));
+  background: linear-gradient(125deg, rgba(255,255,255,.1), transparent 28%, transparent 70%, rgba(124,247,212,.07));
 }
 
-/* Real WebGL 3D hero. */
+/* Brighter cinematic showroom */
+main.min-h-screen {
+  background:
+    radial-gradient(circle at 74% 8%, rgba(63,151,210,.22), transparent 30%),
+    radial-gradient(circle at 18% 18%, rgba(40,185,157,.13), transparent 26%),
+    linear-gradient(180deg,#102235 0%,#0c1927 36%,#0a141f 100%) !important;
+}
+
+#home {
+  background:
+    radial-gradient(ellipse at 78% 48%, rgba(73,167,225,.18), transparent 35%),
+    radial-gradient(ellipse at 38% 32%, rgba(255,183,96,.08), transparent 28%);
+}
+
+header > div {
+  background: rgba(10,24,37,.79) !important;
+  border-color: rgba(170,225,255,.19) !important;
+  box-shadow: 0 14px 44px rgba(0,0,0,.22), inset 0 1px 0 rgba(255,255,255,.05) !important;
+}
+
+/* Real WebGL 3D hero: increase visibility dramatically. */
 .hero3d-layer {
   position: fixed;
   inset: 0;
@@ -122,89 +107,102 @@ button {
   pointer-events: none;
   transition: opacity .18s linear, transform .18s linear;
   clip-path: inset(0 0 0 43%);
-  filter: saturate(1.08) contrast(1.03);
+  filter: saturate(1.38) contrast(1.04) brightness(1.85);
 }
+.hero3d-layer canvas { width: 100% !important; height: 100% !important; }
 
-.hero3d-layer canvas {
-  width: 100% !important;
-  height: 100% !important;
+/* WebGL owns the hero visual; hide only the duplicate CSS hero phone. */
+#home .phone-render { visibility: hidden !important; }
+
+/* Restore model-specific 3D phone renders in the catalog. */
+#phones .phone-render { display: block !important; visibility: visible !important; }
+#phones article {
+  background: linear-gradient(160deg,#183047,#102233) !important;
+  border-color: rgba(150,220,255,.18) !important;
+  box-shadow: 0 24px 60px rgba(0,0,0,.2) !important;
 }
-
-/* The old CSS-only fake hero phone is removed from view. */
-#home .phone-render {
-  visibility: hidden !important;
-}
-
-/* Never pretend a generated placeholder is the exact store model. */
-#phones .phone-render {
-  display: none !important;
-}
-
 #phones article > div:first-child {
-  min-height: 96px;
-  padding: 22px 20px !important;
+  min-height: 315px;
+  padding: 30px 16px 8px !important;
   display: flex;
-  align-items: flex-end;
+  align-items: center;
+  justify-content: center;
   background:
-    radial-gradient(circle at 85% 10%, rgba(124,247,212,.14), transparent 28%),
-    radial-gradient(circle at 15% 90%, rgba(139,92,246,.12), transparent 30%),
-    linear-gradient(135deg, #17191e, #0c0d10) !important;
+    radial-gradient(circle at 76% 18%, rgba(124,247,212,.28), transparent 29%),
+    radial-gradient(circle at 18% 84%, rgba(118,190,255,.23), transparent 31%),
+    linear-gradient(150deg,#294b65 0%,#19354b 48%,#112638 100%) !important;
+}
+#phones article > div:first-child::after { content: none !important; }
+#phones article h3 { color: #fff7dc !important; }
+#phones article p { color: rgba(232,244,255,.68) !important; }
+#phones article span { text-shadow: 0 0 18px rgba(124,247,212,.12); }
+
+/* Brighten major content areas without turning the site white. */
+#services,#phones,#visit { position: relative; }
+#services::before,#phones::before,#visit::before {
+  content: '';
+  position: absolute;
+  inset: 5% 0;
+  pointer-events: none;
+  background: radial-gradient(circle at 50% 50%,rgba(70,153,207,.08),transparent 55%);
 }
 
-#phones article > div:first-child::after {
-  content: 'Exact store photo only';
-  margin-top: auto;
-  display: block;
-  font-size: 9px;
-  line-height: 1.45;
-  letter-spacing: .14em;
-  text-transform: uppercase;
-  color: rgba(255,255,255,.24);
+/* Floating language selector, restored from the previous site. */
+.mw-language-strip {
+  position: fixed;
+  z-index: 70;
+  top: 78px;
+  right: 22px;
+  display: flex;
+  gap: 5px;
+  padding: 5px;
+  border: 1px solid rgba(176,228,255,.23);
+  border-radius: 999px;
+  background: rgba(12,30,45,.88);
+  box-shadow: 0 12px 35px rgba(0,0,0,.24);
+  backdrop-filter: blur(14px);
+}
+.mw-language-strip a {
+  min-width: 34px;
+  padding: 7px 9px;
+  border-radius: 999px;
+  text-align: center;
+  font-size: 10px;
+  font-weight: 800;
+  letter-spacing: .08em;
+  color: rgba(236,247,255,.7);
+  transition: .2s ease;
+}
+.mw-language-strip a:hover,.mw-language-strip a.active {
+  color: #07131c;
+  background: #7cf7d4;
+  box-shadow: 0 0 22px rgba(124,247,212,.22);
 }
 
 @media (hover: hover) and (pointer: fine) {
-  .service-3d:hover {
-    box-shadow: 0 34px 90px rgba(0,0,0,.42), 0 0 0 1px rgba(124,247,212,.08);
-  }
+  .service-3d:hover { box-shadow: 0 34px 90px rgba(0,0,0,.3),0 0 0 1px rgba(124,247,212,.12); }
+  #phones article:hover { box-shadow: 0 34px 85px rgba(0,0,0,.3),0 0 38px rgba(84,188,255,.08) !important; }
 }
 
 @media (max-width: 1024px) {
-  .hero3d-layer {
-    clip-path: inset(0 0 0 32%);
-    opacity: .9;
-  }
+  .hero3d-layer { clip-path: inset(0 0 0 32%); opacity: .98; }
 }
-
 @media (max-width: 760px) {
-  .hero3d-layer {
-    clip-path: none;
-    opacity: .5;
-    transform: translate3d(20%, 5%, 0) scale(.9);
-  }
+  .hero3d-layer { clip-path: none; opacity: .66; transform: translate3d(20%,5%,0) scale(.9); }
+  .mw-language-strip { top: 72px; right: 10px; }
 }
-
 @media (max-width: 640px) {
-  #phones article > div:first-child {
-    min-height: 82px;
-  }
+  #phones article > div:first-child { min-height: 270px; }
+  .mw-language-strip a { min-width: 30px; padding: 6px 7px; font-size: 9px; }
 }
 
 @media (prefers-reduced-motion: reduce) {
-  *,
-  *::before,
-  *::after {
+  *,*::before,*::after {
     scroll-behavior: auto !important;
     animation-duration: .01ms !important;
     animation-iteration-count: 1 !important;
     transition-duration: .01ms !important;
   }
-
-  .marquee-track {
-    animation: none !important;
-  }
-
-  .hero3d-layer {
-    opacity: .72 !important;
-    transform: none !important;
-  }
+  .marquee-track { animation: none !important; }
+  .hero3d-layer { opacity: .82 !important; transform: none !important; }
 }
