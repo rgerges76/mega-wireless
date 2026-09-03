@@ -3,7 +3,7 @@
   <head>
     <meta charset="UTF-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-    <meta name="theme-color" content="#000000" />
+    <meta name="theme-color" content="#0b1622" />
     <meta name="apple-mobile-web-app-capable" content="yes" />
     <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent" />
     <meta name="apple-mobile-web-app-title" content="Mega Wireless" />
@@ -26,7 +26,68 @@
     <script src="https://files.bpcontent.cloud/2026/08/28/15/20260828155536-V0H9SFBE.js" defer></script>
   </head>
   <body>
+    <div class="mw-language-strip" aria-label="Language selector">
+      <a href="?lang=en" data-mega-lang="en">EN</a>
+      <a href="?lang=es" data-mega-lang="es">ES</a>
+      <a href="?lang=ar" data-mega-lang="ar">AR</a>
+    </div>
     <div id="root"></div>
     <script type="module" src="/src/main.tsx"></script>
+    <script>
+      (function(){
+        var dict={
+          es:{
+            'Services':'Servicios','Phones':'Teléfonos','Mega AI':'Mega AI','Visit':'Visítanos','Ask Mega AI':'Pregunta a Mega AI',
+            'Nashville tech, upgraded':'Tecnología en Nashville, mejorada','Tech help':'Ayuda tecnológica','that feels':'que se siente','future.':'del futuro.',
+            'Try Mega AI':'Prueba Mega AI','Shop unlocked phones':'Compra teléfonos desbloqueados','Free initial diagnostics':'Diagnóstico inicial gratis','Same-day common repairs':'Reparaciones comunes el mismo día',
+            'What we actually do':'Lo que realmente hacemos','One store.':'Una tienda.','Four ways to help.':'Cuatro formas de ayudarte.','Repair':'Reparación','Fix it fast.':'Repáralo rápido.','Phones':'Teléfonos','Buy unlocked.':'Compra desbloqueado.','AI':'IA','Ask before you drive.':'Pregunta antes de venir.','Local':'Local','Help in your language.':'Ayuda en tu idioma.','See repair options':'Ver reparaciones','Browse phones':'Ver teléfonos','Visit the store':'Visita la tienda','Message':'Mensaje','Call':'Llamar','Unlocked':'Desbloqueado','Today’s phone catalog':'Teléfonos disponibles hoy','Mega AI assistant':'Asistente Mega AI','Your first answer':'Tu primera respuesta','before the counter.':'antes de llegar.'
+          },
+          ar:{
+            'Services':'الخدمات','Phones':'الهواتف','Mega AI':'Mega AI','Visit':'زورنا','Ask Mega AI':'اسأل Mega AI',
+            'Nashville tech, upgraded':'تكنولوجيا أذكى في ناشفيل','Tech help':'مساعدة تقنية','that feels':'بإحساس','future.':'المستقبل.','Try Mega AI':'جرّب Mega AI','Shop unlocked phones':'تسوّق هواتف مفتوحة الشبكة','Free initial diagnostics':'فحص مبدئي مجاني','Same-day common repairs':'إصلاحات شائعة في نفس اليوم',
+            'What we actually do':'خدماتنا الحقيقية','One store.':'مكان واحد.','Four ways to help.':'أربع طرق لمساعدتك.','Repair':'صيانة','Fix it fast.':'نصلحه بسرعة.','Phones':'هواتف','Buy unlocked.':'اشتري مفتوح الشبكة.','AI':'ذكاء اصطناعي','Ask before you drive.':'اسأل قبل ما تيجي.','Local':'محلي','Help in your language.':'مساعدة بلغتك.','See repair options':'شوف خدمات الصيانة','Browse phones':'شوف الهواتف','Visit the store':'زور المحل','Message':'راسلنا','Call':'اتصل','Unlocked':'مفتوح الشبكة','Today’s phone catalog':'هواتف متاحة اليوم','Mega AI assistant':'مساعد Mega AI','Your first answer':'أول إجابة ليك','before the counter.':'قبل ما تيجي المحل.'
+          }
+        };
+        var current='en';
+        try{current=new URLSearchParams(location.search).get('lang')||localStorage.getItem('mw_lang')||'en'}catch(e){}
+        if(!/^(en|es|ar)$/.test(current))current='en';
+        var original=new WeakMap();
+        function translateNode(node,lang){
+          if(node.nodeType!==3)return;
+          var raw=node.nodeValue||'';
+          var trimmed=raw.trim();
+          if(!trimmed)return;
+          if(!original.has(node))original.set(node,trimmed);
+          var source=original.get(node)||trimmed;
+          var replacement=lang==='en'?source:((dict[lang]&&dict[lang][source])||source);
+          node.nodeValue=raw.replace(trimmed,replacement);
+        }
+        function apply(lang){
+          current=lang;
+          try{localStorage.setItem('mw_lang',lang)}catch(e){}
+          document.documentElement.lang=lang;
+          document.querySelectorAll('[data-mega-lang]').forEach(function(el){el.classList.toggle('active',el.getAttribute('data-mega-lang')===lang)});
+          var root=document.getElementById('root');
+          if(!root)return;
+          var walker=document.createTreeWalker(root,NodeFilter.SHOW_TEXT);
+          var nodes=[];while(walker.nextNode())nodes.push(walker.currentNode);
+          nodes.forEach(function(n){translateNode(n,lang)});
+        }
+        document.addEventListener('click',function(e){
+          var a=e.target.closest&&e.target.closest('[data-mega-lang]');
+          if(!a)return;
+          e.preventDefault();
+          var lang=a.getAttribute('data-mega-lang')||'en';
+          try{history.replaceState(null,'',location.pathname+'?lang='+lang+location.hash)}catch(err){}
+          apply(lang);
+        });
+        var observer=new MutationObserver(function(){apply(current)});
+        window.addEventListener('DOMContentLoaded',function(){
+          var root=document.getElementById('root');
+          if(root)observer.observe(root,{childList:true,subtree:true});
+          apply(current);
+        });
+      })();
+    </script>
   </body>
 </html>
