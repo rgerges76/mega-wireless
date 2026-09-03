@@ -114,24 +114,85 @@ button {
   background: linear-gradient(125deg, rgba(255,255,255,.055), transparent 28%, transparent 70%, rgba(124,247,212,.035));
 }
 
+/* Real WebGL 3D hero. This is intentionally separate from the product catalog. */
+.hero3d-layer {
+  position: fixed;
+  inset: 0;
+  z-index: 4;
+  pointer-events: none;
+  transition: opacity .18s linear, transform .18s linear;
+  clip-path: inset(0 0 0 43%);
+  filter: saturate(1.08) contrast(1.03);
+}
+
+.hero3d-layer canvas {
+  width: 100% !important;
+  height: 100% !important;
+}
+
+/* Remove the old CSS-only fake phones from the hero. */
+#home .phone-render {
+  visibility: hidden !important;
+}
+
+/* Product rule: never show an invented placeholder as if it were the real model. */
+#phones .phone-render {
+  display: none !important;
+}
+
+#phones article > div:first-child {
+  min-height: 110px;
+  padding: 22px 20px !important;
+  display: flex;
+  align-items: flex-end;
+  background:
+    radial-gradient(circle at 85% 10%, rgba(124,247,212,.14), transparent 28%),
+    radial-gradient(circle at 15% 90%, rgba(139,92,246,.12), transparent 30%),
+    linear-gradient(135deg, #17191e, #0c0d10) !important;
+}
+
+#phones article > div:first-child::after {
+  content: 'Exact photo coming from store inventory';
+  margin-top: auto;
+  display: block;
+  max-width: 170px;
+  font-size: 9px;
+  line-height: 1.45;
+  letter-spacing: .14em;
+  text-transform: uppercase;
+  color: rgba(255,255,255,.28);
+}
+
 @media (hover: hover) and (pointer: fine) {
   .service-3d:hover {
     box-shadow: 0 34px 90px rgba(0,0,0,.42), 0 0 0 1px rgba(124,247,212,.08);
   }
+}
 
-  #phones article:hover .phone-back {
-    transform: translate3d(-6px,-6px,24px) rotateZ(-8deg) rotateY(-8deg);
+@media (max-width: 1024px) {
+  .hero3d-layer {
+    clip-path: inset(0 0 0 32%);
+    opacity: .9;
+  }
+}
+
+@media (max-width: 760px) {
+  .hero3d-layer {
+    clip-path: none;
+    opacity: .5;
+    transform: translate3d(20%, 5%, 0) scale(.9);
   }
 
-  #phones article:hover .phone-front {
-    transform: translate3d(9px,-12px,38px) rotateZ(6deg) rotateY(7deg);
+  #home > div,
+  #home > section {
+    position: relative;
+    z-index: 7;
   }
 }
 
 @media (max-width: 640px) {
-  .phone-render {
-    transform: scale(.96);
-    transform-origin: center;
+  #phones article > div:first-child {
+    min-height: 92px;
   }
 }
 
@@ -147,5 +208,10 @@ button {
 
   .marquee-track {
     animation: none !important;
+  }
+
+  .hero3d-layer {
+    opacity: .72 !important;
+    transform: none !important;
   }
 }
