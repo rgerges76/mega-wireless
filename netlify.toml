@@ -1,4 +1,5 @@
 [build]
+  command = "node scripts/inject-auth-callback-router.cjs"
   publish = "public"
   functions = "netlify/functions"
 
