@@ -1,11 +1,23 @@
-import { useEffect, useMemo, useRef, useState } from 'react'
-import { ArrowRight, Bot, Check, MapPin, MessageCircle, Phone, ShieldCheck, Smartphone, Wrench } from 'lucide-react'
-import { motion, useInView, useScroll, useTransform, type MotionValue } from 'framer-motion'
+import { useEffect, useRef, useState } from 'react'
+import {
+  ArrowRight,
+  BatteryCharging,
+  Bot,
+  Check,
+  CircleDollarSign,
+  Languages,
+  MapPin,
+  MessageCircle,
+  Phone,
+  ShieldCheck,
+  Sparkles,
+  Smartphone,
+  Wrench,
+  Zap,
+} from 'lucide-react'
+import { motion, useInView } from 'framer-motion'
 
-const PRIMARY = '#E1E0CC'
 const EASE = [0.16, 1, 0.3, 1] as const
-const HERO_VIDEO = 'https://d8j0ntlcm91z4.cloudfront.net/user_38xzZboKViGWJOttwIXH07lWA1P/hf_20260405_170732_8a9ccda6-5cff-4628-b164-059c500a2b41.mp4'
-const FEATURE_VIDEO = 'https://d8j0ntlcm91z4.cloudfront.net/user_38xzZboKViGWJOttwIXH07lWA1P/hf_20260406_133058_0504132a-0cf3-4450-a370-8ea3b05c95d4.mp4'
 
 type PhoneItem = {
   name: string
@@ -19,7 +31,14 @@ type PhoneItem = {
   brand?: string
 }
 
-type MultiStyleSegment = { text: string; className?: string }
+type CameraKind = 'dualVertical' | 'dualDiagonal' | 'triple' | 'samsungTriple' | 'samsungQuad' | 'basic'
+
+type PhoneProfile = {
+  camera: CameraKind
+  finish: string
+  accent: string
+  label: string
+}
 
 declare global {
   interface Window {
@@ -28,215 +47,267 @@ declare global {
   }
 }
 
-function WordsPullUp({ text, className = '', showAsterisk = false }: { text: string; className?: string; showAsterisk?: boolean }) {
-  const ref = useRef<HTMLDivElement>(null)
-  const isInView = useInView(ref, { once: true, margin: '-40px' })
-  const words = text.split(' ')
-
-  return (
-    <div ref={ref} className={`inline-flex flex-wrap ${className}`} aria-label={text}>
-      {words.map((word, index) => (
-        <span key={`${word}-${index}`} className="overflow-hidden inline-block pr-[0.16em] -mr-[0.16em]">
-          <motion.span
-            className="relative inline-block"
-            initial={{ y: 20, opacity: 0 }}
-            animate={isInView ? { y: 0, opacity: 1 } : { y: 20, opacity: 0 }}
-            transition={{ duration: 0.8, delay: index * 0.08, ease: EASE }}
-          >
-            {word}
-            {showAsterisk && index === words.length - 1 && (
-              <span className="absolute top-[0.65em] -right-[0.3em] text-[0.31em] leading-none">*</span>
-            )}
-          </motion.span>
-          {index !== words.length - 1 && <span>&nbsp;</span>}
-        </span>
-      ))}
-    </div>
-  )
-}
-
-function WordsPullUpMultiStyle({ segments, className = '', justify = 'justify-center' }: { segments: MultiStyleSegment[]; className?: string; justify?: string }) {
-  const ref = useRef<HTMLDivElement>(null)
-  const isInView = useInView(ref, { once: true, margin: '-40px' })
-  const words = useMemo(
-    () => segments.flatMap((segment) => segment.text.split(' ').map((word) => ({ word, className: segment.className ?? '' }))),
-    [segments],
-  )
-
-  return (
-    <div ref={ref} className={`inline-flex flex-wrap ${justify} ${className}`}>
-      {words.map((item, index) => (
-        <span key={`${item.word}-${index}`} className="overflow-hidden inline-block pr-[0.22em] -mr-[0.12em]">
-          <motion.span
-            className={`inline-block ${item.className}`}
-            initial={{ y: 20, opacity: 0 }}
-            animate={isInView ? { y: 0, opacity: 1 } : { y: 20, opacity: 0 }}
-            transition={{ duration: 0.8, delay: index * 0.08, ease: EASE }}
-          >
-            {item.word}
-          </motion.span>
-          <span>&nbsp;</span>
-        </span>
-      ))}
-    </div>
-  )
-}
-
-function AnimatedLetter({ char, index, total, progress }: { char: string; index: number; total: number; progress: MotionValue<number> }) {
-  const charProgress = total > 1 ? index / total : 0
-  const opacity = useTransform(progress, [Math.max(0, charProgress - 0.1), Math.min(1, charProgress + 0.05)], [0.2, 1])
-  return <motion.span style={{ opacity }}>{char}</motion.span>
-}
-
-function AboutReveal() {
-  const text = 'For more than a decade, Mega Wireless has helped Nashville customers repair devices, buy reliable unlocked phones, activate prepaid service and solve everyday tech problems. Today, our AI assistant adds another layer of help before you even walk through the door.'
-  const target = useRef<HTMLParagraphElement>(null)
-  const { scrollYProgress } = useScroll({ target, offset: ['start 0.8', 'end 0.2'] })
-  const chars = [...text]
-
-  return (
-    <p ref={target} className="mx-auto mt-10 max-w-3xl text-xs leading-6 text-[#DEDBC8] sm:text-sm sm:leading-7 md:text-base md:leading-8">
-      {chars.map((char, index) => (
-        <AnimatedLetter key={`${index}-${char}`} char={char} index={index} total={chars.length} progress={scrollYProgress} />
-      ))}
-    </p>
-  )
-}
-
 function openAI() {
   try {
-    window.gtag?.('event', 'ai_chat_started', { context: 'prisma_redesign' })
+    window.gtag?.('event', 'ai_chat_started', { context: 'showroom_redesign' })
     if (window.botpress?.open) {
       window.botpress.open()
       return
     }
   } catch {
-    // Optional webchat fallback below.
+    // Keep the public site usable even if analytics/chat is unavailable.
   }
-  document.getElementById('features')?.scrollIntoView({ behavior: 'smooth' })
+  document.getElementById('ai')?.scrollIntoView({ behavior: 'smooth' })
 }
 
-const navItems = [
-  ['Our story', '#about'],
-  ['Phones', '#phones'],
-  ['Repairs', '/phone-screen-repair-nashville.html'],
-  ['AI Assistant', '#features'],
-  ['Visit us', '#visit'],
-] as const
+function getPhoneProfile(name: string, specs = ''): PhoneProfile {
+  const n = name.toLowerCase()
+  const s = specs.toLowerCase()
+  const isBlue = s.includes('blue') || n.includes('blue')
 
-const featureCards = [
-  {
-    number: '01',
-    title: 'Smart repair intake.',
-    icon: Wrench,
-    items: ['Free initial diagnosis', 'Clear repair quote before work', 'Same-day service on many common repairs', '30-day standard screen warranty'],
-  },
-  {
-    number: '02',
-    title: 'Mega AI support.',
-    icon: Bot,
-    items: ['Ask simple phone or computer questions', 'English, Spanish and Arabic', 'Fast troubleshooting before your visit'],
-  },
-  {
-    number: '03',
-    title: 'Unlocked phone studio.',
-    icon: Smartphone,
-    items: ['Live phone pricing from our catalog', 'Every phone card includes a visual', 'Call or message to confirm availability'],
-  },
-] as const
-
-function handleFeatureAction(number: string) {
-  if (number === '01') {
-    window.location.href = '/phone-screen-repair-nashville.html'
-  } else if (number === '02') {
-    openAI()
-  } else {
-    document.getElementById('phones')?.scrollIntoView({ behavior: 'smooth' })
+  if (n.includes('s20 ultra')) {
+    return { camera: 'samsungQuad', finish: 'from-[#2c3040] to-[#0c0d12]', accent: '#88a9ff', label: 'Galaxy Ultra' }
   }
+  if (n.includes('s21')) {
+    return { camera: 'samsungTriple', finish: 'from-[#b7a6d9] to-[#312942]', accent: '#c9b6ff', label: 'Galaxy S' }
+  }
+  if (n.includes('samsung')) {
+    return { camera: 'samsungTriple', finish: 'from-[#777f90] to-[#16181d]', accent: '#b6c7ff', label: 'Galaxy' }
+  }
+  if (n.includes('blu')) {
+    return { camera: 'basic', finish: 'from-[#2e7da5] to-[#0a273d]', accent: '#63d7ff', label: 'BLU' }
+  }
+  if (n.includes('pro')) {
+    return {
+      camera: 'triple',
+      finish: isBlue ? 'from-[#758aa4] to-[#1d2631]' : 'from-[#79736b] to-[#292622]',
+      accent: isBlue ? '#9db9d7' : '#c7b59c',
+      label: 'iPhone Pro',
+    }
+  }
+  if (n.includes('iphone 11') || n.includes('iphone 12')) {
+    return {
+      camera: 'dualVertical',
+      finish: isBlue ? 'from-[#557b9d] to-[#17334b]' : 'from-[#525257] to-[#171719]',
+      accent: isBlue ? '#86b8df' : '#b8b8bf',
+      label: 'iPhone',
+    }
+  }
+  if (n.includes('iphone')) {
+    return {
+      camera: 'dualDiagonal',
+      finish: isBlue ? 'from-[#78a9c8] to-[#254a63]' : 'from-[#66656a] to-[#1c1c20]',
+      accent: isBlue ? '#9bd5f6' : '#c5c3ca',
+      label: 'iPhone',
+    }
+  }
+  return { camera: 'basic', finish: 'from-[#4e5663] to-[#171a1f]', accent: '#b7c3d4', label: 'Phone' }
 }
 
-function FeatureInfoCard({ card, index }: { card: (typeof featureCards)[number]; index: number }) {
-  const ref = useRef<HTMLElement>(null)
-  const visible = useInView(ref, { once: true, margin: '-100px' })
-  const Icon = card.icon
+function isGenericPlaceholder(image?: string) {
+  if (!image) return true
+  return /\/assets\/phones\/.+\.svg(?:\?|$)/i.test(image)
+}
+
+function CameraCluster({ kind }: { kind: CameraKind }) {
+  const lens = (className: string) => (
+    <span className={`absolute rounded-full border border-white/25 bg-[#08090b] shadow-[inset_0_0_0_3px_#20242a,0_4px_10px_rgba(0,0,0,.45)] ${className}`}>
+      <span className="absolute left-[28%] top-[22%] h-[22%] w-[22%] rounded-full bg-white/45 blur-[1px]" />
+    </span>
+  )
+
+  if (kind === 'triple') {
+    return (
+      <div className="absolute left-3 top-3 h-[72px] w-[72px] rounded-[22px] border border-white/15 bg-black/20 shadow-[0_12px_30px_rgba(0,0,0,.28)] backdrop-blur-sm">
+        {lens('left-[8px] top-[8px] h-[27px] w-[27px]')}
+        {lens('right-[8px] top-[8px] h-[27px] w-[27px]')}
+        {lens('left-[22px] bottom-[8px] h-[27px] w-[27px]')}
+        <span className="absolute bottom-[10px] right-[9px] h-[8px] w-[8px] rounded-full bg-[#d9d0b5]/80" />
+      </div>
+    )
+  }
+
+  if (kind === 'dualDiagonal') {
+    return (
+      <div className="absolute left-3 top-3 h-[66px] w-[66px] rounded-[21px] border border-white/15 bg-black/20 backdrop-blur-sm">
+        {lens('left-[8px] top-[8px] h-[27px] w-[27px]')}
+        {lens('right-[8px] bottom-[8px] h-[27px] w-[27px]')}
+        <span className="absolute right-[10px] top-[10px] h-[7px] w-[7px] rounded-full bg-[#d9d0b5]/80" />
+      </div>
+    )
+  }
+
+  if (kind === 'dualVertical') {
+    return (
+      <div className="absolute left-3 top-3 h-[74px] w-[54px] rounded-[20px] border border-white/15 bg-black/20 backdrop-blur-sm">
+        {lens('left-[13px] top-[8px] h-[27px] w-[27px]')}
+        {lens('left-[13px] bottom-[8px] h-[27px] w-[27px]')}
+        <span className="absolute right-[6px] top-[33px] h-[6px] w-[6px] rounded-full bg-[#d9d0b5]/80" />
+      </div>
+    )
+  }
+
+  if (kind === 'samsungQuad') {
+    return (
+      <div className="absolute left-3 top-3 h-[86px] w-[55px] rounded-[16px] border border-white/10 bg-black/45">
+        {lens('left-[8px] top-[8px] h-[24px] w-[24px]')}
+        {lens('left-[8px] top-[36px] h-[24px] w-[24px]')}
+        {lens('left-[8px] bottom-[7px] h-[20px] w-[20px]')}
+        <span className="absolute right-[7px] top-[12px] h-[9px] w-[9px] rounded-full bg-[#11151b]" />
+        <span className="absolute right-[8px] top-[31px] h-[6px] w-[6px] rounded-full bg-[#d9d0b5]/80" />
+      </div>
+    )
+  }
+
+  if (kind === 'samsungTriple') {
+    return (
+      <div className="absolute left-3 top-3 h-[92px] w-[42px] rounded-[16px] bg-black/25">
+        {lens('left-[8px] top-[7px] h-[26px] w-[26px]')}
+        {lens('left-[8px] top-[34px] h-[26px] w-[26px]')}
+        {lens('left-[8px] bottom-[6px] h-[26px] w-[26px]')}
+      </div>
+    )
+  }
 
   return (
-    <motion.article
-      ref={ref}
-      initial={{ opacity: 0, scale: 0.95 }}
-      animate={visible ? { opacity: 1, scale: 1 } : { opacity: 0, scale: 0.95 }}
-      transition={{ duration: 0.8, delay: index * 0.15, ease: [0.22, 1, 0.36, 1] }}
-      className="flex min-h-[360px] flex-col rounded-[1.6rem] bg-[#212121] p-5 sm:p-6 lg:min-h-0"
-    >
-      <div className="flex items-start justify-between">
-        <div className="grid h-12 w-12 place-items-center rounded-xl bg-primary text-black"><Icon size={22} /></div>
-        <span className="text-xs text-gray-500">({card.number})</span>
+    <div className="absolute left-3 top-3 h-[55px] w-[42px] rounded-[15px] bg-black/25">
+      {lens('left-[8px] top-[7px] h-[25px] w-[25px]')}
+      <span className="absolute bottom-[8px] left-[10px] h-[7px] w-[7px] rounded-full bg-[#d9d0b5]/80" />
+    </div>
+  )
+}
+
+function PhoneRender({ name, specs, image, hero = false }: { name: string; specs?: string; image?: string; hero?: boolean }) {
+  const profile = getPhoneProfile(name, specs)
+  const hasRealPhoto = !isGenericPlaceholder(image)
+
+  if (hasRealPhoto) {
+    return (
+      <div className={`relative mx-auto ${hero ? 'h-[380px] w-[300px] sm:h-[500px] sm:w-[390px]' : 'h-[250px] w-[210px]'}`}>
+        <motion.img
+          src={image}
+          alt={`${name} at Mega Wireless`}
+          className="h-full w-full object-contain drop-shadow-[0_35px_45px_rgba(0,0,0,.65)]"
+          animate={hero ? { y: [0, -10, 0], rotateZ: [-2, 1, -2] } : undefined}
+          transition={hero ? { duration: 6, repeat: Infinity, ease: 'easeInOut' } : undefined}
+        />
       </div>
-      <h3 className="mt-10 text-xl font-normal text-primary sm:text-2xl">{card.title}</h3>
-      <div className="mt-7 space-y-4">
-        {card.items.map((item) => (
-          <div key={item} className="flex gap-3 text-sm leading-5 text-gray-400">
-            <Check className="mt-0.5 h-4 w-4 shrink-0 text-primary" strokeWidth={1.7} />
-            <span>{item}</span>
+    )
+  }
+
+  return (
+    <div className={`phone-render relative mx-auto ${hero ? 'h-[390px] w-[300px] sm:h-[500px] sm:w-[390px]' : 'h-[250px] w-[210px]'}`} aria-label={`${name} stylized model render`}>
+      <motion.div
+        className="phone-shadow absolute left-1/2 top-[86%] h-[13%] w-[68%] -translate-x-1/2 rounded-full bg-black/70 blur-2xl"
+        animate={hero ? { scaleX: [1, 0.86, 1], opacity: [0.6, 0.42, 0.6] } : undefined}
+        transition={hero ? { duration: 5.5, repeat: Infinity, ease: 'easeInOut' } : undefined}
+      />
+
+      <motion.div
+        className={`phone-back absolute left-[16%] top-[6%] h-[78%] w-[56%] rounded-[34px] border border-white/20 bg-gradient-to-br ${profile.finish} shadow-[0_35px_70px_rgba(0,0,0,.55),inset_0_1px_0_rgba(255,255,255,.35)]`}
+        style={{ transformStyle: 'preserve-3d' }}
+        animate={hero ? { y: [0, -14, 0], rotateZ: [-10, -7, -10], rotateY: [-20, -12, -20] } : undefined}
+        transition={hero ? { duration: 6.3, repeat: Infinity, ease: 'easeInOut' } : undefined}
+      >
+        <div className="absolute inset-[3px] rounded-[31px] border border-white/10" />
+        <CameraCluster kind={profile.camera} />
+        <span className="absolute bottom-6 left-1/2 -translate-x-1/2 text-[8px] font-bold uppercase tracking-[0.35em] text-white/35">{profile.label}</span>
+        <span className="absolute -right-[2px] top-[82px] h-[44px] w-[3px] rounded-full bg-white/20" />
+      </motion.div>
+
+      <motion.div
+        className="phone-front absolute bottom-[3%] right-[5%] h-[74%] w-[55%] rounded-[34px] border border-white/20 bg-[#09090b] p-[5px] shadow-[0_38px_75px_rgba(0,0,0,.62)]"
+        animate={hero ? { y: [0, -18, 0], rotateZ: [8, 5, 8], rotateY: [14, 9, 14] } : undefined}
+        transition={hero ? { duration: 5.6, repeat: Infinity, ease: 'easeInOut' } : undefined}
+      >
+        <div className="relative h-full overflow-hidden rounded-[29px] bg-[radial-gradient(circle_at_35%_28%,rgba(111,245,209,.5),transparent_26%),radial-gradient(circle_at_70%_68%,rgba(139,92,246,.65),transparent_30%),linear-gradient(150deg,#111827,#08070d_60%,#030303)]">
+          <div className="absolute left-1/2 top-[9px] h-[11px] w-[42px] -translate-x-1/2 rounded-full bg-black" />
+          <div className="absolute inset-0 bg-[linear-gradient(120deg,transparent_35%,rgba(255,255,255,.08)_45%,transparent_58%)]" />
+          <div className="absolute bottom-5 left-4 right-4">
+            <div className="text-[8px] uppercase tracking-[0.28em] text-white/45">Mega Wireless</div>
+            <div className="mt-1 text-[11px] font-bold text-white/90">SMART TECH · REAL HELP</div>
           </div>
-        ))}
+        </div>
+      </motion.div>
+
+      <span className="absolute right-[2%] top-[7%] h-3 w-3 rounded-full blur-[1px]" style={{ background: profile.accent, boxShadow: `0 0 35px ${profile.accent}` }} />
+    </div>
+  )
+}
+
+function Reveal({ children, delay = 0, className = '' }: { children: React.ReactNode; delay?: number; className?: string }) {
+  const ref = useRef<HTMLDivElement>(null)
+  const visible = useInView(ref, { once: true, margin: '-60px' })
+  return (
+    <motion.div ref={ref} className={className} initial={{ opacity: 0, y: 24 }} animate={visible ? { opacity: 1, y: 0 } : { opacity: 0, y: 24 }} transition={{ duration: 0.75, delay, ease: EASE }}>
+      {children}
+    </motion.div>
+  )
+}
+
+function ServiceCard({ icon: Icon, kicker, title, text, action, href, delay }: { icon: typeof Wrench; kicker: string; title: string; text: string; action: string; href?: string; delay: number }) {
+  const content = (
+    <motion.div whileHover={{ y: -8, rotateX: -3, rotateY: 3 }} transition={{ duration: 0.25 }} className="service-3d group relative h-full overflow-hidden rounded-[28px] border border-white/10 bg-white/[0.045] p-6 sm:p-7">
+      <div className="absolute -right-16 -top-16 h-44 w-44 rounded-full bg-[#7cf7d4]/10 blur-3xl transition group-hover:bg-[#7cf7d4]/20" />
+      <div className="relative z-10 flex h-full flex-col">
+        <div className="flex items-center justify-between">
+          <span className="grid h-12 w-12 place-items-center rounded-2xl border border-white/10 bg-black/35"><Icon size={21} /></span>
+          <span className="text-[10px] uppercase tracking-[0.24em] text-white/35">{kicker}</span>
+        </div>
+        <h3 className="mt-10 text-2xl font-bold tracking-[-0.04em] text-[#f1efdf]">{title}</h3>
+        <p className="mt-4 text-sm leading-6 text-white/50">{text}</p>
+        <div className="mt-auto flex items-center gap-2 pt-9 text-sm font-bold text-[#7cf7d4]">{action}<ArrowRight size={16} className="transition-transform group-hover:translate-x-1" /></div>
       </div>
-      <button onClick={() => handleFeatureAction(card.number)} className="group mt-auto flex items-center gap-2 pt-10 text-sm text-primary">
-        {card.number === '02' ? 'Try Mega AI' : card.number === '03' ? 'See phones' : 'Learn more'}
-        <ArrowRight className="h-4 w-4 -rotate-45 transition-transform group-hover:translate-x-1" />
-      </button>
-    </motion.article>
+    </motion.div>
+  )
+
+  return (
+    <Reveal delay={delay} className="h-full">
+      {href ? <a href={href} className="block h-full [perspective:1000px]">{content}</a> : <button onClick={openAI} className="block h-full w-full text-left [perspective:1000px]">{content}</button>}
+    </Reveal>
   )
 }
 
 function PhoneCard({ phone, index }: { phone: PhoneItem; index: number }) {
   const ref = useRef<HTMLElement>(null)
-  const visible = useInView(ref, { once: true, margin: '-40px' })
+  const visible = useInView(ref, { once: true, margin: '-60px' })
   const name = phone.name || 'Phone'
-  const image = phone.image || (name.toLowerCase().includes('samsung') ? '/assets/phones/samsung.svg' : '/assets/phones/iphone-black.svg')
   const message = encodeURIComponent(`Hello Mega Wireless, is the ${name} available?`)
 
   return (
     <motion.article
       ref={ref}
-      initial={{ opacity: 0, y: 24 }}
-      animate={visible ? { opacity: 1, y: 0 } : { opacity: 0, y: 24 }}
-      transition={{ duration: 0.7, delay: Math.min(index * 0.06, 0.42), ease: EASE }}
-      className="group overflow-hidden rounded-[1.6rem] border border-white/5 bg-[#171717]"
+      initial={{ opacity: 0, y: 30, scale: 0.97 }}
+      animate={visible ? { opacity: 1, y: 0, scale: 1 } : { opacity: 0, y: 30, scale: 0.97 }}
+      transition={{ duration: 0.65, delay: Math.min(index * 0.05, 0.35), ease: EASE }}
+      whileHover={{ y: -10 }}
+      className="group overflow-hidden rounded-[30px] border border-white/10 bg-[#111214] shadow-[0_24px_60px_rgba(0,0,0,.25)]"
     >
-      <div className="relative aspect-[4/3] overflow-hidden bg-[#0d0d0d] p-5 sm:p-6">
-        <div className="absolute inset-0 bg-gradient-to-b from-white/[0.04] to-transparent" />
-        <img
-          src={image}
-          alt={`${name} available at Mega Wireless Nashville`}
-          className="relative z-10 h-full w-full object-contain transition duration-700 group-hover:scale-[1.04]"
-          loading="lazy"
-          onError={(event) => { event.currentTarget.src = '/assets/phones/iphone-black.svg' }}
-        />
+      <div className="relative overflow-hidden bg-[radial-gradient(circle_at_50%_20%,rgba(124,247,212,.09),transparent_42%),linear-gradient(180deg,#191b20,#0d0e10)] px-4 pb-1 pt-5">
+        <span className="absolute left-5 top-5 rounded-full border border-white/10 bg-black/25 px-3 py-1 text-[9px] uppercase tracking-[0.22em] text-white/50">Unlocked</span>
+        <PhoneRender name={name} specs={phone.specs} image={phone.image} />
       </div>
-      <div className="p-5 sm:p-6">
+      <div className="border-t border-white/5 p-5 sm:p-6">
         <div className="flex items-start justify-between gap-4">
-          <div>
-            <h3 className="text-lg text-primary">{name}</h3>
-            <p className="mt-1 text-xs text-gray-500">{phone.specs || 'Call for storage details'} · Unlocked</p>
+          <div className="min-w-0">
+            <h3 className="truncate text-lg font-bold tracking-[-0.03em] text-[#f2efdf]">{name}</h3>
+            <p className="mt-1 text-xs text-white/38">{phone.specs || 'Storage details available by phone'}</p>
           </div>
-          <span className="text-lg text-primary">{phone.price || 'Call'}</span>
+          <span className="shrink-0 text-lg font-extrabold text-[#7cf7d4]">{phone.price || 'Call'}</span>
         </div>
-        <p className="mt-5 text-xs leading-5 text-gray-400">{phone.availability || 'Call or message to confirm today’s availability.'}</p>
+        <p className="mt-4 min-h-[40px] text-xs leading-5 text-white/45">{phone.availability || 'Call or message to confirm today’s availability.'}</p>
         <div className="mt-6 grid grid-cols-2 gap-2">
-          <a href={`https://wa.me/16156785849?text=${message}`} className="rounded-full bg-primary px-4 py-3 text-center text-xs font-bold text-black transition hover:opacity-90">Message</a>
-          <a href="tel:+16156785849" className="rounded-full border border-primary/30 px-4 py-3 text-center text-xs text-primary transition hover:border-primary/70">Call</a>
+          <a href={`https://wa.me/16156785849?text=${message}`} className="rounded-full bg-[#f1efdf] px-4 py-3 text-center text-xs font-extrabold text-black transition hover:bg-white">Message</a>
+          <a href="tel:+16156785849" className="rounded-full border border-white/15 px-4 py-3 text-center text-xs font-bold text-white/75 transition hover:border-[#7cf7d4]/60 hover:text-[#7cf7d4]">Call</a>
         </div>
       </div>
     </motion.article>
   )
 }
 
-export default function App() {
+function App() {
   const [phones, setPhones] = useState<PhoneItem[]>([])
   const [phoneError, setPhoneError] = useState(false)
-  const videoCardRef = useRef<HTMLElement>(null)
-  const videoCardVisible = useInView(videoCardRef, { once: true, margin: '-100px' })
 
   useEffect(() => {
     const controller = new AbortController()
@@ -264,138 +335,211 @@ export default function App() {
   }, [])
 
   return (
-    <main className="bg-black text-primary">
-      <section id="home" className="h-screen p-4 md:p-6">
-        <div className="relative h-full overflow-hidden rounded-2xl bg-[#0b0b0b] md:rounded-[2rem]">
-          <video src={HERO_VIDEO} autoPlay loop muted playsInline className="absolute inset-0 h-full w-full object-cover" />
-          <div className="noise-overlay pointer-events-none absolute inset-0 opacity-[0.7] mix-blend-overlay" />
-          <div className="absolute inset-0 bg-gradient-to-b from-black/30 via-transparent to-black/70" />
-          <div className="absolute inset-0 bg-gradient-to-r from-black/20 via-transparent to-black/15" />
-
-          <nav className="absolute left-1/2 top-0 z-20 -translate-x-1/2 rounded-b-2xl bg-black px-4 py-2 md:rounded-b-3xl md:px-8">
-            <div className="flex items-center gap-3 sm:gap-6 md:gap-12 lg:gap-14">
-              {navItems.map(([label, href]) => (
-                <a key={label} href={href} className="whitespace-nowrap text-[10px] transition-colors sm:text-xs md:text-sm" style={{ color: 'rgba(225,224,204,.8)' }} onMouseEnter={(event) => { event.currentTarget.style.color = PRIMARY }} onMouseLeave={(event) => { event.currentTarget.style.color = 'rgba(225,224,204,.8)' }}>
-                  {label}
-                </a>
-              ))}
+    <main className="min-h-screen overflow-hidden bg-[#050506] text-[#f1efdf]">
+      <header className="fixed left-0 right-0 top-0 z-50 px-3 pt-3 sm:px-5 sm:pt-4">
+        <div className="mx-auto flex max-w-[1380px] items-center justify-between rounded-full border border-white/10 bg-black/60 px-4 py-3 shadow-[0_12px_40px_rgba(0,0,0,.25)] backdrop-blur-xl sm:px-6">
+          <a href="#home" className="flex items-center gap-3">
+            <span className="grid h-9 w-9 place-items-center rounded-full bg-[#7cf7d4] text-[11px] font-black text-black">MW</span>
+            <div className="hidden sm:block">
+              <div className="text-sm font-extrabold tracking-[-0.02em]">MEGA WIRELESS</div>
+              <div className="text-[8px] uppercase tracking-[0.28em] text-white/35">Nashville</div>
             </div>
+          </a>
+          <nav className="hidden items-center gap-7 text-xs font-bold text-white/55 md:flex">
+            <a className="transition hover:text-white" href="#services">Services</a>
+            <a className="transition hover:text-white" href="#phones">Phones</a>
+            <a className="transition hover:text-white" href="#ai">Mega AI</a>
+            <a className="transition hover:text-white" href="#visit">Visit</a>
           </nav>
+          <button onClick={openAI} className="inline-flex items-center gap-2 rounded-full bg-[#f1efdf] px-4 py-2.5 text-xs font-extrabold text-black transition hover:scale-[1.02]">Ask Mega AI <Sparkles size={14} /></button>
+        </div>
+      </header>
 
-          <div className="absolute bottom-0 left-0 right-0 z-10 px-5 pb-5 sm:px-7 sm:pb-7 md:px-9 md:pb-9 lg:px-12 lg:pb-10">
-            <div className="grid grid-cols-1 items-end gap-6 md:grid-cols-12 md:gap-5">
-              <div className="md:col-span-8">
-                <WordsPullUp text="Mega" showAsterisk className="text-[26vw] font-medium leading-[0.85] tracking-[-0.07em] text-[#E1E0CC] sm:text-[24vw] md:text-[22vw] lg:text-[20vw] xl:text-[19vw] 2xl:text-[20vw]" />
-              </div>
-              <div className="pb-1 md:col-span-4 md:pb-4 lg:pb-6">
-                <motion.p initial={{ opacity: 0, y: 20 }} animate={{ opacity: 1, y: 0 }} transition={{ duration: 0.85, delay: 0.5, ease: EASE }} className="max-w-md text-xs leading-[1.2] text-primary/70 sm:text-sm md:text-base">
-                  Mega Wireless is Nashville’s local tech studio for phone repair, unlocked devices, prepaid service and AI-powered help — built around speed, clarity and real human support.
-                </motion.p>
-                <motion.button onClick={openAI} initial={{ opacity: 0, y: 20 }} animate={{ opacity: 1, y: 0 }} transition={{ duration: 0.85, delay: 0.7, ease: EASE }} className="group mt-5 inline-flex items-center gap-2 rounded-full bg-primary py-1 pl-5 pr-1 text-sm font-medium text-black transition-all hover:gap-3 sm:text-base">
-                  Ask Mega AI
-                  <span className="grid h-9 w-9 place-items-center rounded-full bg-black text-primary transition-transform group-hover:scale-110 sm:h-10 sm:w-10"><ArrowRight size={17} /></span>
-                </motion.button>
-              </div>
+      <section id="home" className="relative min-h-screen px-4 pb-16 pt-28 sm:px-6 lg:pt-32">
+        <div className="pointer-events-none absolute left-[8%] top-[15%] h-[360px] w-[360px] rounded-full bg-[#7cf7d4]/10 blur-[110px]" />
+        <div className="pointer-events-none absolute right-[4%] top-[22%] h-[430px] w-[430px] rounded-full bg-[#8b5cf6]/12 blur-[130px]" />
+        <div className="pointer-events-none absolute bottom-[4%] left-[38%] h-[300px] w-[300px] rounded-full bg-[#ff9d5c]/8 blur-[110px]" />
+
+        <div className="mx-auto grid min-h-[760px] max-w-[1380px] items-center gap-10 lg:grid-cols-[1.05fr_.95fr]">
+          <div className="relative z-10 pt-8 lg:pt-0">
+            <motion.div initial={{ opacity: 0, y: 14 }} animate={{ opacity: 1, y: 0 }} transition={{ duration: 0.7, ease: EASE }} className="inline-flex items-center gap-2 rounded-full border border-[#7cf7d4]/25 bg-[#7cf7d4]/7 px-4 py-2 text-[10px] font-bold uppercase tracking-[0.2em] text-[#9bf9df]">
+              <Zap size={13} /> Nashville tech, upgraded
+            </motion.div>
+            <motion.h1 initial={{ opacity: 0, y: 24 }} animate={{ opacity: 1, y: 0 }} transition={{ duration: 0.9, delay: 0.08, ease: EASE }} className="mt-7 max-w-[760px] text-[clamp(3.5rem,8vw,8.6rem)] font-extrabold leading-[0.78] tracking-[-0.075em]">
+              Tech help<br />that feels<br /><span className="hero-gradient-text">future.</span>
+            </motion.h1>
+            <motion.p initial={{ opacity: 0, y: 20 }} animate={{ opacity: 1, y: 0 }} transition={{ duration: 0.8, delay: 0.18, ease: EASE }} className="mt-8 max-w-xl text-sm leading-7 text-white/52 sm:text-base">
+              Repairs, unlocked phones, prepaid service and an AI assistant — all in one local Nashville store. No boring catalog. No guessing what to do next.
+            </motion.p>
+            <motion.div initial={{ opacity: 0, y: 20 }} animate={{ opacity: 1, y: 0 }} transition={{ duration: 0.8, delay: 0.28, ease: EASE }} className="mt-8 flex flex-wrap gap-3">
+              <button onClick={openAI} className="group inline-flex items-center gap-3 rounded-full bg-[#7cf7d4] px-6 py-4 text-sm font-extrabold text-black transition hover:gap-4 hover:bg-[#9bf9df]">Try Mega AI <ArrowRight size={17} /></button>
+              <a href="#phones" className="inline-flex items-center gap-3 rounded-full border border-white/15 bg-white/[0.035] px-6 py-4 text-sm font-bold text-white/80 transition hover:border-white/30 hover:bg-white/[0.07]">Shop unlocked phones</a>
+            </motion.div>
+            <motion.div initial={{ opacity: 0 }} animate={{ opacity: 1 }} transition={{ duration: 1, delay: 0.5 }} className="mt-10 flex flex-wrap gap-x-7 gap-y-3 text-[10px] uppercase tracking-[0.18em] text-white/35">
+              <span>Free initial diagnostics</span><span>Same-day common repairs</span><span>English · Español · العربية</span>
+            </motion.div>
+          </div>
+
+          <motion.div initial={{ opacity: 0, scale: 0.92, x: 30 }} animate={{ opacity: 1, scale: 1, x: 0 }} transition={{ duration: 1.1, delay: 0.12, ease: EASE }} className="relative min-h-[520px] [perspective:1300px] sm:min-h-[620px]">
+            <div className="absolute left-1/2 top-1/2 h-[70%] w-[75%] -translate-x-1/2 -translate-y-1/2 rounded-full border border-white/10 bg-white/[0.02] shadow-[inset_0_0_80px_rgba(255,255,255,.02)]" />
+            <div className="absolute left-1/2 top-1/2 h-[54%] w-[54%] -translate-x-1/2 -translate-y-1/2 rounded-full border border-[#7cf7d4]/15" />
+            <div className="absolute left-1/2 top-1/2 h-[36%] w-[36%] -translate-x-1/2 -translate-y-1/2 rounded-full bg-[#7cf7d4]/10 blur-3xl" />
+            <div className="absolute left-1/2 top-[47%] w-full -translate-x-1/2 -translate-y-1/2">
+              <PhoneRender name="iPhone 15 Pro" specs="Titanium" hero />
             </div>
+            <motion.div animate={{ y: [0, -10, 0], rotateZ: [3, 1, 3] }} transition={{ duration: 5, repeat: Infinity, ease: 'easeInOut' }} className="absolute right-[2%] top-[15%] rounded-2xl border border-white/10 bg-black/45 px-4 py-3 backdrop-blur-xl sm:right-[7%]">
+              <div className="flex items-center gap-2 text-[10px] font-bold uppercase tracking-[0.16em] text-[#7cf7d4]"><Bot size={14} /> Mega AI</div>
+              <div className="mt-2 max-w-[170px] text-xs leading-5 text-white/65">“My phone won’t charge.”</div>
+            </motion.div>
+            <motion.div animate={{ y: [0, 11, 0], rotateZ: [-3, -1, -3] }} transition={{ duration: 5.8, repeat: Infinity, ease: 'easeInOut' }} className="absolute bottom-[16%] left-[1%] rounded-2xl border border-white/10 bg-black/45 px-4 py-3 backdrop-blur-xl sm:left-[6%]">
+              <div className="text-[10px] uppercase tracking-[0.16em] text-white/35">Unlocked phones</div>
+              <div className="mt-1 text-sm font-extrabold text-white">Live pricing</div>
+            </motion.div>
+          </motion.div>
+        </div>
+      </section>
+
+      <div className="marquee-shell border-y border-white/8 bg-white/[0.025] py-4">
+        <div className="marquee-track whitespace-nowrap text-[10px] font-extrabold uppercase tracking-[0.26em] text-white/30">
+          REPAIRS · UNLOCKED PHONES · MEGA AI · PREPAID SERVICE · SCREEN REPAIR · BATTERY · CHARGING PORT · NASHVILLE · REPAIRS · UNLOCKED PHONES · MEGA AI · PREPAID SERVICE · SCREEN REPAIR · BATTERY · CHARGING PORT · NASHVILLE ·
+        </div>
+      </div>
+
+      <section id="services" className="px-4 py-24 sm:px-6 sm:py-32">
+        <div className="mx-auto max-w-[1380px]">
+          <Reveal>
+            <div className="grid gap-7 lg:grid-cols-12 lg:items-end">
+              <div className="lg:col-span-8">
+                <div className="text-[10px] font-bold uppercase tracking-[0.25em] text-[#7cf7d4]">What we actually do</div>
+                <h2 className="mt-5 text-4xl font-extrabold leading-[0.92] tracking-[-0.055em] sm:text-6xl lg:text-7xl">One store.<br /><span className="text-white/30">Four ways to help.</span></h2>
+              </div>
+              <p className="max-w-md text-sm leading-7 text-white/45 lg:col-span-4">The page is built around what customers want to do immediately — repair a device, buy a phone, ask AI, or get local help.</p>
+            </div>
+          </Reveal>
+
+          <div className="mt-12 grid gap-3 md:grid-cols-2 lg:grid-cols-4">
+            <ServiceCard icon={Wrench} kicker="Repair" title="Fix it fast." text="Screens, batteries, charging problems and common device repairs with diagnosis before work starts." action="See repair options" href="/phone-screen-repair-nashville.html" delay={0} />
+            <ServiceCard icon={Smartphone} kicker="Phones" title="Buy unlocked." text="Browse today’s public catalog with model-specific visuals, current pricing and direct contact buttons." action="Browse phones" href="#phones" delay={0.07} />
+            <ServiceCard icon={Bot} kicker="AI" title="Ask before you drive." text="Describe a simple phone or computer problem and let Mega AI guide your next step in seconds." action="Try Mega AI" delay={0.14} />
+            <ServiceCard icon={Languages} kicker="Local" title="Help in your language." text="English, Spanish and Arabic support for a Nashville store that actually answers real customer questions." action="Visit the store" href="#visit" delay={0.21} />
           </div>
         </div>
       </section>
 
-      <section id="about" className="bg-black px-4 py-16 sm:px-6 md:py-24">
-        <div className="mx-auto max-w-6xl rounded-[1.75rem] bg-[#101010] px-6 py-16 text-center sm:px-10 md:rounded-[2.2rem] md:px-14 md:py-24">
-          <div className="text-[10px] text-primary sm:text-xs">South Nashville tech</div>
-          <div className="mx-auto mt-7 max-w-4xl text-3xl leading-[0.95] sm:text-4xl sm:leading-[0.9] md:text-5xl lg:text-6xl xl:text-7xl">
-            <WordsPullUpMultiStyle
-              segments={[
-                { text: 'More than a phone store,', className: 'font-normal' },
-                { text: 'a local tech lab.', className: 'font-serif italic' },
-                { text: 'Repairs, devices and smarter support under one roof.', className: 'font-normal' },
-              ]}
-            />
-          </div>
-          <AboutReveal />
-          <div className="mx-auto mt-10 flex max-w-2xl flex-wrap justify-center gap-3 text-[11px] text-gray-400 sm:text-xs">
-            <span className="rounded-full border border-white/10 px-4 py-2">4717 Nolensville Pike</span>
-            <span className="rounded-full border border-white/10 px-4 py-2">Open daily 10 AM–8 PM</span>
-            <span className="rounded-full border border-white/10 px-4 py-2">English · Español · العربية</span>
+      <section id="ai" className="px-4 py-12 sm:px-6 sm:py-20">
+        <div className="mx-auto max-w-[1380px] overflow-hidden rounded-[36px] border border-white/10 bg-[radial-gradient(circle_at_20%_20%,rgba(124,247,212,.11),transparent_28%),radial-gradient(circle_at_82%_70%,rgba(139,92,246,.13),transparent_32%),#0b0c0e] p-6 sm:p-10 lg:p-14">
+          <div className="grid items-center gap-10 lg:grid-cols-2">
+            <Reveal>
+              <div className="relative mx-auto max-w-[520px]">
+                <div className="absolute inset-10 rounded-full bg-[#7cf7d4]/10 blur-[80px]" />
+                <div className="relative rounded-[30px] border border-white/10 bg-black/45 p-5 shadow-[0_30px_80px_rgba(0,0,0,.35)] backdrop-blur-xl sm:p-7">
+                  <div className="flex items-center justify-between border-b border-white/8 pb-4">
+                    <div className="flex items-center gap-3"><span className="grid h-9 w-9 place-items-center rounded-full bg-[#7cf7d4] text-black"><Bot size={17} /></span><div><div className="text-sm font-extrabold">Mega AI</div><div className="text-[9px] text-white/35">Smart first-step support</div></div></div>
+                    <span className="h-2 w-2 rounded-full bg-[#7cf7d4] shadow-[0_0_18px_#7cf7d4]" />
+                  </div>
+                  <div className="space-y-4 py-6 text-sm leading-6">
+                    <div className="ml-auto max-w-[78%] rounded-2xl rounded-tr-md bg-white/10 px-4 py-3 text-white/75">My phone won’t charge. What should I check first?</div>
+                    <div className="max-w-[86%] rounded-2xl rounded-tl-md border border-[#7cf7d4]/15 bg-[#7cf7d4]/8 px-4 py-3 text-white/65">Start with the cable and adapter, then gently check the charging port for visible debris. If it still won’t charge, Mega Wireless can inspect it before any repair begins.</div>
+                  </div>
+                  <div className="flex items-center gap-3 rounded-full border border-white/10 bg-black/35 px-4 py-3 text-xs text-white/30">Ask about your device… <Sparkles className="ml-auto text-[#7cf7d4]" size={15} /></div>
+                </div>
+              </div>
+            </Reveal>
+
+            <Reveal delay={0.12}>
+              <div className="lg:pl-8">
+                <div className="text-[10px] font-bold uppercase tracking-[0.25em] text-[#7cf7d4]">Mega AI assistant</div>
+                <h2 className="mt-5 text-4xl font-extrabold leading-[0.94] tracking-[-0.055em] sm:text-6xl">Your first answer<br /><span className="text-white/30">before the counter.</span></h2>
+                <p className="mt-6 max-w-lg text-sm leading-7 text-white/48">Use AI for simple troubleshooting and service questions. For anything that needs hands-on diagnosis, the conversation leads back to real technicians at the store.</p>
+                <div className="mt-8 grid max-w-lg gap-3 sm:grid-cols-3">
+                  <div className="rounded-2xl border border-white/8 bg-white/[0.035] p-4"><BatteryCharging size={17} className="text-[#7cf7d4]" /><div className="mt-3 text-xs font-bold">Charging</div></div>
+                  <div className="rounded-2xl border border-white/8 bg-white/[0.035] p-4"><Smartphone size={17} className="text-[#7cf7d4]" /><div className="mt-3 text-xs font-bold">Phone issues</div></div>
+                  <div className="rounded-2xl border border-white/8 bg-white/[0.035] p-4"><Languages size={17} className="text-[#7cf7d4]" /><div className="mt-3 text-xs font-bold">3 languages</div></div>
+                </div>
+                <button onClick={openAI} className="mt-8 inline-flex items-center gap-3 rounded-full bg-[#f1efdf] px-6 py-4 text-sm font-extrabold text-black transition hover:scale-[1.02]">Open Mega AI <ArrowRight size={16} /></button>
+              </div>
+            </Reveal>
           </div>
         </div>
       </section>
 
-      <section id="features" className="relative min-h-screen overflow-hidden bg-black px-4 py-16 sm:px-6 md:py-24">
-        <div className="bg-noise pointer-events-none absolute inset-0 opacity-[0.15]" />
-        <div className="relative z-10 mx-auto max-w-[1440px]">
-          <div className="max-w-4xl text-xl font-normal leading-tight sm:text-2xl md:text-3xl lg:text-4xl">
-            <WordsPullUpMultiStyle
-              justify="justify-start"
-              segments={[
-                { text: 'Store-grade service for everyday tech.', className: 'text-primary' },
-                { text: 'Built for speed. Powered by smart support.', className: 'text-gray-500' },
-              ]}
-            />
-          </div>
-
-          <div className="mt-10 grid grid-cols-1 gap-3 sm:mt-14 sm:grid-cols-2 sm:gap-2 md:gap-1 lg:h-[480px] lg:grid-cols-4">
-            <motion.article ref={videoCardRef} initial={{ opacity: 0, scale: 0.95 }} animate={videoCardVisible ? { opacity: 1, scale: 1 } : { opacity: 0, scale: 0.95 }} transition={{ duration: 0.8, ease: [0.22, 1, 0.36, 1] }} className="relative min-h-[360px] overflow-hidden rounded-[1.6rem] bg-[#212121] lg:min-h-0">
-              <video src={FEATURE_VIDEO} autoPlay loop muted playsInline className="absolute inset-0 h-full w-full object-cover" />
-              <div className="absolute inset-0 bg-gradient-to-t from-black/70 via-black/5 to-black/10" />
-              <div className="noise-overlay pointer-events-none absolute inset-0 opacity-30 mix-blend-overlay" />
-              <div className="absolute bottom-0 left-0 p-5 sm:p-6"><p className="text-xl text-[#E1E0CC] sm:text-2xl">Your tech. Our mission.</p></div>
-            </motion.article>
-            {featureCards.map((card, index) => <FeatureInfoCard key={card.number} card={card} index={index + 1} />)}
-          </div>
-
-          <div id="phones" className="mt-24 scroll-mt-8 sm:mt-32">
-            <div className="grid gap-6 md:grid-cols-12 md:items-end">
-              <div className="md:col-span-8">
-                <div className="text-[10px] text-primary sm:text-xs">Live phone catalog</div>
-                <h2 className="mt-4 text-4xl font-normal leading-[0.95] text-primary sm:text-5xl md:text-6xl lg:text-7xl">Unlocked phones.<br /><span className="font-serif italic text-gray-500">Every price, with a visual.</span></h2>
+      <section id="phones" className="px-4 py-24 sm:px-6 sm:py-32">
+        <div className="mx-auto max-w-[1380px]">
+          <Reveal>
+            <div className="grid gap-7 lg:grid-cols-12 lg:items-end">
+              <div className="lg:col-span-8">
+                <div className="text-[10px] font-bold uppercase tracking-[0.25em] text-[#7cf7d4]">Today’s phone catalog</div>
+                <h2 className="mt-5 text-4xl font-extrabold leading-[0.92] tracking-[-0.055em] sm:text-6xl lg:text-7xl">Phones that look<br /><span className="text-white/30">like the model listed.</span></h2>
               </div>
-              <div className="md:col-span-4 md:pb-1">
-                <p className="text-xs leading-6 text-gray-400 sm:text-sm">Phone cards load from the same admin catalog, so updated prices and photos can flow to the public site without rebuilding the page.</p>
+              <div className="lg:col-span-4">
+                <p className="text-sm leading-7 text-white/45">Generic fake phone thumbnails are gone. Each card now renders the correct model family and camera layout. When a real store photo is uploaded in Admin, that real photo takes priority automatically.</p>
               </div>
             </div>
+          </Reveal>
 
-            {phoneError ? (
-              <div className="mt-10 rounded-[1.5rem] border border-white/10 bg-[#171717] p-6 text-sm text-gray-400">The live phone catalog is temporarily unavailable. Call <a className="text-primary underline" href="tel:+16156785849">(615) 678-5849</a> for today’s inventory.</div>
-            ) : phones.length === 0 ? (
-              <div className="mt-10 rounded-[1.5rem] border border-white/10 bg-[#171717] p-6 text-sm text-gray-400">Loading today’s phone inventory…</div>
-            ) : (
-              <div className="mt-10 grid grid-cols-1 gap-3 sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4">
-                {phones.map((phone, index) => <PhoneCard key={`${phone.name}-${index}`} phone={phone} index={index} />)}
-              </div>
-            )}
-          </div>
-
-          <div id="visit" className="mt-24 grid gap-3 sm:mt-32 md:grid-cols-3">
-            <a href="tel:+16156785849" className="group rounded-[1.5rem] bg-[#151515] p-6 transition hover:bg-[#1b1b1b]">
-              <Phone className="h-5 w-5 text-primary" />
-              <p className="mt-8 text-lg text-primary">Call the store</p>
-              <p className="mt-2 text-sm text-gray-500">(615) 678-5849</p>
-            </a>
-            <a href="https://wa.me/16156785849?text=Hello%20Mega%20Wireless%2C%20I%20need%20help." className="group rounded-[1.5rem] bg-[#151515] p-6 transition hover:bg-[#1b1b1b]">
-              <MessageCircle className="h-5 w-5 text-primary" />
-              <p className="mt-8 text-lg text-primary">Message Mega Wireless</p>
-              <p className="mt-2 text-sm text-gray-500">Fast help before you visit.</p>
-            </a>
-            <a href="https://www.google.com/maps/search/?api=1&query=4717+Nolensville+Pike+Nashville+TN+37211" className="group rounded-[1.5rem] bg-[#151515] p-6 transition hover:bg-[#1b1b1b]">
-              <MapPin className="h-5 w-5 text-primary" />
-              <p className="mt-8 text-lg text-primary">Visit us</p>
-              <p className="mt-2 text-sm text-gray-500">4717 Nolensville Pike · Nashville, TN 37211</p>
-            </a>
-          </div>
-
-          <div className="mt-16 flex flex-col gap-5 border-t border-white/10 pt-8 text-xs text-gray-500 sm:flex-row sm:items-center sm:justify-between">
-            <div className="flex flex-wrap items-center gap-4">
-              <span className="text-primary">Mega Wireless</span>
-              <span>Open daily 10 AM–8 PM</span>
-              <a href="/privacy.html" className="hover:text-primary">Privacy</a>
-              <a href="/admin/" className="hover:text-primary">Secure Admin</a>
+          {phoneError ? (
+            <div className="mt-12 rounded-[26px] border border-white/10 bg-white/[0.035] p-6 text-sm text-white/50">The live phone catalog is temporarily unavailable. Call <a className="font-bold text-[#7cf7d4]" href="tel:+16156785849">(615) 678-5849</a> for today’s inventory.</div>
+          ) : phones.length === 0 ? (
+            <div className="mt-12 rounded-[26px] border border-white/10 bg-white/[0.035] p-6 text-sm text-white/50">Loading today’s phone inventory…</div>
+          ) : (
+            <div className="mt-12 grid grid-cols-1 gap-3 sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4">
+              {phones.map((phone, index) => <PhoneCard key={`${phone.name}-${index}`} phone={phone} index={index} />)}
             </div>
-            <div className="flex items-center gap-2"><ShieldCheck size={14} /> Smart support. Real technicians.</div>
+          )}
+        </div>
+      </section>
+
+      <section className="px-4 pb-12 sm:px-6">
+        <div className="mx-auto max-w-[1380px] rounded-[36px] border border-white/10 bg-[#0c0d0f] p-6 sm:p-10">
+          <div className="grid gap-3 md:grid-cols-3">
+            <Reveal>
+              <div className="rounded-[26px] bg-white/[0.035] p-6">
+                <ShieldCheck className="text-[#7cf7d4]" size={20} /><div className="mt-8 text-lg font-extrabold">Diagnosis before repair.</div><p className="mt-2 text-sm leading-6 text-white/42">We confirm the issue and price before work begins.</p>
+              </div>
+            </Reveal>
+            <Reveal delay={0.06}>
+              <div className="rounded-[26px] bg-white/[0.035] p-6">
+                <CircleDollarSign className="text-[#7cf7d4]" size={20} /><div className="mt-8 text-lg font-extrabold">Clear public pricing.</div><p className="mt-2 text-sm leading-6 text-white/42">Phone prices come from the same admin catalog customers see.</p>
+              </div>
+            </Reveal>
+            <Reveal delay={0.12}>
+              <div className="rounded-[26px] bg-white/[0.035] p-6">
+                <Check className="text-[#7cf7d4]" size={20} /><div className="mt-8 text-lg font-extrabold">Real local support.</div><p className="mt-2 text-sm leading-6 text-white/42">AI for the first step, technicians for the hands-on work.</p>
+              </div>
+            </Reveal>
           </div>
         </div>
       </section>
+
+      <section id="visit" className="px-4 py-20 sm:px-6 sm:py-28">
+        <div className="mx-auto max-w-[1380px]">
+          <Reveal>
+            <div className="rounded-[38px] border border-white/10 bg-[linear-gradient(135deg,rgba(124,247,212,.08),transparent_35%),#0a0b0d] p-7 sm:p-10 lg:p-14">
+              <div className="grid gap-10 lg:grid-cols-[1fr_.85fr] lg:items-end">
+                <div>
+                  <div className="text-[10px] font-bold uppercase tracking-[0.25em] text-[#7cf7d4]">Mega Wireless Nashville</div>
+                  <h2 className="mt-5 text-4xl font-extrabold leading-[0.92] tracking-[-0.055em] sm:text-6xl">Need the real human?<br /><span className="text-white/30">We’re right here.</span></h2>
+                  <p className="mt-6 text-sm leading-7 text-white/45">4717 Nolensville Pike, Nashville, TN 37211 · Open daily 10 AM–8 PM.</p>
+                </div>
+                <div className="grid gap-2 sm:grid-cols-3 lg:grid-cols-1 xl:grid-cols-3">
+                  <a href="tel:+16156785849" className="rounded-2xl bg-[#f1efdf] p-4 text-black transition hover:scale-[1.02]"><Phone size={17} /><div className="mt-5 text-xs font-extrabold">Call</div></a>
+                  <a href="https://wa.me/16156785849?text=Hello%20Mega%20Wireless%2C%20I%20need%20help." className="rounded-2xl border border-white/10 bg-white/[0.04] p-4 transition hover:border-[#7cf7d4]/40"><MessageCircle size={17} /><div className="mt-5 text-xs font-extrabold">Message</div></a>
+                  <a href="https://www.google.com/maps/search/?api=1&query=4717+Nolensville+Pike+Nashville+TN+37211" className="rounded-2xl border border-white/10 bg-white/[0.04] p-4 transition hover:border-[#7cf7d4]/40"><MapPin size={17} /><div className="mt-5 text-xs font-extrabold">Directions</div></a>
+                </div>
+              </div>
+            </div>
+          </Reveal>
+        </div>
+      </section>
+
+      <footer className="px-4 pb-8 sm:px-6">
+        <div className="mx-auto flex max-w-[1380px] flex-col gap-5 border-t border-white/10 pt-7 text-xs text-white/35 sm:flex-row sm:items-center sm:justify-between">
+          <div className="flex flex-wrap items-center gap-4"><span className="font-extrabold text-white/70">Mega Wireless</span><span>Open daily 10 AM–8 PM</span><a className="hover:text-white" href="/privacy.html">Privacy</a><a className="hover:text-white" href="/admin/">Secure Admin</a></div>
+          <div>Smart support · Real technicians</div>
+        </div>
+      </footer>
     </main>
   )
 }
+
+export default App
