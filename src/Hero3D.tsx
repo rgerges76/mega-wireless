@@ -3,80 +3,23 @@ import { Float, RoundedBox } from '@react-three/drei'
 import { useEffect, useRef } from 'react'
 import * as THREE from 'three'
 
-type PhoneProps = {
-  position: [number, number, number]
-  rotation: [number, number, number]
-  color: string
-  accent: string
-  camera: 'triple' | 'dual' | 'samsung'
-  scale?: number
-  speed?: number
-}
-
-function Lens({ x, y, z = 0.2, scale = 1 }: { x: number; y: number; z?: number; scale?: number }) {
+function Lens({ x, y }: { x: number; y: number }) {
   return (
-    <group position={[x, y, z]} scale={scale}>
-      <mesh>
-        <cylinderGeometry args={[0.17, 0.17, 0.08, 32]} />
-        <meshPhysicalMaterial color="#05070b" metalness={0.72} roughness={0.16} clearcoat={1} clearcoatRoughness={0.08} />
+    <group position={[x, y, 0.23]}>
+      <mesh rotation={[Math.PI / 2, 0, 0]}>
+        <cylinderGeometry args={[0.2, 0.2, 0.09, 36]} />
+        <meshPhysicalMaterial color="#071321" metalness={0.78} roughness={0.12} clearcoat={1} />
       </mesh>
-      <mesh position={[-0.035, 0.035, 0.05]}>
-        <sphereGeometry args={[0.042, 16, 16]} />
-        <meshStandardMaterial color="#b8dfff" emissive="#6db7ff" emissiveIntensity={1.15} />
+      <mesh position={[-0.05, 0.05, 0.055]}>
+        <sphereGeometry args={[0.05, 18, 18]} />
+        <meshStandardMaterial color="#bfe8ff" emissive="#6fc8ff" emissiveIntensity={0.7} />
       </mesh>
     </group>
   )
 }
 
-function CameraArray({ kind }: { kind: PhoneProps['camera'] }) {
-  if (kind === 'triple') {
-    return (
-      <group position={[-0.42, 0.73, 0.19]}>
-        <RoundedBox args={[0.88, 0.88, 0.08]} radius={0.18} smoothness={4}>
-          <meshPhysicalMaterial color="#2a2b30" metalness={0.4} roughness={0.28} clearcoat={0.9} />
-        </RoundedBox>
-        <Lens x={-0.18} y={0.19} />
-        <Lens x={0.18} y={0.19} />
-        <Lens x={0} y={-0.19} />
-        <mesh position={[0.28, -0.22, 0.24]}>
-          <sphereGeometry args={[0.055, 16, 16]} />
-          <meshStandardMaterial color="#f8e7ba" emissive="#ffd27a" emissiveIntensity={0.55} />
-        </mesh>
-      </group>
-    )
-  }
-
-  if (kind === 'samsung') {
-    return (
-      <group position={[-0.5, 0.66, 0.22]}>
-        <Lens x={0} y={0.28} scale={0.9} />
-        <Lens x={0} y={0} scale={0.9} />
-        <Lens x={0} y={-0.28} scale={0.9} />
-        <mesh position={[0.34, -0.02, 0.03]}>
-          <sphereGeometry args={[0.055, 16, 16]} />
-          <meshStandardMaterial color="#e7dbc0" />
-        </mesh>
-      </group>
-    )
-  }
-
-  return (
-    <group position={[-0.4, 0.72, 0.2]}>
-      <RoundedBox args={[0.72, 0.72, 0.08]} radius={0.18} smoothness={4}>
-        <meshPhysicalMaterial color="#27303a" metalness={0.3} roughness={0.25} clearcoat={1} />
-      </RoundedBox>
-      <Lens x={-0.15} y={0.15} />
-      <Lens x={0.15} y={-0.15} />
-      <mesh position={[0.18, 0.18, 0.22]}>
-        <sphereGeometry args={[0.05, 16, 16]} />
-        <meshStandardMaterial color="#f5ddb0" emissive="#ffc768" emissiveIntensity={0.45} />
-      </mesh>
-    </group>
-  )
-}
-
-function Phone({ position, rotation, color, accent, camera, scale = 1, speed = 1 }: PhoneProps) {
-  const group = useRef<THREE.Group>(null)
+function MainPhone() {
+  const ref = useRef<THREE.Group>(null)
   const mouse = useRef({ x: 0, y: 0 })
 
   useEffect(() => {
@@ -89,63 +32,162 @@ function Phone({ position, rotation, color, accent, camera, scale = 1, speed = 1
   }, [])
 
   useFrame((state, delta) => {
-    if (!group.current) return
-    const t = state.clock.getElapsedTime() * speed
-    const targetY = rotation[1] + mouse.current.x * 0.16
-    const targetX = rotation[0] - mouse.current.y * 0.09
-    group.current.rotation.y = THREE.MathUtils.damp(group.current.rotation.y, targetY + Math.sin(t * 0.65) * 0.06, 4, delta)
-    group.current.rotation.x = THREE.MathUtils.damp(group.current.rotation.x, targetX + Math.cos(t * 0.58) * 0.025, 4, delta)
+    if (!ref.current) return
+    const t = state.clock.getElapsedTime()
+    ref.current.rotation.y = THREE.MathUtils.damp(ref.current.rotation.y, -0.48 + mouse.current.x * 0.12 + Math.sin(t * 0.55) * 0.05, 4, delta)
+    ref.current.rotation.x = THREE.MathUtils.damp(ref.current.rotation.x, -0.04 - mouse.current.y * 0.05 + Math.cos(t * 0.45) * 0.02, 4, delta)
   })
 
   return (
-    <Float speed={1.35 * speed} rotationIntensity={0.18} floatIntensity={0.45}>
-      <group ref={group} position={position} rotation={rotation} scale={scale}>
-        <RoundedBox args={[1.72, 3.5, 0.28]} radius={0.25} smoothness={6}>
-          <meshPhysicalMaterial color={color} metalness={0.68} roughness={0.22} clearcoat={1} clearcoatRoughness={0.06} />
+    <Float speed={1.15} rotationIntensity={0.08} floatIntensity={0.42}>
+      <group ref={ref} position={[2.15, 0.05, 0.2]} rotation={[-0.04, -0.48, 0.08]} scale={1.08}>
+        <RoundedBox args={[2.15, 4.35, 0.32]} radius={0.34} smoothness={8}>
+          <meshPhysicalMaterial color="#b8c9db" metalness={0.72} roughness={0.16} clearcoat={1} clearcoatRoughness={0.05} />
         </RoundedBox>
 
-        <mesh position={[0, 0, -0.16]}>
-          <RoundedBox args={[1.58, 3.34, 0.05]} radius={0.2} smoothness={6}>
-            <meshPhysicalMaterial color="#07090d" metalness={0.1} roughness={0.08} clearcoat={1} />
+        <RoundedBox position={[0, 0, -0.19]} args={[1.98, 4.15, 0.055]} radius={0.28} smoothness={8}>
+          <meshPhysicalMaterial color="#101923" metalness={0.08} roughness={0.08} clearcoat={1} />
+        </RoundedBox>
+        <mesh position={[0, 0, -0.225]}>
+          <planeGeometry args={[1.78, 3.84]} />
+          <meshBasicMaterial color="#77cfff" transparent opacity={0.24} toneMapped={false} />
+        </mesh>
+
+        <group position={[-0.55, 1.25, 0.22]}>
+          <RoundedBox args={[1.05, 1.05, 0.12]} radius={0.24} smoothness={6}>
+            <meshPhysicalMaterial color="#9fb3c8" metalness={0.5} roughness={0.18} clearcoat={1} />
           </RoundedBox>
-        </mesh>
+          <Lens x={-0.23} y={0.23} />
+          <Lens x={0.23} y={0.23} />
+          <Lens x={0} y={-0.24} />
+          <mesh position={[0.34, -0.28, 0.24]}>
+            <sphereGeometry args={[0.07, 20, 20]} />
+            <meshStandardMaterial color="#fff3ca" emissive="#ffd875" emissiveIntensity={0.45} />
+          </mesh>
+        </group>
 
-        <mesh position={[0, 0, -0.195]}>
-          <planeGeometry args={[1.42, 3.03]} />
-          <meshBasicMaterial color={accent} transparent opacity={0.3} toneMapped={false} />
-        </mesh>
-
-        <mesh position={[0, 1.34, -0.205]}>
-          <RoundedBox args={[0.42, 0.12, 0.025]} radius={0.06} smoothness={4}>
-            <meshBasicMaterial color="#020203" />
-          </RoundedBox>
-        </mesh>
-
-        <CameraArray kind={camera} />
-
-        <mesh position={[0.86, 0.3, 0]}>
-          <boxGeometry args={[0.035, 0.55, 0.06]} />
-          <meshStandardMaterial color="#a8a8ad" metalness={0.8} roughness={0.2} />
+        <mesh position={[1.08, 0.45, 0]}>
+          <boxGeometry args={[0.04, 0.75, 0.08]} />
+          <meshStandardMaterial color="#dce7f2" metalness={0.85} roughness={0.15} />
         </mesh>
       </group>
     </Float>
   )
 }
 
-function Rings() {
+function ScreenProtector() {
   const ref = useRef<THREE.Group>(null)
   useFrame((state) => {
     if (!ref.current) return
-    ref.current.rotation.z = state.clock.getElapsedTime() * 0.07
-    ref.current.rotation.x = Math.sin(state.clock.getElapsedTime() * 0.22) * 0.09
+    const t = state.clock.getElapsedTime()
+    ref.current.rotation.z = -0.12 + Math.sin(t * 0.7) * 0.035
+    ref.current.position.y = 1.0 + Math.sin(t * 0.8) * 0.11
   })
-
   return (
-    <group ref={ref} position={[2.8, -0.6, -1.8]} rotation={[0.85, 0.15, -0.2]}>
-      {[1.8, 2.25, 2.7].map((r, index) => (
-        <mesh key={r}>
-          <torusGeometry args={[r, 0.018 + index * 0.007, 12, 120]} />
-          <meshBasicMaterial color={index === 1 ? '#7cf7d4' : '#8d79ff'} transparent opacity={0.3 - index * 0.05} toneMapped={false} />
+    <group ref={ref} position={[0.7, 1.0, 0.5]} rotation={[0.02, 0.22, -0.12]}>
+      <RoundedBox args={[1.7, 3.45, 0.035]} radius={0.24} smoothness={6}>
+        <meshPhysicalMaterial color="#d9f4ff" transparent opacity={0.18} transmission={0.65} roughness={0.03} metalness={0} clearcoat={1} />
+      </RoundedBox>
+      <mesh position={[0, 0, 0.04]}>
+        <planeGeometry args={[1.55, 3.18]} />
+        <meshBasicMaterial color="#ffffff" transparent opacity={0.045} toneMapped={false} />
+      </mesh>
+    </group>
+  )
+}
+
+function ShieldBadge() {
+  return (
+    <Float speed={1.5} rotationIntensity={0.16} floatIntensity={0.55}>
+      <group position={[1.05, -1.05, 1.1]} rotation={[0.08, -0.18, -0.08]} scale={0.72}>
+        <mesh rotation={[Math.PI / 2, 0, 0]}>
+          <cylinderGeometry args={[0.78, 0.78, 0.22, 6]} />
+          <meshPhysicalMaterial color="#1469df" metalness={0.42} roughness={0.18} clearcoat={1} />
+        </mesh>
+        <mesh position={[-0.15, -0.02, 0.16]} rotation={[0, 0, -0.7]}>
+          <boxGeometry args={[0.14, 0.58, 0.12]} />
+          <meshStandardMaterial color="#ffffff" />
+        </mesh>
+        <mesh position={[0.22, 0.08, 0.16]} rotation={[0, 0, 0.72]}>
+          <boxGeometry args={[0.14, 0.82, 0.12]} />
+          <meshStandardMaterial color="#ffffff" />
+        </mesh>
+      </group>
+    </Float>
+  )
+}
+
+function Cable() {
+  const ref = useRef<THREE.Group>(null)
+  useFrame((state) => {
+    if (!ref.current) return
+    ref.current.rotation.z = 0.28 + Math.sin(state.clock.getElapsedTime() * 0.5) * 0.07
+  })
+  return (
+    <Float speed={1.2} rotationIntensity={0.12} floatIntensity={0.45}>
+      <group ref={ref} position={[-0.25, -0.35, -0.25]} rotation={[0.5, 0.2, 0.28]}>
+        <mesh>
+          <torusGeometry args={[0.95, 0.055, 14, 90, Math.PI * 1.55]} />
+          <meshPhysicalMaterial color="#f8fbff" metalness={0.05} roughness={0.28} clearcoat={0.65} />
+        </mesh>
+        <RoundedBox position={[-0.92, 0.1, 0]} args={[0.28, 0.62, 0.16]} radius={0.06} smoothness={4}>
+          <meshStandardMaterial color="#ffffff" />
+        </RoundedBox>
+        <mesh position={[-0.92, 0.46, 0]}>
+          <boxGeometry args={[0.16, 0.17, 0.09]} />
+          <meshStandardMaterial color="#d7e0e7" metalness={0.62} roughness={0.25} />
+        </mesh>
+      </group>
+    </Float>
+  )
+}
+
+function Screwdriver({ position, color, rotation }: { position: [number, number, number]; color: string; rotation: [number, number, number] }) {
+  return (
+    <Float speed={1.45} rotationIntensity={0.22} floatIntensity={0.48}>
+      <group position={position} rotation={rotation}>
+        <mesh rotation={[0, 0, Math.PI / 2]}>
+          <cylinderGeometry args={[0.12, 0.12, 1.0, 28]} />
+          <meshPhysicalMaterial color={color} metalness={0.5} roughness={0.22} clearcoat={1} />
+        </mesh>
+        <mesh position={[-0.82, 0, 0]} rotation={[0, 0, Math.PI / 2]}>
+          <cylinderGeometry args={[0.035, 0.055, 0.8, 18]} />
+          <meshStandardMaterial color="#c7d2dc" metalness={0.9} roughness={0.15} />
+        </mesh>
+      </group>
+    </Float>
+  )
+}
+
+function SuctionCup() {
+  return (
+    <Float speed={1.35} rotationIntensity={0.2} floatIntensity={0.45}>
+      <group position={[4.25, -1.45, -0.15]} rotation={[0.8, 0.2, 0.2]}>
+        <mesh rotation={[Math.PI / 2, 0, 0]}>
+          <cylinderGeometry args={[0.5, 0.7, 0.12, 42]} />
+          <meshPhysicalMaterial color="#bfe8ff" transparent opacity={0.35} roughness={0.1} clearcoat={1} />
+        </mesh>
+        <mesh position={[0, 0.42, 0]}>
+          <torusGeometry args={[0.28, 0.045, 14, 48]} />
+          <meshStandardMaterial color="#8ea8bc" metalness={0.8} roughness={0.18} />
+        </mesh>
+      </group>
+    </Float>
+  )
+}
+
+function OrbitRings() {
+  const ref = useRef<THREE.Group>(null)
+  useFrame((state) => {
+    if (!ref.current) return
+    ref.current.rotation.z = state.clock.getElapsedTime() * 0.08
+  })
+  return (
+    <group ref={ref} position={[2.2, -0.2, -1.4]} rotation={[0.92, 0.1, -0.18]}>
+      {[2.15, 2.62, 3.05].map((radius, index) => (
+        <mesh key={radius}>
+          <torusGeometry args={[radius, 0.024, 12, 140]} />
+          <meshBasicMaterial color={index === 1 ? '#6dd8ff' : index === 2 ? '#8f78ff' : '#65e9cb'} transparent opacity={0.34 - index * 0.05} toneMapped={false} />
         </mesh>
       ))}
     </group>
@@ -155,20 +197,29 @@ function Rings() {
 function Scene() {
   return (
     <>
-      <ambientLight intensity={0.55} />
-      <directionalLight position={[5, 6, 8]} intensity={2.3} color="#f4efd8" />
-      <pointLight position={[-4, 1, 4]} intensity={15} distance={10} color="#6edcff" />
-      <pointLight position={[4, -1, 3]} intensity={18} distance={9} color="#9a7dff" />
-      <spotLight position={[0, 7, 3]} angle={0.38} penumbra={0.9} intensity={28} color="#fff4cd" />
+      <ambientLight intensity={1.35} />
+      <directionalLight position={[5, 7, 8]} intensity={3.6} color="#ffffff" />
+      <directionalLight position={[-5, 1, 5]} intensity={2.2} color="#9ddcff" />
+      <pointLight position={[5, 2, 4]} intensity={32} distance={11} color="#6ccfff" />
+      <pointLight position={[1, -3, 3]} intensity={24} distance={10} color="#9c83ff" />
+      <spotLight position={[1, 8, 5]} angle={0.42} penumbra={0.9} intensity={34} color="#fff7df" />
 
-      <Phone position={[2.5, 0.25, 0.3]} rotation={[-0.06, -0.56, 0.12]} color="#243647" accent="#58d5ff" camera="triple" scale={1.12} speed={0.92} />
-      <Phone position={[0.95, -0.75, -1.0]} rotation={[0.08, 0.4, -0.12]} color="#0d1015" accent="#8d79ff" camera="dual" scale={0.84} speed={1.08} />
-      <Phone position={[4.2, -0.9, -1.3]} rotation={[0.02, -0.72, 0.18]} color="#3a4150" accent="#7cf7d4" camera="samsung" scale={0.78} speed={1.12} />
-      <Rings />
+      <MainPhone />
+      <ScreenProtector />
+      <ShieldBadge />
+      <Cable />
+      <Screwdriver position={[4.25, 1.35, 0.4]} color="#1768df" rotation={[0.25, 0.2, -0.7]} />
+      <Screwdriver position={[4.45, 0.15, 0.0]} color="#253240" rotation={[0.15, -0.1, -0.85]} />
+      <SuctionCup />
+      <OrbitRings />
 
-      <mesh position={[2.25, -2.3, -0.5]} rotation={[-Math.PI / 2, 0, 0]}>
-        <circleGeometry args={[3.8, 64]} />
-        <meshBasicMaterial color="#7cf7d4" transparent opacity={0.04} toneMapped={false} />
+      <mesh position={[2.25, -2.45, -0.75]} rotation={[-Math.PI / 2, 0, 0]}>
+        <cylinderGeometry args={[2.7, 3.05, 0.18, 64]} />
+        <meshPhysicalMaterial color="#eaf6ff" metalness={0.15} roughness={0.25} clearcoat={1} />
+      </mesh>
+      <mesh position={[2.25, -2.32, -0.73]} rotation={[-Math.PI / 2, 0, 0]}>
+        <torusGeometry args={[2.65, 0.055, 12, 100]} />
+        <meshBasicMaterial color="#68d9ff" transparent opacity={0.8} toneMapped={false} />
       </mesh>
     </>
   )
@@ -181,8 +232,8 @@ export default function Hero3D() {
     const onScroll = () => {
       if (!wrapper.current) return
       const y = Math.min(window.scrollY / Math.max(window.innerHeight, 1), 1)
-      wrapper.current.style.opacity = String(1 - y * 1.15)
-      wrapper.current.style.transform = `translate3d(0, ${y * 40}px, 0) scale(${1 - y * 0.025})`
+      wrapper.current.style.opacity = String(1 - y * 1.12)
+      wrapper.current.style.transform = `translate3d(0, ${y * 34}px, 0) scale(${1 - y * 0.02})`
     }
     onScroll()
     window.addEventListener('scroll', onScroll, { passive: true })
@@ -191,7 +242,7 @@ export default function Hero3D() {
 
   return (
     <div ref={wrapper} className="hero3d-layer" aria-hidden="true">
-      <Canvas dpr={[1, 1.55]} camera={{ position: [0, 0, 8.2], fov: 42 }} gl={{ antialias: true, alpha: true, powerPreference: 'high-performance' }}>
+      <Canvas dpr={[1, 1.5]} camera={{ position: [0, 0, 9], fov: 40 }} gl={{ antialias: true, alpha: true, powerPreference: 'high-performance' }}>
         <Scene />
       </Canvas>
     </div>
