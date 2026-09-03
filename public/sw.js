@@ -1,4 +1,4 @@
-const CACHE='mega-wireless-v4';
+const CACHE='mega-wireless-v5';
 const CORE=['/offline.html','/manifest.webmanifest','/privacy.html'];
 const FRESH=new Set(['/phones.json','/repairs.json','/offers.json','/assets/growth.js','/assets/growth.css']);
 
