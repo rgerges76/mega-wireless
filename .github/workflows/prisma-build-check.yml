@@ -3,6 +3,7 @@ name: Validate React Showroom Redesign
 on:
   push:
     branches:
+      - main
       - prisma-react-redesign
       - showroom-redesign-v2
 
