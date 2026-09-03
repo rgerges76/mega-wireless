@@ -225,20 +225,26 @@ function Scene() {
   )
 }
 
-function Hero3DCanvas() {
+function useHeroLayerMotion() {
   const wrapper = useRef<HTMLDivElement>(null)
 
   useEffect(() => {
     const onScroll = () => {
       if (!wrapper.current) return
       const y = Math.min(window.scrollY / Math.max(window.innerHeight, 1), 1)
-      wrapper.current.style.opacity = String(1 - y * 1.12)
+      wrapper.current.style.opacity = String(Math.max(0, 1 - y * 1.12))
       wrapper.current.style.transform = `translate3d(0, ${y * 34}px, 0) scale(${1 - y * 0.02})`
     }
     onScroll()
     window.addEventListener('scroll', onScroll, { passive: true })
     return () => window.removeEventListener('scroll', onScroll)
   }, [])
+
+  return wrapper
+}
+
+function Hero3DCanvas() {
+  const wrapper = useHeroLayerMotion()
 
   return (
     <div ref={wrapper} className="hero3d-layer" aria-hidden="true">
@@ -263,8 +269,10 @@ function supportsWebGL() {
 }
 
 function Hero3DFallback() {
+  const wrapper = useHeroLayerMotion()
+
   return (
-    <div className="hero3d-layer hero3d-fallback" aria-hidden="true">
+    <div ref={wrapper} className="hero3d-layer hero3d-fallback" aria-hidden="true">
       <div className="fallback-orbit fallback-orbit-one" />
       <div className="fallback-orbit fallback-orbit-two" />
       <div className="fallback-orbit fallback-orbit-three" />
