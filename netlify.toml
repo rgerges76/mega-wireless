@@ -1,6 +1,6 @@
 [build]
-  command = "node scripts/inject-auth-callback-router.cjs"
-  publish = "public"
+  command = "npm run build && node scripts/inject-auth-callback-router.cjs"
+  publish = "dist"
   functions = "netlify/functions"
 
 [functions."daily-report"]

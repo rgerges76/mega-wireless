@@ -2,8 +2,9 @@ const fs = require('node:fs');
 const path = require('node:path');
 
 const root = process.cwd();
-const indexPath = path.join(root, 'public', 'index.html');
-const headersPath = path.join(root, 'public', '_headers');
+const publishDir = path.join(root, 'dist');
+const indexPath = path.join(publishDir, 'index.html');
+const headersPath = path.join(publishDir, '_headers');
 
 let html = fs.readFileSync(indexPath, 'utf8');
 const marker = 'mw-auth-callback-router';
