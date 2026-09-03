@@ -9,6 +9,7 @@
     "preview": "vite preview"
   },
   "dependencies": {
+    "@netlify/blobs": "^10.0.9",
     "@react-three/drei": "^9.122.0",
     "@react-three/fiber": "^8.17.14",
     "framer-motion": "^12.23.12",
