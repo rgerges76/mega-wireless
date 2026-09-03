@@ -114,7 +114,7 @@ button {
   background: linear-gradient(125deg, rgba(255,255,255,.055), transparent 28%, transparent 70%, rgba(124,247,212,.035));
 }
 
-/* Real WebGL 3D hero. This is intentionally separate from the product catalog. */
+/* Real WebGL 3D hero. */
 .hero3d-layer {
   position: fixed;
   inset: 0;
@@ -130,18 +130,18 @@ button {
   height: 100% !important;
 }
 
-/* Remove the old CSS-only fake phones from the hero. */
+/* The old CSS-only fake hero phone is removed from view. */
 #home .phone-render {
   visibility: hidden !important;
 }
 
-/* Product rule: never show an invented placeholder as if it were the real model. */
+/* Never pretend a generated placeholder is the exact store model. */
 #phones .phone-render {
   display: none !important;
 }
 
 #phones article > div:first-child {
-  min-height: 110px;
+  min-height: 96px;
   padding: 22px 20px !important;
   display: flex;
   align-items: flex-end;
@@ -152,15 +152,14 @@ button {
 }
 
 #phones article > div:first-child::after {
-  content: 'Exact photo coming from store inventory';
+  content: 'Exact store photo only';
   margin-top: auto;
   display: block;
-  max-width: 170px;
   font-size: 9px;
   line-height: 1.45;
   letter-spacing: .14em;
   text-transform: uppercase;
-  color: rgba(255,255,255,.28);
+  color: rgba(255,255,255,.24);
 }
 
 @media (hover: hover) and (pointer: fine) {
@@ -182,17 +181,11 @@ button {
     opacity: .5;
     transform: translate3d(20%, 5%, 0) scale(.9);
   }
-
-  #home > div,
-  #home > section {
-    position: relative;
-    z-index: 7;
-  }
 }
 
 @media (max-width: 640px) {
   #phones article > div:first-child {
-    min-height: 92px;
+    min-height: 82px;
   }
 }
 
