@@ -1,6 +1,6 @@
 import { Canvas, useFrame } from '@react-three/fiber'
 import { Float, RoundedBox } from '@react-three/drei'
-import { useEffect, useRef } from 'react'
+import { Component, type ReactNode, useEffect, useRef, useState } from 'react'
 import * as THREE from 'three'
 
 function Lens({ x, y }: { x: number; y: number }) {
@@ -225,7 +225,7 @@ function Scene() {
   )
 }
 
-export default function Hero3D() {
+function Hero3DCanvas() {
   const wrapper = useRef<HTMLDivElement>(null)
 
   useEffect(() => {
@@ -246,5 +246,69 @@ export default function Hero3D() {
         <Scene />
       </Canvas>
     </div>
+  )
+}
+
+function supportsWebGL() {
+  if (typeof document === 'undefined') return false
+
+  try {
+    const canvas = document.createElement('canvas')
+    const options = { failIfMajorPerformanceCaveat: true }
+    const context = canvas.getContext('webgl2', options) || canvas.getContext('webgl', options)
+    return Boolean(context)
+  } catch {
+    return false
+  }
+}
+
+function Hero3DFallback() {
+  return (
+    <div className="hero3d-layer hero3d-fallback" aria-hidden="true">
+      <div className="fallback-orbit fallback-orbit-one" />
+      <div className="fallback-orbit fallback-orbit-two" />
+      <div className="fallback-orbit fallback-orbit-three" />
+      <div className="fallback-phone-stage">
+        <div className="fallback-phone-shadow" />
+        <div className="fallback-phone-back">
+          <div className="fallback-camera-island">
+            <i /><i /><i /><b />
+          </div>
+          <span className="fallback-phone-mark" />
+        </div>
+        <div className="fallback-phone-front">
+          <div className="fallback-dynamic-island" />
+          <div className="fallback-screen-glow" />
+          <div className="fallback-screen-orb" />
+        </div>
+        <div className="fallback-shield"><span>✓</span></div>
+      </div>
+    </div>
+  )
+}
+
+class Hero3DErrorBoundary extends Component<{ children: ReactNode }, { failed: boolean }> {
+  state = { failed: false }
+
+  static getDerivedStateFromError() {
+    return { failed: true }
+  }
+
+  componentDidCatch() {
+    // The CSS fallback keeps the public site usable without exposing error details.
+  }
+
+  render() {
+    return this.state.failed ? <Hero3DFallback /> : this.props.children
+  }
+}
+
+export default function Hero3D() {
+  const [webglAvailable] = useState(supportsWebGL)
+
+  return (
+    <Hero3DErrorBoundary>
+      {webglAvailable ? <Hero3DCanvas /> : <Hero3DFallback />}
+    </Hero3DErrorBoundary>
   )
 }

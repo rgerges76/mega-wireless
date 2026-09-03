@@ -73,7 +73,7 @@ const COPY: Record<Lang, Copy> = {
     vision: 'A familiar Nashville name, now entering its next chapter.',
     future: 'We are building a smarter future for local technology — faster service, clearer answers, better tools and a customer experience designed around you.',
     whyKicker: 'TRUST THAT WAS EARNED',
-    whyTitle: 'Why Nashville keeps choosing Mega Wireless',
+    whyTitle: 'Why people choose Mega Wireless',
     whyLead: 'A strong local reputation is not a slogan. It is built repair by repair, customer by customer, and year after year.',
     experience: '15+ Years of Hands-On Experience',
     experienceText: 'Real device knowledge built across thousands of repairs, upgrades and everyday tech problems.',
@@ -227,12 +227,12 @@ function useMegaLanguage() {
 
 function TrustSection({ copy }: { copy: Copy }) {
   const items = [
-    { icon: Award, title: copy.experience, text: copy.experienceText, tone: 'from-[#e9f3ff] to-[#f7fbff]', iconTone: 'bg-[#e4f0ff] text-[#1263d6]' },
-    { icon: Clock3, title: copy.fast, text: copy.fastText, tone: 'from-[#f2edff] to-[#fbf9ff]', iconTone: 'bg-[#eee7ff] text-[#7355dc]' },
-    { icon: ShieldCheck, title: copy.warranty, text: copy.warrantyText, tone: 'from-[#e9faef] to-[#f8fff9]', iconTone: 'bg-[#e2f8e9] text-[#138843]' },
-    { icon: Star, title: copy.reputation, text: copy.reputationText, tone: 'from-[#fff7df] to-[#fffdf7]', iconTone: 'bg-[#fff1c2] text-[#ad7600]' },
-    { icon: HeartHandshake, title: copy.honest, text: copy.honestText, tone: 'from-[#eef9fb] to-[#fbffff]', iconTone: 'bg-[#def6f9] text-[#14788b]' },
-    { icon: Languages, title: copy.language, text: copy.languageText, tone: 'from-[#fff0f5] to-[#fffafd]', iconTone: 'bg-[#ffe5ef] text-[#b83268]' },
+    { icon: Award, title: copy.experience, text: copy.experienceText, tone: 'from-[#edf5ff] to-[#ffffff]', iconTone: 'bg-[#1d4ed8] text-white' },
+    { icon: Clock3, title: copy.fast, text: copy.fastText, tone: 'from-[#f3efff] to-[#ffffff]', iconTone: 'bg-[#6d28d9] text-white' },
+    { icon: ShieldCheck, title: copy.warranty, text: copy.warrantyText, tone: 'from-[#ecfdf5] to-[#ffffff]', iconTone: 'bg-[#047857] text-white' },
+    { icon: Star, title: copy.reputation, text: copy.reputationText, tone: 'from-[#fff7e8] to-[#ffffff]', iconTone: 'bg-[#92400e] text-white' },
+    { icon: HeartHandshake, title: copy.honest, text: copy.honestText, tone: 'from-[#ecfeff] to-[#ffffff]', iconTone: 'bg-[#155e75] text-white' },
+    { icon: Languages, title: copy.language, text: copy.languageText, tone: 'from-[#fff1f5] to-[#ffffff]', iconTone: 'bg-[#9f1239] text-white' },
   ]
 
   return (
@@ -258,9 +258,9 @@ function TrustSection({ copy }: { copy: Copy }) {
         </motion.div>
 
         <div className="mt-16 text-center">
-          <div className="text-[10px] font-extrabold uppercase tracking-[.28em] text-[#1263d6]">{copy.whyKicker}</div>
-          <h2 className="mx-auto mt-4 max-w-4xl text-4xl font-extrabold leading-[.98] tracking-[-.055em] text-[#08152b] sm:text-6xl">{copy.whyTitle}</h2>
-          <p className="mx-auto mt-5 max-w-3xl text-sm leading-7 text-[#52647b] sm:text-base">{copy.whyLead}</p>
+          <div className="text-[10px] font-extrabold uppercase tracking-[.28em] text-[#065f46]">{copy.whyKicker}</div>
+          <h2 className="mx-auto mt-4 max-w-4xl text-4xl font-extrabold leading-[.98] tracking-[-.055em] text-[#0f172a] sm:text-6xl">{copy.whyTitle}</h2>
+          <p className="mx-auto mt-5 max-w-3xl text-sm font-medium leading-7 text-[#334155] sm:text-base">{copy.whyLead}</p>
         </div>
 
         <div className="mt-10 grid gap-4 md:grid-cols-2 lg:grid-cols-3">
@@ -271,12 +271,12 @@ function TrustSection({ copy }: { copy: Copy }) {
               whileInView={{ opacity: 1, y: 0 }}
               viewport={{ once: true, amount: 0.2 }}
               transition={{ delay: index * 0.06 }}
-              whileHover={{ y: -6 }}
-              className={`rounded-[26px] border border-[#d7e5f2] bg-gradient-to-br ${tone} p-6 shadow-[0_18px_45px_rgba(27,78,123,.08)]`}
+              whileHover={{ y: -8, rotateX: -2.5, rotateY: index % 2 === 0 ? 2.5 : -2.5 }}
+              className={`trust-3d-card rounded-[26px] border border-[#d7e5f2] bg-gradient-to-br ${tone} p-6 shadow-[0_18px_45px_rgba(27,78,123,.08)]`}
             >
-              <span className={`grid h-12 w-12 place-items-center rounded-2xl ${iconTone}`}><Icon size={22} /></span>
-              <h3 className="mt-6 text-xl font-extrabold tracking-[-.03em] text-[#0a1730]">{title}</h3>
-              <p className="mt-3 text-sm leading-6 text-[#52647b]">{text}</p>
+              <span className={`trust-icon-3d grid h-12 w-12 place-items-center rounded-2xl ${iconTone}`}><Icon size={22} /></span>
+              <h3 className="mt-6 text-xl font-extrabold tracking-[-.03em] text-[#0f172a]">{title}</h3>
+              <p className="mt-3 text-sm font-medium leading-6 text-[#334155]">{text}</p>
             </motion.article>
           ))}
         </div>

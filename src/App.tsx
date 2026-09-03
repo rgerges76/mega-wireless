@@ -251,12 +251,12 @@ function ServiceCard({ icon: Icon, kicker, title, text, action, href, delay }: {
       <div className="absolute -right-16 -top-16 h-44 w-44 rounded-full bg-[#7cf7d4]/10 blur-3xl transition group-hover:bg-[#7cf7d4]/20" />
       <div className="relative z-10 flex h-full flex-col">
         <div className="flex items-center justify-between">
-          <span className="grid h-12 w-12 place-items-center rounded-2xl border border-white/10 bg-black/35"><Icon size={21} /></span>
-          <span className="text-[10px] uppercase tracking-[0.24em] text-white/35">{kicker}</span>
+          <span className="service-icon grid h-12 w-12 place-items-center rounded-2xl border border-white/10 bg-black/35"><Icon size={21} /></span>
+          <span className="service-kicker text-[10px] font-extrabold uppercase tracking-[0.24em] text-white/35">{kicker}</span>
         </div>
         <h3 className="mt-10 text-2xl font-bold tracking-[-0.04em] text-[#f1efdf]">{title}</h3>
         <p className="mt-4 text-sm leading-6 text-white/50">{text}</p>
-        <div className="mt-auto flex items-center gap-2 pt-9 text-sm font-bold text-[#7cf7d4]">{action}<ArrowRight size={16} className="transition-transform group-hover:translate-x-1" /></div>
+        <div className="service-action mt-auto flex items-center gap-2 pt-9 text-sm font-extrabold text-[#065f46]">{action}<ArrowRight size={16} className="transition-transform group-hover:translate-x-1" /></div>
       </div>
     </motion.div>
   )
@@ -284,7 +284,7 @@ function PhoneCard({ phone, index }: { phone: PhoneItem; index: number }) {
       className="group overflow-hidden rounded-[30px] border border-white/10 bg-[#111214] shadow-[0_24px_60px_rgba(0,0,0,.25)]"
     >
       <div className="relative overflow-hidden bg-[radial-gradient(circle_at_50%_20%,rgba(124,247,212,.09),transparent_42%),linear-gradient(180deg,#191b20,#0d0e10)] px-4 pb-1 pt-5">
-        <span className="absolute left-5 top-5 rounded-full border border-white/10 bg-black/25 px-3 py-1 text-[9px] uppercase tracking-[0.22em] text-white/50">Unlocked</span>
+        <span className="phone-badge absolute left-5 top-5 rounded-full border border-[#047857] bg-[#047857] px-3 py-1 text-[9px] font-extrabold uppercase tracking-[0.22em] text-white">Unlocked</span>
         <PhoneRender name={name} specs={phone.specs} image={phone.image} />
       </div>
       <div className="border-t border-white/5 p-5 sm:p-6">
@@ -293,12 +293,12 @@ function PhoneCard({ phone, index }: { phone: PhoneItem; index: number }) {
             <h3 className="truncate text-lg font-bold tracking-[-0.03em] text-[#f2efdf]">{name}</h3>
             <p className="mt-1 text-xs text-white/38">{phone.specs || 'Storage details available by phone'}</p>
           </div>
-          <span className="shrink-0 text-lg font-extrabold text-[#7cf7d4]">{phone.price || 'Call'}</span>
+          <span className="phone-price shrink-0 text-lg font-extrabold text-[#0f172a]">{phone.price || 'Call'}</span>
         </div>
         <p className="mt-4 min-h-[40px] text-xs leading-5 text-white/45">{phone.availability || 'Call or message to confirm today’s availability.'}</p>
         <div className="mt-6 grid grid-cols-2 gap-2">
-          <a href={`https://wa.me/16156785849?text=${message}`} className="rounded-full bg-[#f1efdf] px-4 py-3 text-center text-xs font-extrabold text-black transition hover:bg-white">Message</a>
-          <a href="tel:+16156785849" className="rounded-full border border-white/15 px-4 py-3 text-center text-xs font-bold text-white/75 transition hover:border-[#7cf7d4]/60 hover:text-[#7cf7d4]">Call</a>
+          <a href={`https://wa.me/16156785849?text=${message}`} className="phone-message rounded-full bg-[#0f172a] px-4 py-3 text-center text-xs font-extrabold text-white transition hover:bg-[#1e293b]">Message</a>
+          <a href="tel:+16156785849" className="phone-call rounded-full border border-[#047857] bg-[#047857] px-4 py-3 text-center text-xs font-extrabold text-white transition hover:bg-[#065f46]">Call</a>
         </div>
       </div>
     </motion.article>
@@ -362,7 +362,7 @@ function App() {
 
         <div className="mx-auto grid min-h-[760px] max-w-[1380px] items-center gap-10 lg:grid-cols-[1.05fr_.95fr]">
           <div className="relative z-10 pt-8 lg:pt-0">
-            <motion.div initial={{ opacity: 0, y: 14 }} animate={{ opacity: 1, y: 0 }} transition={{ duration: 0.7, ease: EASE }} className="inline-flex items-center gap-2 rounded-full border border-[#7cf7d4]/25 bg-[#7cf7d4]/7 px-4 py-2 text-[10px] font-bold uppercase tracking-[0.2em] text-[#9bf9df]">
+            <motion.div initial={{ opacity: 0, y: 14 }} animate={{ opacity: 1, y: 0 }} transition={{ duration: 0.7, ease: EASE }} className="hero-kicker inline-flex items-center gap-2 rounded-full border border-[#86c9b3] bg-[#ecfdf5] px-4 py-2 text-[10px] font-extrabold uppercase tracking-[0.2em] text-[#065f46]">
               <Zap size={13} /> Nashville tech, upgraded
             </motion.div>
             <motion.h1 initial={{ opacity: 0, y: 24 }} animate={{ opacity: 1, y: 0 }} transition={{ duration: 0.9, delay: 0.08, ease: EASE }} className="mt-7 max-w-[760px] text-[clamp(3.5rem,8vw,8.6rem)] font-extrabold leading-[0.78] tracking-[-0.075em]">
@@ -372,8 +372,9 @@ function App() {
               Repairs, unlocked phones, prepaid service and an AI assistant — all in one local Nashville store. No boring catalog. No guessing what to do next.
             </motion.p>
             <motion.div initial={{ opacity: 0, y: 20 }} animate={{ opacity: 1, y: 0 }} transition={{ duration: 0.8, delay: 0.28, ease: EASE }} className="mt-8 flex flex-wrap gap-3">
-              <button onClick={openAI} className="group inline-flex items-center gap-3 rounded-full bg-[#7cf7d4] px-6 py-4 text-sm font-extrabold text-black transition hover:gap-4 hover:bg-[#9bf9df]">Try Mega AI <ArrowRight size={17} /></button>
-              <a href="#phones" className="inline-flex items-center gap-3 rounded-full border border-white/15 bg-white/[0.035] px-6 py-4 text-sm font-bold text-white/80 transition hover:border-white/30 hover:bg-white/[0.07]">Shop unlocked phones</a>
+              <a data-cta="call-now" href="tel:+16156785849" className="cta-call inline-flex items-center gap-3 rounded-full bg-[#047857] px-6 py-4 text-sm font-extrabold text-white shadow-[0_14px_34px_rgba(4,120,87,.25)] transition hover:-translate-y-0.5 hover:bg-[#065f46]"><Phone size={17} /> Call Now</a>
+              <a data-cta="directions" href="https://www.google.com/maps/search/?api=1&query=4717+Nolensville+Pike+Nashville+TN+37211" className="cta-directions inline-flex items-center gap-3 rounded-full border-2 border-[#0f172a] bg-white px-6 py-4 text-sm font-extrabold text-[#0f172a] transition hover:-translate-y-0.5 hover:bg-[#f1f5f9]"><MapPin size={17} /> Get Directions</a>
+              <a href="#phones" className="cta-shop inline-flex items-center gap-3 rounded-full border border-[#0f172a] bg-[#0f172a] px-6 py-4 text-sm font-extrabold text-white transition hover:-translate-y-0.5 hover:bg-[#1e293b]"><Smartphone size={17} /> Shop Phones</a>
             </motion.div>
             <motion.div initial={{ opacity: 0 }} animate={{ opacity: 1 }} transition={{ duration: 1, delay: 0.5 }} className="mt-10 flex flex-wrap gap-x-7 gap-y-3 text-[10px] uppercase tracking-[0.18em] text-white/35">
               <span>Free initial diagnostics</span><span>Same-day common repairs</span><span>English · Español · العربية</span>
@@ -410,7 +411,7 @@ function App() {
           <Reveal>
             <div className="grid gap-7 lg:grid-cols-12 lg:items-end">
               <div className="lg:col-span-8">
-                <div className="text-[10px] font-bold uppercase tracking-[0.25em] text-[#7cf7d4]">What we actually do</div>
+                <div className="section-kicker text-[10px] font-extrabold uppercase tracking-[0.25em] text-[#065f46]">What we actually do</div>
                 <h2 className="mt-5 text-4xl font-extrabold leading-[0.92] tracking-[-0.055em] sm:text-6xl lg:text-7xl">One store.<br /><span className="text-white/30">Four ways to help.</span></h2>
               </div>
               <p className="max-w-md text-sm leading-7 text-white/45 lg:col-span-4">The page is built around what customers want to do immediately — repair a device, buy a phone, ask AI, or get local help.</p>
@@ -448,13 +449,13 @@ function App() {
 
             <Reveal delay={0.12}>
               <div className="lg:pl-8">
-                <div className="text-[10px] font-bold uppercase tracking-[0.25em] text-[#7cf7d4]">Mega AI assistant</div>
+                <div className="section-kicker text-[10px] font-extrabold uppercase tracking-[0.25em] text-[#065f46]">Mega AI assistant</div>
                 <h2 className="mt-5 text-4xl font-extrabold leading-[0.94] tracking-[-0.055em] sm:text-6xl">Your first answer<br /><span className="text-white/30">before the counter.</span></h2>
                 <p className="mt-6 max-w-lg text-sm leading-7 text-white/48">Use AI for simple troubleshooting and service questions. For anything that needs hands-on diagnosis, the conversation leads back to real technicians at the store.</p>
                 <div className="mt-8 grid max-w-lg gap-3 sm:grid-cols-3">
-                  <div className="rounded-2xl border border-white/8 bg-white/[0.035] p-4"><BatteryCharging size={17} className="text-[#7cf7d4]" /><div className="mt-3 text-xs font-bold">Charging</div></div>
-                  <div className="rounded-2xl border border-white/8 bg-white/[0.035] p-4"><Smartphone size={17} className="text-[#7cf7d4]" /><div className="mt-3 text-xs font-bold">Phone issues</div></div>
-                  <div className="rounded-2xl border border-white/8 bg-white/[0.035] p-4"><Languages size={17} className="text-[#7cf7d4]" /><div className="mt-3 text-xs font-bold">3 languages</div></div>
+                  <div className="ai-feature rounded-2xl border border-[#d7e5f2] bg-white p-4"><BatteryCharging size={17} className="text-[#047857]" /><div className="mt-3 text-xs font-extrabold text-[#0f172a]">Charging</div></div>
+                  <div className="ai-feature rounded-2xl border border-[#d7e5f2] bg-white p-4"><Smartphone size={17} className="text-[#047857]" /><div className="mt-3 text-xs font-extrabold text-[#0f172a]">Phone issues</div></div>
+                  <div className="ai-feature rounded-2xl border border-[#d7e5f2] bg-white p-4"><Languages size={17} className="text-[#047857]" /><div className="mt-3 text-xs font-extrabold text-[#0f172a]">3 languages</div></div>
                 </div>
                 <button onClick={openAI} className="mt-8 inline-flex items-center gap-3 rounded-full bg-[#f1efdf] px-6 py-4 text-sm font-extrabold text-black transition hover:scale-[1.02]">Open Mega AI <ArrowRight size={16} /></button>
               </div>
@@ -468,7 +469,7 @@ function App() {
           <Reveal>
             <div className="grid gap-7 lg:grid-cols-12 lg:items-end">
               <div className="lg:col-span-8">
-                <div className="text-[10px] font-bold uppercase tracking-[0.25em] text-[#7cf7d4]">Today’s phone catalog</div>
+                <div className="section-kicker text-[10px] font-extrabold uppercase tracking-[0.25em] text-[#065f46]">Today’s phone catalog</div>
                 <h2 className="mt-5 text-4xl font-extrabold leading-[0.92] tracking-[-0.055em] sm:text-6xl lg:text-7xl">Phones that look<br /><span className="text-white/30">like the model listed.</span></h2>
               </div>
               <div className="lg:col-span-4">
@@ -478,9 +479,9 @@ function App() {
           </Reveal>
 
           {phoneError ? (
-            <div className="mt-12 rounded-[26px] border border-white/10 bg-white/[0.035] p-6 text-sm text-white/50">The live phone catalog is temporarily unavailable. Call <a className="font-bold text-[#7cf7d4]" href="tel:+16156785849">(615) 678-5849</a> for today’s inventory.</div>
+            <div className="catalog-status mt-12 rounded-[26px] border border-[#d7e5f2] bg-white p-6 text-sm font-medium text-[#334155]">The live phone catalog is temporarily unavailable. Call <a className="font-extrabold text-[#065f46] underline decoration-2 underline-offset-4" href="tel:+16156785849">(615) 678-5849</a> for today’s inventory.</div>
           ) : phones.length === 0 ? (
-            <div className="mt-12 rounded-[26px] border border-white/10 bg-white/[0.035] p-6 text-sm text-white/50">Loading today’s phone inventory…</div>
+            <div className="catalog-status mt-12 rounded-[26px] border border-[#d7e5f2] bg-white p-6 text-sm font-medium text-[#334155]">Loading today’s phone inventory…</div>
           ) : (
             <div className="mt-12 grid grid-cols-1 gap-3 sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4">
               {phones.map((phone, index) => <PhoneCard key={`${phone.name}-${index}`} phone={phone} index={index} />)}
@@ -517,14 +518,14 @@ function App() {
             <div className="rounded-[38px] border border-white/10 bg-[linear-gradient(135deg,rgba(124,247,212,.08),transparent_35%),#0a0b0d] p-7 sm:p-10 lg:p-14">
               <div className="grid gap-10 lg:grid-cols-[1fr_.85fr] lg:items-end">
                 <div>
-                  <div className="text-[10px] font-bold uppercase tracking-[0.25em] text-[#7cf7d4]">Mega Wireless Nashville</div>
+                  <div className="section-kicker text-[10px] font-extrabold uppercase tracking-[0.25em] text-[#065f46]">Mega Wireless Nashville</div>
                   <h2 className="mt-5 text-4xl font-extrabold leading-[0.92] tracking-[-0.055em] sm:text-6xl">Need the real human?<br /><span className="text-white/30">We’re right here.</span></h2>
                   <p className="mt-6 text-sm leading-7 text-white/45">4717 Nolensville Pike, Nashville, TN 37211 · Open daily 10 AM–8 PM.</p>
                 </div>
                 <div className="grid gap-2 sm:grid-cols-3 lg:grid-cols-1 xl:grid-cols-3">
-                  <a href="tel:+16156785849" className="rounded-2xl bg-[#f1efdf] p-4 text-black transition hover:scale-[1.02]"><Phone size={17} /><div className="mt-5 text-xs font-extrabold">Call</div></a>
-                  <a href="https://wa.me/16156785849?text=Hello%20Mega%20Wireless%2C%20I%20need%20help." className="rounded-2xl border border-white/10 bg-white/[0.04] p-4 transition hover:border-[#7cf7d4]/40"><MessageCircle size={17} /><div className="mt-5 text-xs font-extrabold">Message</div></a>
-                  <a href="https://www.google.com/maps/search/?api=1&query=4717+Nolensville+Pike+Nashville+TN+37211" className="rounded-2xl border border-white/10 bg-white/[0.04] p-4 transition hover:border-[#7cf7d4]/40"><MapPin size={17} /><div className="mt-5 text-xs font-extrabold">Directions</div></a>
+                  <a href="tel:+16156785849" className="visit-call rounded-2xl bg-[#047857] p-4 font-extrabold text-white shadow-[0_12px_28px_rgba(4,120,87,.22)] transition hover:scale-[1.02] hover:bg-[#065f46]"><Phone size={17} /><div className="mt-5 text-xs">Call Now</div></a>
+                  <a href="https://wa.me/16156785849?text=Hello%20Mega%20Wireless%2C%20I%20need%20help." className="visit-message rounded-2xl border border-[#0f172a] bg-[#0f172a] p-4 font-extrabold text-white transition hover:scale-[1.02] hover:bg-[#1e293b]"><MessageCircle size={17} /><div className="mt-5 text-xs">Message</div></a>
+                  <a href="https://www.google.com/maps/search/?api=1&query=4717+Nolensville+Pike+Nashville+TN+37211" className="visit-directions rounded-2xl border-2 border-[#0f172a] bg-white p-4 font-extrabold text-[#0f172a] transition hover:scale-[1.02] hover:bg-[#f1f5f9]"><MapPin size={17} /><div className="mt-5 text-xs">Directions</div></a>
                 </div>
               </div>
             </div>
