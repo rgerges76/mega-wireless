@@ -33,6 +33,14 @@ type PhoneItem = {
   brand?: string
 }
 
+type MusicMode = 'global' | 'arabic' | 'latin'
+
+const MUSIC_MODES: Array<{ id: MusicMode; short: string; label: string; description: string }> = [
+  { id: 'global', short: 'EN', label: 'Global Pop', description: 'Modern international pulse' },
+  { id: 'arabic', short: 'AR', label: 'Arabic Electro', description: 'Modern Arabic-inspired rhythm' },
+  { id: 'latin', short: 'ES', label: 'Latin Urban', description: 'Contemporary Latin energy' },
+]
+
 type CameraKind = 'dualVertical' | 'dualDiagonal' | 'triple' | 'samsungTriple' | 'samsungQuad' | 'basic'
 
 type PhoneProfile = {
@@ -312,6 +320,7 @@ function App() {
   const [phoneError, setPhoneError] = useState(false)
   const [introOpen, setIntroOpen] = useState(true)
   const [musicOn, setMusicOn] = useState(false)
+  const [musicMode, setMusicMode] = useState<MusicMode>('global')
   const audioRef = useRef<{ context: AudioContext; master: GainNode; timer: number } | null>(null)
 
   const stopMusic = () => {
@@ -324,7 +333,7 @@ function App() {
     setMusicOn(false)
   }
 
-  const startMusic = () => {
+  const startMusic = (selectedMode: MusicMode = musicMode) => {
     if (audioRef.current) return
     const AudioContextClass = window.AudioContext
     if (!AudioContextClass) return
@@ -334,33 +343,59 @@ function App() {
     master.gain.exponentialRampToValueAtTime(0.08, context.currentTime + 1.2)
     master.connect(context.destination)
 
-    const notes = [146.83, 185, 220, 277.18, 220, 185]
+    const sound = {
+      global: { notes: [146.83, 185, 220, 277.18, 329.63, 220], pace: 430, wave: 'triangle' as OscillatorType },
+      arabic: { notes: [146.83, 155.56, 185, 196, 220, 233.08, 277.18, 233.08], pace: 390, wave: 'sine' as OscillatorType },
+      latin: { notes: [164.81, 196, 246.94, 293.66, 246.94, 196, 329.63, 246.94], pace: 355, wave: 'triangle' as OscillatorType },
+    }[selectedMode]
     let step = 0
     const playNote = () => {
       const now = context.currentTime
       const oscillator = context.createOscillator()
       const gain = context.createGain()
       const filter = context.createBiquadFilter()
-      oscillator.type = 'sine'
-      oscillator.frequency.setValueAtTime(notes[step % notes.length], now)
+      oscillator.type = sound.wave
+      oscillator.frequency.setValueAtTime(sound.notes[step % sound.notes.length], now)
       filter.type = 'lowpass'
-      filter.frequency.setValueAtTime(950, now)
+      filter.frequency.setValueAtTime(selectedMode === 'arabic' ? 1250 : 1500, now)
       gain.gain.setValueAtTime(0.0001, now)
-      gain.gain.exponentialRampToValueAtTime(0.22, now + 0.12)
-      gain.gain.exponentialRampToValueAtTime(0.0001, now + 1.65)
+      gain.gain.exponentialRampToValueAtTime(step % 4 === 0 ? 0.2 : 0.105, now + 0.025)
+      gain.gain.exponentialRampToValueAtTime(0.0001, now + sound.pace / 1000 * .88)
       oscillator.connect(filter).connect(gain).connect(master)
       oscillator.start(now)
-      oscillator.stop(now + 1.7)
+      oscillator.stop(now + sound.pace / 1000)
+
+      if (step % 4 === 0 || (selectedMode === 'latin' && step % 4 === 3)) {
+        const kick = context.createOscillator()
+        const kickGain = context.createGain()
+        kick.type = 'sine'
+        kick.frequency.setValueAtTime(105, now)
+        kick.frequency.exponentialRampToValueAtTime(45, now + .14)
+        kickGain.gain.setValueAtTime(.24, now)
+        kickGain.gain.exponentialRampToValueAtTime(.0001, now + .18)
+        kick.connect(kickGain).connect(master)
+        kick.start(now)
+        kick.stop(now + .2)
+      }
       step += 1
     }
     playNote()
-    const timer = window.setInterval(playNote, 1250)
+    const timer = window.setInterval(playNote, sound.pace)
     audioRef.current = { context, master, timer }
     setMusicOn(true)
+    window.gtag?.('event', 'music_play', { music_style: selectedMode })
+  }
+
+  const selectMusic = (mode: MusicMode) => {
+    const wasPlaying = Boolean(audioRef.current)
+    if (wasPlaying) stopMusic()
+    setMusicMode(mode)
+    if (wasPlaying) window.setTimeout(() => startMusic(mode), 380)
+    window.gtag?.('event', 'music_style_select', { music_style: mode })
   }
 
   const enterSite = () => {
-    startMusic()
+    startMusic(musicMode)
     setIntroOpen(false)
     window.gtag?.('event', 'welcome_enter', { music_enabled: true })
   }
@@ -439,6 +474,13 @@ function App() {
               <h1>Welcome to<br /><span>Mega Wireless</span></h1>
               <p>Phones. Repairs. Real help — upgraded.</p>
             </motion.div>
+            <motion.div className="mw-music-picker" initial={{ opacity: 0 }} animate={{ opacity: 1 }} transition={{ delay: .58 }} aria-label="Choose music style">
+              {MUSIC_MODES.map((mode) => (
+                <button key={mode.id} className={musicMode === mode.id ? 'active' : ''} onClick={() => selectMusic(mode.id)} aria-pressed={musicMode === mode.id}>
+                  <b>{mode.short}</b><span>{mode.label}</span><small>{mode.description}</small>
+                </button>
+              ))}
+            </motion.div>
             <motion.button initial={{ opacity: 0, y: 16 }} animate={{ opacity: 1, y: 0 }} transition={{ delay: .7 }} onClick={enterSite} className="mw-enter-button">
               <span>Enter Mega Wireless</span><ArrowRight size={19} />
             </motion.button>
@@ -449,14 +491,19 @@ function App() {
       )}
 
       {!introOpen && (
-        <button
-          className="mw-sound-toggle"
-          onClick={musicOn ? stopMusic : startMusic}
-          aria-label={musicOn ? 'Mute background music' : 'Play background music'}
-          title={musicOn ? 'Mute music' : 'Play music'}
-        >
-          {musicOn ? <Volume2 size={17} /> : <VolumeX size={17} />}
-        </button>
+        <div className="mw-music-dock">
+          <div className="mw-music-dock-styles">
+            {MUSIC_MODES.map((mode) => <button key={mode.id} className={musicMode === mode.id ? 'active' : ''} onClick={() => selectMusic(mode.id)} aria-label={`Use ${mode.label} music`}>{mode.short}</button>)}
+          </div>
+          <button
+            className="mw-sound-toggle"
+            onClick={musicOn ? stopMusic : () => startMusic(musicMode)}
+            aria-label={musicOn ? 'Mute background music' : 'Play background music'}
+            title={musicOn ? 'Mute music' : 'Play music'}
+          >
+            {musicOn ? <Volume2 size={17} /> : <VolumeX size={17} />}
+          </button>
+        </div>
       )}
       <header className="fixed left-0 right-0 top-0 z-50 px-3 pt-3 sm:px-5 sm:pt-4">
         <div className="mx-auto flex max-w-[1380px] items-center justify-between rounded-full border border-white/10 bg-black/60 px-4 py-3 shadow-[0_12px_40px_rgba(0,0,0,.25)] backdrop-blur-xl sm:px-6">

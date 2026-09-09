@@ -71,13 +71,23 @@ body.mw-intro-active { overflow: hidden; }
 .mw-welcome-mark { display: grid; place-items: center; width: 54px; height: 54px; margin: 0 auto 22px; border: 1px solid rgba(124,247,212,.65); border-radius: 17px; background: rgba(124,247,212,.12); color: #baffed; font-size: .86rem; font-weight: 900; box-shadow: 0 0 40px rgba(124,247,212,.16); backdrop-filter: blur(14px); }
 .mw-welcome h1 { margin: 0; color: #f8fbff; font-size: clamp(3.4rem, 9vw, 7.8rem); font-weight: 900; line-height: .82; letter-spacing: -.075em; text-wrap: balance; }
 .mw-welcome h1 span { background: linear-gradient(90deg,#7cf7d4,#83cfff 52%,#c3a8ff); -webkit-background-clip: text; background-clip: text; color: transparent; }
-.mw-welcome p { margin: 28px auto 30px; color: rgba(239,248,255,.6); font-size: clamp(.95rem,2vw,1.15rem); letter-spacing: .04em; }
+.mw-welcome p { margin: 24px auto 20px; color: rgba(239,248,255,.6); font-size: clamp(.95rem,2vw,1.15rem); letter-spacing: .04em; }
+.mw-music-picker { display: grid; grid-template-columns: repeat(3,minmax(0,1fr)); gap: 8px; width: min(100%,620px); margin: 0 auto 22px; }
+.mw-music-picker button { display: grid; grid-template-columns: auto 1fr; gap: 2px 9px; align-items: center; padding: 12px 14px; border: 1px solid rgba(184,226,255,.13); border-radius: 16px; background: rgba(5,17,27,.5); color: rgba(236,247,255,.62); text-align: left; backdrop-filter: blur(14px); transition: .2s ease; }
+.mw-music-picker button b { grid-row: span 2; display: grid; width: 29px; height: 29px; place-items: center; border-radius: 9px; background: rgba(255,255,255,.07); font-size: .62rem; }
+.mw-music-picker button span { font-size: .72rem; font-weight: 850; }
+.mw-music-picker button small { color: rgba(224,240,250,.35); font-size: .56rem; line-height: 1.2; }
+.mw-music-picker button.active { border-color: rgba(124,247,212,.7); background: rgba(124,247,212,.13); color: #eafff9; box-shadow: 0 0 28px rgba(124,247,212,.09); }
 .mw-enter-button { display: inline-flex; align-items: center; justify-content: center; gap: 18px; min-height: 58px; padding: 0 26px; border: 0; border-radius: 999px; background: #eefbf7; color: #07131c; font-weight: 900; box-shadow: 0 18px 55px rgba(50,213,170,.22); transition: transform .22s ease, box-shadow .22s ease; }
 .mw-enter-button:hover { transform: translateY(-3px) scale(1.02); box-shadow: 0 24px 70px rgba(50,213,170,.32); }
 .mw-enter-silent { display: block; margin: 16px auto 0; padding: 7px 10px; border: 0; background: transparent; color: rgba(231,244,255,.42); font-size: .75rem; text-decoration: underline; text-underline-offset: 4px; }
 .mw-welcome-hint { position: absolute; bottom: 24px; left: 50%; z-index: 108; display: flex; align-items: center; gap: 9px; transform: translateX(-50%); color: rgba(230,244,255,.4); font-size: .68rem; letter-spacing: .12em; text-transform: uppercase; white-space: nowrap; }
 .mw-welcome-hint span { width: 7px; height: 7px; border-radius: 50%; background: #7cf7d4; box-shadow: 0 0 16px #7cf7d4; animation: mw-pulse 1.8s ease-in-out infinite; }
-.mw-sound-toggle { position: fixed; right: 20px; bottom: 20px; z-index: 80; display: grid; width: 46px; height: 46px; place-items: center; border: 1px solid rgba(177,226,255,.22); border-radius: 50%; background: rgba(8,22,33,.82); color: #dff8f1; box-shadow: 0 12px 32px rgba(0,0,0,.28); backdrop-filter: blur(14px); }
+.mw-music-dock { position: fixed; right: 18px; bottom: 18px; z-index: 80; display: flex; gap: 7px; padding: 5px; border: 1px solid rgba(177,226,255,.18); border-radius: 999px; background: rgba(8,22,33,.84); box-shadow: 0 12px 32px rgba(0,0,0,.28); backdrop-filter: blur(14px); }
+.mw-music-dock-styles { display: flex; align-items: center; gap: 3px; }
+.mw-music-dock-styles button { width: 34px; height: 34px; border: 0; border-radius: 50%; background: transparent; color: rgba(223,248,241,.45); font-size: .59rem; font-weight: 900; }
+.mw-music-dock-styles button.active { background: #7cf7d4; color: #07131c; }
+.mw-sound-toggle { display: grid; width: 38px; height: 38px; place-items: center; border: 0; border-radius: 50%; background: rgba(255,255,255,.09); color: #dff8f1; }
 
 body.mw-intro-active .hero3d-layer { z-index: 104; clip-path: inset(0 0 0 48%); opacity: 1 !important; transform: scale(1.06) !important; filter: saturate(1.55) contrast(1.08) brightness(1.95); }
 
@@ -248,6 +258,9 @@ header > div {
   body.mw-intro-active .hero3d-layer { clip-path: none; opacity: .34 !important; transform: translate3d(16%,8%,0) scale(.92) !important; }
   .mw-welcome-copy { padding: 24px 18px; }
   .mw-welcome h1 { line-height: .88; }
+  .mw-music-picker { grid-template-columns: 1fr; max-width: 330px; }
+  .mw-music-picker button { padding: 9px 12px; }
+  .mw-welcome-hint { display: none; }
 }
 @media (max-width: 640px) {
   #phones article > div:first-child { min-height: 270px; }
