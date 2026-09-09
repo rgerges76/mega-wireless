@@ -42,6 +42,10 @@ function MainPhone() {
     const baseRotation = Math.PI - .34 + turnProgress * Math.PI * 2
     ref.current.rotation.y = THREE.MathUtils.damp(ref.current.rotation.y, baseRotation + mouse.current.x * 0.08, 5, delta)
     ref.current.rotation.x = THREE.MathUtils.damp(ref.current.rotation.x, -0.04 - mouse.current.y * 0.05 + Math.cos(t * 0.45) * 0.02, 4, delta)
+    const emerge = Math.sin(turnProgress * Math.PI)
+    ref.current.position.z = .2 + emerge * 1.45
+    const scale = 1.08 + emerge * .18
+    ref.current.scale.setScalar(scale)
     if (cracks.current) cracks.current.visible = cycle < 2.75
     if (backCracks.current) backCracks.current.visible = cycle > 2.35 && cycle < 5.35
     if (repairGlow.current) {
@@ -125,6 +129,60 @@ function MainPhone() {
         </mesh>
       </group>
     </Float>
+  )
+}
+
+function MegaBillboard() {
+  const scan = useRef<THREE.Mesh>(null)
+  useFrame((state) => {
+    if (!scan.current) return
+    const cycle = (state.clock.getElapsedTime() % 4.8) / 4.8
+    scan.current.position.y = 2.15 - cycle * 4.3
+  })
+
+  const dots = Array.from({ length: 117 }, (_, index) => {
+    const col = index % 13
+    const row = Math.floor(index / 13)
+    return { x: -2.88 + col * .48, y: 1.84 - row * .46, alpha: .1 + ((col + row) % 4) * .025 }
+  })
+
+  return (
+    <group position={[2.15, 0, -1.6]}>
+      <RoundedBox args={[6.9, 5.45, .28]} radius={.22} smoothness={6}>
+        <meshPhysicalMaterial color="#151044" emissive="#181b68" emissiveIntensity={.55} metalness={.28} roughness={.27} clearcoat={1} />
+      </RoundedBox>
+      <RoundedBox position={[0, 0, .18]} args={[6.45, 5.02, .06]} radius={.18} smoothness={6}>
+        <meshBasicMaterial color="#122d63" toneMapped={false} />
+      </RoundedBox>
+      {dots.map((dot, index) => (
+        <mesh key={index} position={[dot.x, dot.y, .225]}>
+          <circleGeometry args={[.028, 10]} />
+          <meshBasicMaterial color={index % 3 === 0 ? '#ff77ac' : index % 3 === 1 ? '#5ff4d4' : '#ffd75f'} transparent opacity={dot.alpha} toneMapped={false} />
+        </mesh>
+      ))}
+      <mesh ref={scan} position={[0, 2.15, .25]}>
+        <planeGeometry args={[6.1, .035]} />
+        <meshBasicMaterial color="#8cfff0" transparent opacity={.85} toneMapped={false} />
+      </mesh>
+      <mesh position={[0, 2.48, .18]}>
+        <boxGeometry args={[6.15, .06, .06]} />
+        <meshBasicMaterial color="#ffd75f" toneMapped={false} />
+      </mesh>
+      <mesh position={[0, -2.48, .18]}>
+        <boxGeometry args={[6.15, .06, .06]} />
+        <meshBasicMaterial color="#ff77ac" toneMapped={false} />
+      </mesh>
+      <group position={[-3.38, 0, -.18]} rotation={[0, .3, 0]}>
+        <RoundedBox args={[.52, 4.7, .18]} radius={.12} smoothness={4}>
+          <meshPhysicalMaterial color="#281a69" emissive="#ff77ac" emissiveIntensity={.3} metalness={.45} roughness={.25} />
+        </RoundedBox>
+      </group>
+      <group position={[3.38, 0, -.18]} rotation={[0, -.3, 0]}>
+        <RoundedBox args={[.52, 4.7, .18]} radius={.12} smoothness={4}>
+          <meshPhysicalMaterial color="#153d68" emissive="#5ff4d4" emissiveIntensity={.3} metalness={.45} roughness={.25} />
+        </RoundedBox>
+      </group>
+    </group>
   )
 }
 
@@ -278,6 +336,7 @@ function Scene() {
       <spotLight position={[1, 8, 5]} angle={0.42} penumbra={0.9} intensity={38} color="#ffd96d" />
 
       <MainPhone />
+      <MegaBillboard />
       <ScreenProtector />
       <ShieldBadge />
       <Cable />

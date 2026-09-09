@@ -478,8 +478,8 @@ function App() {
             <motion.div initial={{ opacity: 0, y: 14 }} animate={{ opacity: 1, y: 0 }} transition={{ delay: .2 }} className="mw-welcome-eyebrow">Nashville · Tennessee</motion.div>
             <motion.div initial={{ opacity: 0, y: 30 }} animate={{ opacity: 1, y: 0 }} transition={{ delay: .35, duration: .85, ease: EASE }}>
               <div className="mw-welcome-mark">MW</div>
-              <h1>Welcome to<br /><span>Mega Wireless</span></h1>
-              <p>Phones. Repairs. Real help — upgraded.</p>
+              <h1>We bring<br /><span>phones back.</span></h1>
+              <p>A cinematic repair experience by Mega Wireless Nashville.</p>
             </motion.div>
             <motion.div className="mw-music-picker" initial={{ opacity: 0 }} animate={{ opacity: 1 }} transition={{ delay: .58 }} aria-label="Choose music style">
               {MUSIC_MODES.map((mode) => (
