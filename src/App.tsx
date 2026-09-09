@@ -467,6 +467,13 @@ function App() {
           aria-label="Welcome to Mega Wireless"
         >
           <div className="mw-welcome-grid" aria-hidden="true" />
+          <div className="mw-repair-story" aria-hidden="true">
+            <span className="mw-repair-step mw-step-broken">Broken Screen</span>
+            <span className="mw-repair-line"><i /></span>
+            <span className="mw-repair-step mw-step-repair">Back Glass</span>
+            <span className="mw-repair-line"><i /></span>
+            <span className="mw-repair-step mw-step-ready">Like New</span>
+          </div>
           <div className="mw-welcome-copy">
             <motion.div initial={{ opacity: 0, y: 14 }} animate={{ opacity: 1, y: 0 }} transition={{ delay: .2 }} className="mw-welcome-eyebrow">Nashville · Tennessee</motion.div>
             <motion.div initial={{ opacity: 0, y: 30 }} animate={{ opacity: 1, y: 0 }} transition={{ delay: .35, duration: .85, ease: EASE }}>

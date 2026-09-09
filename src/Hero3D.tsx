@@ -20,6 +20,9 @@ function Lens({ x, y }: { x: number; y: number }) {
 
 function MainPhone() {
   const ref = useRef<THREE.Group>(null)
+  const cracks = useRef<THREE.Group>(null)
+  const backCracks = useRef<THREE.Group>(null)
+  const repairGlow = useRef<THREE.Mesh>(null)
   const mouse = useRef({ x: 0, y: 0 })
 
   useEffect(() => {
@@ -34,28 +37,61 @@ function MainPhone() {
   useFrame((state, delta) => {
     if (!ref.current) return
     const t = state.clock.getElapsedTime()
-    ref.current.rotation.y = THREE.MathUtils.damp(ref.current.rotation.y, -0.48 + mouse.current.x * 0.12 + Math.sin(t * 0.55) * 0.05, 4, delta)
+    const cycle = t % 11
+    const turnProgress = THREE.MathUtils.smoothstep(cycle, 2.2, 6.5)
+    const baseRotation = Math.PI - .34 + turnProgress * Math.PI * 2
+    ref.current.rotation.y = THREE.MathUtils.damp(ref.current.rotation.y, baseRotation + mouse.current.x * 0.08, 5, delta)
     ref.current.rotation.x = THREE.MathUtils.damp(ref.current.rotation.x, -0.04 - mouse.current.y * 0.05 + Math.cos(t * 0.45) * 0.02, 4, delta)
+    if (cracks.current) cracks.current.visible = cycle < 2.75
+    if (backCracks.current) backCracks.current.visible = cycle > 2.35 && cycle < 5.35
+    if (repairGlow.current) {
+      const visible = cycle > 5.8 && cycle < 8.8
+      repairGlow.current.visible = visible
+      const pulse = 1 + Math.sin(t * 7) * .08
+      repairGlow.current.scale.set(pulse, pulse, 1)
+    }
   })
 
   return (
     <Float speed={1.15} rotationIntensity={0.08} floatIntensity={0.42}>
       <group ref={ref} position={[2.15, 0.05, 0.2]} rotation={[-0.04, -0.48, 0.08]} scale={1.08}>
         <RoundedBox args={[2.15, 4.35, 0.32]} radius={0.34} smoothness={8}>
-          <meshPhysicalMaterial color="#b8c9db" metalness={0.72} roughness={0.16} clearcoat={1} clearcoatRoughness={0.05} />
+        <meshPhysicalMaterial color="#ff7c9f" metalness={0.48} roughness={0.18} clearcoat={1} clearcoatRoughness={0.04} />
         </RoundedBox>
 
         <RoundedBox position={[0, 0, -0.19]} args={[1.98, 4.15, 0.055]} radius={0.28} smoothness={8}>
-          <meshPhysicalMaterial color="#101923" metalness={0.08} roughness={0.08} clearcoat={1} />
+          <meshPhysicalMaterial color="#38246d" metalness={0.1} roughness={0.07} clearcoat={1} />
         </RoundedBox>
         <mesh position={[0, 0, -0.225]}>
           <planeGeometry args={[1.78, 3.84]} />
-          <meshBasicMaterial color="#77cfff" transparent opacity={0.24} toneMapped={false} />
+          <meshBasicMaterial color="#56f1d1" transparent opacity={0.48} toneMapped={false} />
+        </mesh>
+
+        <group ref={cracks} position={[0, 0, -0.265]} rotation={[0, Math.PI, 0]}>
+          {[
+            [0, .5, .72, .025, .74], [.27, .13, .58, .022, -.68],
+            [-.25, .04, .5, .022, .55], [.37, -.25, .7, .024, .22],
+            [-.32, -.45, .62, .022, -.42], [.12, -.72, .56, .02, .82],
+          ].map(([x, y, width, height, angle], index) => (
+            <mesh key={index} position={[x, y, 0]} rotation={[0, 0, angle]}>
+              <boxGeometry args={[width, height, .015]} />
+              <meshBasicMaterial color="#fff5f7" toneMapped={false} />
+            </mesh>
+          ))}
+          <mesh position={[0, .45, .012]}>
+            <ringGeometry args={[.12, .2, 7]} />
+            <meshBasicMaterial color="#ffffff" transparent opacity={.9} side={THREE.DoubleSide} toneMapped={false} />
+          </mesh>
+        </group>
+
+        <mesh ref={repairGlow} position={[0, 0, -0.275]} rotation={[0, Math.PI, 0]}>
+          <ringGeometry args={[1.08, 1.16, 48]} />
+          <meshBasicMaterial color="#fff06a" transparent opacity={.9} side={THREE.DoubleSide} toneMapped={false} />
         </mesh>
 
         <group position={[-0.55, 1.25, 0.22]}>
           <RoundedBox args={[1.05, 1.05, 0.12]} radius={0.24} smoothness={6}>
-            <meshPhysicalMaterial color="#9fb3c8" metalness={0.5} roughness={0.18} clearcoat={1} />
+            <meshPhysicalMaterial color="#ffb85c" metalness={0.38} roughness={0.18} clearcoat={1} />
           </RoundedBox>
           <Lens x={-0.23} y={0.23} />
           <Lens x={0.23} y={0.23} />
@@ -66,9 +102,26 @@ function MainPhone() {
           </mesh>
         </group>
 
+        <group ref={backCracks} position={[.12, -.2, .225]}>
+          {[
+            [-.15, .65, .9, .025, .58], [.25, .35, .7, .023, -.76],
+            [-.22, .05, .82, .025, .18], [.2, -.32, .88, .024, -.42],
+            [-.3, -.72, .7, .022, .71], [.42, -.95, .6, .02, -.2],
+          ].map(([x, y, width, height, angle], index) => (
+            <mesh key={index} position={[x, y, 0]} rotation={[0, 0, angle]}>
+              <boxGeometry args={[width, height, .015]} />
+              <meshBasicMaterial color="#fff8fb" toneMapped={false} />
+            </mesh>
+          ))}
+          <mesh position={[.05, .15, .012]}>
+            <ringGeometry args={[.14, .22, 8]} />
+            <meshBasicMaterial color="#ffffff" transparent opacity={.9} side={THREE.DoubleSide} toneMapped={false} />
+          </mesh>
+        </group>
+
         <mesh position={[1.08, 0.45, 0]}>
           <boxGeometry args={[0.04, 0.75, 0.08]} />
-          <meshStandardMaterial color="#dce7f2" metalness={0.85} roughness={0.15} />
+          <meshStandardMaterial color="#fff0a6" metalness={0.72} roughness={0.15} />
         </mesh>
       </group>
     </Float>
@@ -102,7 +155,7 @@ function ShieldBadge() {
       <group position={[1.05, -1.05, 1.1]} rotation={[0.08, -0.18, -0.08]} scale={0.72}>
         <mesh rotation={[Math.PI / 2, 0, 0]}>
           <cylinderGeometry args={[0.78, 0.78, 0.22, 6]} />
-          <meshPhysicalMaterial color="#1469df" metalness={0.42} roughness={0.18} clearcoat={1} />
+          <meshPhysicalMaterial color="#ffb329" metalness={0.32} roughness={0.18} clearcoat={1} />
         </mesh>
         <mesh position={[-0.15, -0.02, 0.16]} rotation={[0, 0, -0.7]}>
           <boxGeometry args={[0.14, 0.58, 0.12]} />
@@ -165,7 +218,7 @@ function SuctionCup() {
       <group position={[4.25, -1.45, -0.15]} rotation={[0.8, 0.2, 0.2]}>
         <mesh rotation={[Math.PI / 2, 0, 0]}>
           <cylinderGeometry args={[0.5, 0.7, 0.12, 42]} />
-          <meshPhysicalMaterial color="#bfe8ff" transparent opacity={0.35} roughness={0.1} clearcoat={1} />
+          <meshPhysicalMaterial color="#8ef7dc" transparent opacity={0.48} roughness={0.1} clearcoat={1} />
         </mesh>
         <mesh position={[0, 0.42, 0]}>
           <torusGeometry args={[0.28, 0.045, 14, 48]} />
@@ -187,8 +240,28 @@ function OrbitRings() {
       {[2.15, 2.62, 3.05].map((radius, index) => (
         <mesh key={radius}>
           <torusGeometry args={[radius, 0.024, 12, 140]} />
-          <meshBasicMaterial color={index === 1 ? '#6dd8ff' : index === 2 ? '#8f78ff' : '#65e9cb'} transparent opacity={0.34 - index * 0.05} toneMapped={false} />
+          <meshBasicMaterial color={index === 1 ? '#ffcf56' : index === 2 ? '#ff73ad' : '#50efd0'} transparent opacity={0.46 - index * 0.05} toneMapped={false} />
         </mesh>
+      ))}
+    </group>
+  )
+}
+
+function EnergyBubbles() {
+  const bubbles = [
+    [-1.1, 2.15, .2, '#ffcf56', .18], [4.7, 2.2, .5, '#ff73ad', .22],
+    [5.0, -.25, .9, '#6f8cff', .14], [.1, -1.8, .5, '#50efd0', .19],
+    [3.8, -2.1, .2, '#ff986b', .13], [.25, 1.8, -.3, '#b78cff', .12],
+  ] as const
+  return (
+    <group>
+      {bubbles.map(([x, y, z, color, size], index) => (
+        <Float key={index} speed={1.5 + index * .12} floatIntensity={.8} rotationIntensity={.35}>
+          <mesh position={[x, y, z]}>
+            <icosahedronGeometry args={[size, 1]} />
+            <meshPhysicalMaterial color={color} emissive={color} emissiveIntensity={.32} roughness={.18} metalness={.22} clearcoat={1} />
+          </mesh>
+        </Float>
       ))}
     </group>
   )
@@ -197,29 +270,30 @@ function OrbitRings() {
 function Scene() {
   return (
     <>
-      <ambientLight intensity={1.35} />
-      <directionalLight position={[5, 7, 8]} intensity={3.6} color="#ffffff" />
-      <directionalLight position={[-5, 1, 5]} intensity={2.2} color="#9ddcff" />
-      <pointLight position={[5, 2, 4]} intensity={32} distance={11} color="#6ccfff" />
-      <pointLight position={[1, -3, 3]} intensity={24} distance={10} color="#9c83ff" />
-      <spotLight position={[1, 8, 5]} angle={0.42} penumbra={0.9} intensity={34} color="#fff7df" />
+      <ambientLight intensity={1.7} />
+      <directionalLight position={[5, 7, 8]} intensity={4.1} color="#fff7d6" />
+      <directionalLight position={[-5, 1, 5]} intensity={2.8} color="#8fffe1" />
+      <pointLight position={[5, 2, 4]} intensity={38} distance={11} color="#ff6fa8" />
+      <pointLight position={[1, -3, 3]} intensity={30} distance={10} color="#6eeed1" />
+      <spotLight position={[1, 8, 5]} angle={0.42} penumbra={0.9} intensity={38} color="#ffd96d" />
 
       <MainPhone />
       <ScreenProtector />
       <ShieldBadge />
       <Cable />
-      <Screwdriver position={[4.25, 1.35, 0.4]} color="#1768df" rotation={[0.25, 0.2, -0.7]} />
-      <Screwdriver position={[4.45, 0.15, 0.0]} color="#253240" rotation={[0.15, -0.1, -0.85]} />
+      <Screwdriver position={[4.25, 1.35, 0.4]} color="#ff775f" rotation={[0.25, 0.2, -0.7]} />
+      <Screwdriver position={[4.45, 0.15, 0.0]} color="#7b61ff" rotation={[0.15, -0.1, -0.85]} />
       <SuctionCup />
       <OrbitRings />
+      <EnergyBubbles />
 
       <mesh position={[2.25, -2.45, -0.75]} rotation={[-Math.PI / 2, 0, 0]}>
         <cylinderGeometry args={[2.7, 3.05, 0.18, 64]} />
-        <meshPhysicalMaterial color="#eaf6ff" metalness={0.15} roughness={0.25} clearcoat={1} />
+        <meshPhysicalMaterial color="#fff0b8" metalness={0.12} roughness={0.22} clearcoat={1} />
       </mesh>
       <mesh position={[2.25, -2.32, -0.73]} rotation={[-Math.PI / 2, 0, 0]}>
         <torusGeometry args={[2.65, 0.055, 12, 100]} />
-        <meshBasicMaterial color="#68d9ff" transparent opacity={0.8} toneMapped={false} />
+        <meshBasicMaterial color="#ffbe42" transparent opacity={0.95} toneMapped={false} />
       </mesh>
     </>
   )

@@ -26,8 +26,22 @@ export function json(statusCode, body, extraHeaders = {}) {
 
 export function sameOrigin(event) {
   const origin = event.headers?.origin || event.headers?.Origin;
-  if (!origin) return true;
+  if (!origin) return false;
   return origin === "https://megawirelessusa.com" || origin === "https://www.megawirelessusa.com" || origin.startsWith("http://localhost:");
+}
+
+export async function enforceEventRateLimit(event) {
+  const ip = safeText(event.headers?.["x-nf-client-connection-ip"] || event.headers?.["client-ip"], 80);
+  if (!ip) throw new Error("RATE_LIMIT_ID_MISSING");
+  const bucket = Math.floor(Date.now() / 600000);
+  const bytes = new TextEncoder().encode(`${ip}:${bucket}`);
+  const digest = await crypto.subtle.digest("SHA-256", bytes);
+  const id = Array.from(new Uint8Array(digest)).slice(0, 16).map((value) => value.toString(16).padStart(2, "0")).join("");
+  const store = getStore("marketing-rate-limits");
+  const key = `${bucket}/${id}.json`;
+  const current = await store.get(key, { type: "json" }) || { count: 0 };
+  if (Number(current.count) >= 120) throw new Error("RATE_LIMITED");
+  await store.setJSON(key, { count: Number(current.count) + 1 }, { metadata: { expires: bucket + 2 } });
 }
 
 export function normalizeEvent(input) {
