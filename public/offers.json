@@ -4,29 +4,36 @@
       "title": "Student Screen Repair",
       "price": "$10 Off",
       "description": "Show a valid school or college ID and save on any eligible screen repair. Free screen protector included.",
-      "valid_until": "2026-08-31",
+      "valid_until": "2026-09-15",
       "active": true
     },
     {
       "title": "Family Repair Bundle",
       "price": "15% Off",
       "description": "Bring two or more phones in the same visit and save 15% on the second eligible repair.",
-      "valid_until": "2026-08-31",
+      "valid_until": "2026-09-15",
       "active": true
     },
     {
       "title": "Battery + Screen Combo",
       "price": "Save $15",
       "description": "Replace your screen and battery together in one visit and save.",
-      "valid_until": "2026-09-30",
-      "active": false
+      "valid_until": "2026-10-15",
+      "active": true
     },
     {
       "active": true,
       "title": "any walet case only 2 for $15",
-      "price": "2 FOR $14.99",
+      "price": "2 FOR $9.99",
       "description": "any iphone wallet case 2 for $14.99",
       "valid_until": "2026-08-27"
+    },
+    {
+      "active": true,
+      "title": "LABOR DAY OFFER",
+      "price": "14.99",
+      "description": "BUY ANY CASE GET FREE SCREEN PROTECTOR",
+      "valid_until": "2026-10-15"
     }
   ]
 }
