@@ -12,6 +12,8 @@ import {
   ShieldCheck,
   Sparkles,
   Smartphone,
+  Volume2,
+  VolumeX,
   Wrench,
   Zap,
 } from 'lucide-react'
@@ -308,6 +310,60 @@ function PhoneCard({ phone, index }: { phone: PhoneItem; index: number }) {
 function App() {
   const [phones, setPhones] = useState<PhoneItem[]>([])
   const [phoneError, setPhoneError] = useState(false)
+  const [introOpen, setIntroOpen] = useState(true)
+  const [musicOn, setMusicOn] = useState(false)
+  const audioRef = useRef<{ context: AudioContext; master: GainNode; timer: number } | null>(null)
+
+  const stopMusic = () => {
+    const audio = audioRef.current
+    if (!audio) return
+    window.clearInterval(audio.timer)
+    audio.master.gain.setTargetAtTime(0, audio.context.currentTime, 0.08)
+    window.setTimeout(() => audio.context.close().catch(() => undefined), 350)
+    audioRef.current = null
+    setMusicOn(false)
+  }
+
+  const startMusic = () => {
+    if (audioRef.current) return
+    const AudioContextClass = window.AudioContext
+    if (!AudioContextClass) return
+    const context = new AudioContextClass()
+    const master = context.createGain()
+    master.gain.setValueAtTime(0.0001, context.currentTime)
+    master.gain.exponentialRampToValueAtTime(0.08, context.currentTime + 1.2)
+    master.connect(context.destination)
+
+    const notes = [146.83, 185, 220, 277.18, 220, 185]
+    let step = 0
+    const playNote = () => {
+      const now = context.currentTime
+      const oscillator = context.createOscillator()
+      const gain = context.createGain()
+      const filter = context.createBiquadFilter()
+      oscillator.type = 'sine'
+      oscillator.frequency.setValueAtTime(notes[step % notes.length], now)
+      filter.type = 'lowpass'
+      filter.frequency.setValueAtTime(950, now)
+      gain.gain.setValueAtTime(0.0001, now)
+      gain.gain.exponentialRampToValueAtTime(0.22, now + 0.12)
+      gain.gain.exponentialRampToValueAtTime(0.0001, now + 1.65)
+      oscillator.connect(filter).connect(gain).connect(master)
+      oscillator.start(now)
+      oscillator.stop(now + 1.7)
+      step += 1
+    }
+    playNote()
+    const timer = window.setInterval(playNote, 1250)
+    audioRef.current = { context, master, timer }
+    setMusicOn(true)
+  }
+
+  const enterSite = () => {
+    startMusic()
+    setIntroOpen(false)
+    window.gtag?.('event', 'welcome_enter', { music_enabled: true })
+  }
 
   useEffect(() => {
     const controller = new AbortController()
@@ -334,8 +390,74 @@ function App() {
     }
   }, [])
 
+  useEffect(() => {
+    const onClick = (event: MouseEvent) => {
+      const link = (event.target as Element | null)?.closest('a,button') as HTMLElement | null
+      if (!link) return
+      const href = link instanceof HTMLAnchorElement ? link.getAttribute('href') || '' : ''
+      const label = (link.textContent || link.getAttribute('aria-label') || '').trim().slice(0, 80)
+      let eventName = ''
+      if (href.startsWith('tel:')) eventName = 'phone_call_click'
+      else if (href.includes('wa.me')) eventName = 'whatsapp_click'
+      else if (href.includes('google.com/maps')) eventName = 'directions_click'
+      else if (href === '#phones') eventName = 'catalog_open'
+      else if (label.includes('Mega AI')) eventName = 'ai_cta_click'
+      if (eventName) window.gtag?.('event', eventName, { link_text: label, link_url: href })
+    }
+    document.addEventListener('click', onClick)
+    return () => document.removeEventListener('click', onClick)
+  }, [])
+
+  useEffect(() => {
+    document.body.classList.toggle('mw-intro-active', introOpen)
+    return () => document.body.classList.remove('mw-intro-active')
+  }, [introOpen])
+
+  useEffect(() => () => {
+    const audio = audioRef.current
+    if (audio) {
+      window.clearInterval(audio.timer)
+      audio.context.close().catch(() => undefined)
+    }
+  }, [])
+
   return (
     <main className="min-h-screen overflow-hidden bg-[#050506] text-[#f1efdf]">
+      {introOpen && (
+        <motion.section
+          className="mw-welcome"
+          initial={{ opacity: 0 }}
+          animate={{ opacity: 1 }}
+          exit={{ opacity: 0 }}
+          aria-label="Welcome to Mega Wireless"
+        >
+          <div className="mw-welcome-grid" aria-hidden="true" />
+          <div className="mw-welcome-copy">
+            <motion.div initial={{ opacity: 0, y: 14 }} animate={{ opacity: 1, y: 0 }} transition={{ delay: .2 }} className="mw-welcome-eyebrow">Nashville · Tennessee</motion.div>
+            <motion.div initial={{ opacity: 0, y: 30 }} animate={{ opacity: 1, y: 0 }} transition={{ delay: .35, duration: .85, ease: EASE }}>
+              <div className="mw-welcome-mark">MW</div>
+              <h1>Welcome to<br /><span>Mega Wireless</span></h1>
+              <p>Phones. Repairs. Real help — upgraded.</p>
+            </motion.div>
+            <motion.button initial={{ opacity: 0, y: 16 }} animate={{ opacity: 1, y: 0 }} transition={{ delay: .7 }} onClick={enterSite} className="mw-enter-button">
+              <span>Enter Mega Wireless</span><ArrowRight size={19} />
+            </motion.button>
+            <button className="mw-enter-silent" onClick={() => { setIntroOpen(false); window.gtag?.('event', 'welcome_enter', { music_enabled: false }) }}>Continue without music</button>
+          </div>
+          <div className="mw-welcome-hint" aria-hidden="true"><span /> Interactive 3D experience</div>
+        </motion.section>
+      )}
+
+      {!introOpen && (
+        <button
+          className="mw-sound-toggle"
+          onClick={musicOn ? stopMusic : startMusic}
+          aria-label={musicOn ? 'Mute background music' : 'Play background music'}
+          title={musicOn ? 'Mute music' : 'Play music'}
+        >
+          {musicOn ? <Volume2 size={17} /> : <VolumeX size={17} />}
+        </button>
+      )}
       <header className="fixed left-0 right-0 top-0 z-50 px-3 pt-3 sm:px-5 sm:pt-4">
         <div className="mx-auto flex max-w-[1380px] items-center justify-between rounded-full border border-white/10 bg-black/60 px-4 py-3 shadow-[0_12px_40px_rgba(0,0,0,.25)] backdrop-blur-xl sm:px-6">
           <a href="#home" className="flex items-center gap-3">
