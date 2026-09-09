@@ -437,14 +437,23 @@ body.mw-intro-active .mw-language-strip { z-index: 130; top: 18px; }
 .mw-welcome-hint { left: auto; right: 3vw; transform: none; }
 
 .mw-plans-section { background: radial-gradient(circle at 50% 18%,rgba(31,144,207,.18),transparent 38%),#07131e; }
+#plans h2, #tablet-deal h2 { color: #f7fbff !important; }
+#plans .section-kicker { color: #7cf7d4 !important; }
 .mw-plan-promises span { border: 1px solid rgba(124,247,212,.26); border-radius: 999px; background: rgba(124,247,212,.08); padding: 8px 11px; color: #baffed; font-size: 10px; font-weight: 800; }
-.mw-plan-card { box-shadow: 0 25px 70px rgba(0,0,0,.24); transition: transform .25s ease,box-shadow .25s ease; }
+.mw-plan-card { color:#f7fbff !important; box-shadow: 0 25px 70px rgba(0,0,0,.24); transition: transform .25s ease,box-shadow .25s ease; }
 .mw-plan-card:hover { transform: translateY(-8px); box-shadow: 0 36px 90px rgba(0,0,0,.34); }
 .mw-plan-photo img { filter: saturate(1.1) contrast(1.03); }
+.mw-plan-card p { color: rgba(241,248,255,.68) !important; }
+.mw-plan-card span { color: rgba(241,248,255,.78); }
+.mw-plan-card .mw-plan-photo span { color:#07131c !important; }
+.mw-plan-card .grid span { border-color:rgba(204,233,255,.16) !important; background:rgba(255,255,255,.07) !important; color:#e7f5ff !important; }
 .mw-tablet-deal { box-shadow: 0 35px 100px rgba(0,0,0,.34),0 0 65px rgba(255,45,141,.1); }
+.mw-tablet-deal h2 { color:#fff !important; }
+.mw-tablet-deal p { color:rgba(255,255,255,.68) !important; }
 .mw-tablet-visual img { filter: saturate(1.07) contrast(1.02); }
 .mw-bundle-items span { display:flex; min-height:44px; align-items:center; gap:8px; border:1px solid rgba(255,255,255,.13); border-radius:14px; background:rgba(255,255,255,.07); padding:10px 12px; color:rgba(255,255,255,.82); font-size:11px; font-weight:800; }
 .mw-bundle-items svg { color:#ff9dd2; }
+.cta-tablet { color:#fff !important; }
 
 @keyframes mw-billboard-shine { 0%,20%{transform:translateX(-120%)} 50%,100%{transform:translateX(150%)} }
 @keyframes mw-device-float { 50%{transform:rotateY(-7deg) rotateZ(1deg) translateY(-12px)} }

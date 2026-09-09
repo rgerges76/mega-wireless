@@ -599,7 +599,7 @@ function App() {
             <motion.div initial={{ opacity: 0, y: 20 }} animate={{ opacity: 1, y: 0 }} transition={{ duration: 0.8, delay: 0.28, ease: EASE }} className="mt-8 flex flex-wrap gap-3">
               <a data-cta="call-now" href="tel:+16156785849" className="cta-call inline-flex items-center gap-3 rounded-full bg-[#047857] px-6 py-4 text-sm font-extrabold text-white shadow-[0_14px_34px_rgba(4,120,87,.25)] transition hover:-translate-y-0.5 hover:bg-[#065f46]"><Phone size={17} /> Call Now</a>
               <a href="#plans" className="cta-shop inline-flex items-center gap-3 rounded-full border-2 border-[#0f172a] bg-white px-6 py-4 text-sm font-extrabold text-[#0f172a] transition hover:-translate-y-0.5 hover:bg-[#f1f5f9]"><Zap size={17} /> See $10 Plans</a>
-              <a href="#tablet-deal" className="inline-flex items-center gap-3 rounded-full border border-white/20 bg-white/10 px-6 py-4 text-sm font-extrabold text-white transition hover:-translate-y-0.5 hover:bg-white/15"><Smartphone size={17} /> $179.99 Tablet Bundle</a>
+              <a href="#tablet-deal" className="cta-tablet inline-flex items-center gap-3 rounded-full border border-[#ff2d8d] bg-[#ff2d8d] px-6 py-4 text-sm font-extrabold text-white shadow-[0_14px_34px_rgba(255,45,141,.22)] transition hover:-translate-y-0.5 hover:bg-[#e61979]"><Smartphone size={17} /> $179.99 Tablet Bundle</a>
             </motion.div>
             <motion.div initial={{ opacity: 0 }} animate={{ opacity: 1 }} transition={{ duration: 1, delay: 0.5 }} className="mt-10 flex flex-wrap gap-x-7 gap-y-3 text-[10px] uppercase tracking-[0.18em] text-white/35">
               <span>No-contract prepaid plans</span><span>Same-day common repairs</span><span>English · Español · العربية</span>
