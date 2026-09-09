@@ -37,13 +37,19 @@
       (function(){
         var dict={
           es:{
-            'Services':'Servicios','Phones':'Teléfonos','Mega AI':'Mega AI','Visit':'Visítanos','Ask Mega AI':'Pregunta a Mega AI',
+            'Services':'Servicios','Plans':'Planes','$179 Tablet':'Tableta $179','Phones':'Teléfonos','Mega AI':'Mega AI','Visit':'Visítanos','Ask Mega AI':'Pregunta a Mega AI',
+            'Your phone deserves a comeback':'Tu teléfono merece volver','Repair it.':'Repáralo.','Love it again.':'Vuelve a quererlo.','Enter Mega Wireless':'Entrar a Mega Wireless','Continue without music':'Continuar sin música',
+            'Prepaid wireless · your way':'Servicio prepago · a tu manera','Lines from':'Líneas desde','$10 a month.':'$10 al mes.','No contract':'Sin contrato','No Social Security number':'Sin Seguro Social','No ID required':'Sin identificación','Starting at':'Desde','Choose this plan':'Elegir este plan',
+            'Mega Wireless exclusive':'Exclusivo de Mega Wireless','Your whole setup.':'Todo tu equipo.','One price.':'Un solo precio.','bundle price':'precio del paquete','Wireless keyboard':'Teclado inalámbrico','Wireless mouse':'Mouse inalámbrico','Protective cover':'Funda protectora','Stylus pen':'Lápiz táctil','Ask about the bundle':'Preguntar por el paquete','Call store':'Llamar a la tienda',
             'Nashville tech, upgraded':'Tecnología en Nashville, mejorada','Tech help':'Ayuda tecnológica','that feels':'que se siente','future.':'del futuro.',
             'Try Mega AI':'Prueba Mega AI','Shop unlocked phones':'Compra teléfonos desbloqueados','Free initial diagnostics':'Diagnóstico inicial gratis','Same-day common repairs':'Reparaciones comunes el mismo día',
             'What we actually do':'Lo que realmente hacemos','One store.':'Una tienda.','Four ways to help.':'Cuatro formas de ayudarte.','Repair':'Reparación','Fix it fast.':'Repáralo rápido.','Phones':'Teléfonos','Buy unlocked.':'Compra desbloqueado.','AI':'IA','Ask before you drive.':'Pregunta antes de venir.','Local':'Local','Help in your language.':'Ayuda en tu idioma.','See repair options':'Ver reparaciones','Browse phones':'Ver teléfonos','Visit the store':'Visita la tienda','Message':'Mensaje','Call':'Llamar','Unlocked':'Desbloqueado','Today’s phone catalog':'Teléfonos disponibles hoy','Mega AI assistant':'Asistente Mega AI','Your first answer':'Tu primera respuesta','before the counter.':'antes de llegar.'
           },
           ar:{
-            'Services':'الخدمات','Phones':'الهواتف','Mega AI':'Mega AI','Visit':'زورنا','Ask Mega AI':'اسأل Mega AI',
+            'Services':'الخدمات','Plans':'الخطوط','$179 Tablet':'تابلت $179','Phones':'الهواتف','Mega AI':'Mega AI','Visit':'زورنا','Ask Mega AI':'اسأل Mega AI',
+            'Your phone deserves a comeback':'هاتفك يستحق العودة','Repair it.':'نصلحه.','Love it again.':'وترجع تحبه.','Enter Mega Wireless':'ادخل إلى Mega Wireless','Continue without music':'استمر بدون موسيقى',
+            'Prepaid wireless · your way':'خطوط مسبقة الدفع على اختيارك','Lines from':'خطوط تبدأ من','$10 a month.':'$10 شهريًا.','No contract':'بدون تعاقد','No Social Security number':'بدون رقم ضمان اجتماعي','No ID required':'بدون هوية','Starting at':'تبدأ من','Choose this plan':'اختر هذا الخط',
+            'Mega Wireless exclusive':'عرض حصري من Mega Wireless','Your whole setup.':'كل احتياجاتك.','One price.':'بسعر واحد.','bundle price':'سعر الباقة','Wireless keyboard':'كيبورد وايرلس','Wireless mouse':'ماوس وايرلس','Protective cover':'كفر حماية','Stylus pen':'قلم لمس','Ask about the bundle':'اسأل عن عرض التابلت','Call store':'اتصل بالمحل',
             'Nashville tech, upgraded':'تكنولوجيا أذكى في ناشفيل','Tech help':'مساعدة تقنية','that feels':'بإحساس','future.':'المستقبل.','Try Mega AI':'جرّب Mega AI','Shop unlocked phones':'تسوّق هواتف مفتوحة الشبكة','Free initial diagnostics':'فحص مبدئي مجاني','Same-day common repairs':'إصلاحات شائعة في نفس اليوم',
             'What we actually do':'خدماتنا الحقيقية','One store.':'مكان واحد.','Four ways to help.':'أربع طرق لمساعدتك.','Repair':'صيانة','Fix it fast.':'نصلحه بسرعة.','Phones':'هواتف','Buy unlocked.':'اشتري مفتوح الشبكة.','AI':'ذكاء اصطناعي','Ask before you drive.':'اسأل قبل ما تيجي.','Local':'محلي','Help in your language.':'مساعدة بلغتك.','See repair options':'شوف خدمات الصيانة','Browse phones':'شوف الهواتف','Visit the store':'زور المحل','Message':'راسلنا','Call':'اتصل','Unlocked':'مفتوح الشبكة','Today’s phone catalog':'هواتف متاحة اليوم','Mega AI assistant':'مساعد Mega AI','Your first answer':'أول إجابة ليك','before the counter.':'قبل ما تيجي المحل.'
           }
@@ -66,6 +72,7 @@
           current=lang;
           try{localStorage.setItem('mw_lang',lang)}catch(e){}
           document.documentElement.lang=lang;
+          document.documentElement.dir=lang==='ar'?'rtl':'ltr';
           document.querySelectorAll('[data-mega-lang]').forEach(function(el){el.classList.toggle('active',el.getAttribute('data-mega-lang')===lang)});
           var root=document.getElementById('root');
           if(!root)return;

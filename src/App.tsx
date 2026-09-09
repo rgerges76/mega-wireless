@@ -41,6 +41,36 @@ const MUSIC_MODES: Array<{ id: MusicMode; short: string; label: string; descript
   { id: 'latin', short: 'ES', label: 'Latin Urban', description: 'Contemporary Latin energy' },
 ]
 
+const WIRELESS_PLANS = [
+  {
+    carrier: 'MobileX',
+    image: '/assets/promos/mobilex-plans.jpeg',
+    color: '#35e777',
+    headline: '$10/mo',
+    intro: 'Unlimited nationwide talk & text',
+    highlights: ['$15 · 1GB', '$20 · 10GB', '$30 · 30GB', '$50 · 50GB'],
+    note: 'Taxes and government fees included on the displayed MobileX plans.',
+  },
+  {
+    carrier: 'Gen Mobile',
+    image: '/assets/promos/genmobile-plans.jpeg',
+    color: '#ff5d69',
+    headline: '$10/mo',
+    intro: '2GB with hotspot included',
+    highlights: ['$20 · 8GB', '$30 · 15GB', '$40 · 25GB', '$50 · Unlimited'],
+    note: 'All plans include nationwide talk and global text.',
+  },
+  {
+    carrier: 'Ultra Mobile',
+    image: '/assets/promos/ultra-mobile-plans.jpeg',
+    color: '#a980ff',
+    headline: '$10/mo',
+    intro: '500MB on a 12-month prepaid plan',
+    highlights: ['$19 · 4GB', '$24 · 8GB', '$29 · 12GB', '$49 · Unlimited'],
+    note: '$10/mo requires $120 upfront. One-month and multi-month options available.',
+  },
+]
+
 type CameraKind = 'dualVertical' | 'dualDiagonal' | 'triple' | 'samsungTriple' | 'samsungQuad' | 'basic'
 
 type PhoneProfile = {
@@ -459,42 +489,59 @@ function App() {
   return (
     <main className="min-h-screen overflow-hidden bg-[#050506] text-[#f1efdf]">
       {introOpen && (
-        <motion.section
+        <section
           className="mw-welcome"
-          initial={{ opacity: 0 }}
-          animate={{ opacity: 1 }}
-          exit={{ opacity: 0 }}
           aria-label="Welcome to Mega Wireless"
         >
           <div className="mw-welcome-grid" aria-hidden="true" />
-          <div className="mw-repair-story" aria-hidden="true">
-            <span className="mw-repair-step mw-step-broken">Broken Screen</span>
-            <span className="mw-repair-line"><i /></span>
-            <span className="mw-repair-step mw-step-repair">Back Glass</span>
-            <span className="mw-repair-line"><i /></span>
-            <span className="mw-repair-step mw-step-ready">Like New</span>
+          <div className="mw-times-square" aria-label="Animated screen repair showcase">
+            <div className="mw-billboard-crown">
+              <span>MEGA WIRELESS</span>
+              <b>LIVE REPAIR</b>
+              <i>● NASHVILLE</i>
+            </div>
+            <div className="mw-billboard-screen">
+              <div className="mw-billboard-copy">
+                <span className="mw-billboard-overline">FROM CRACKED</span>
+                <strong>TO<br /><em>LIKE NEW.</em></strong>
+                <p>Watch the screen transformation.</p>
+              </div>
+              <div className="mw-repair-device" aria-hidden="true">
+                <div className="mw-device-frame">
+                  <div className="mw-device-speaker" />
+                  <div className="mw-screen-cracked">
+                    <span className="mw-crack crack-a" /><span className="mw-crack crack-b" />
+                    <span className="mw-crack crack-c" /><span className="mw-crack crack-d" />
+                  </div>
+                  <div className="mw-screen-new"><span>MW</span><small>READY</small></div>
+                  <div className="mw-repair-scan" />
+                </div>
+                <div className="mw-tool-ring"><Wrench size={22} /></div>
+              </div>
+              <div className="mw-repair-timeline" aria-hidden="true">
+                <span className="stage-one"><b>01</b> Diagnose</span>
+                <span className="stage-two"><b>02</b> Replace</span>
+                <span className="stage-three"><b>03</b> Quality check</span>
+              </div>
+            </div>
+            <div className="mw-billboard-ticker"><span>SCREEN REPAIR · BACK GLASS · BATTERY · CHARGING PORT · SAME-DAY SERVICE · </span></div>
           </div>
           <div className="mw-welcome-copy">
-            <motion.div initial={{ opacity: 0, y: 14 }} animate={{ opacity: 1, y: 0 }} transition={{ delay: .2 }} className="mw-welcome-eyebrow">Nashville · Tennessee</motion.div>
-            <motion.div initial={{ opacity: 0, y: 30 }} animate={{ opacity: 1, y: 0 }} transition={{ delay: .35, duration: .85, ease: EASE }}>
-              <div className="mw-welcome-mark">MW</div>
-              <h1>We bring<br /><span>phones back.</span></h1>
-              <p>A cinematic repair experience by Mega Wireless Nashville.</p>
-            </motion.div>
-            <motion.div className="mw-music-picker" initial={{ opacity: 0 }} animate={{ opacity: 1 }} transition={{ delay: .58 }} aria-label="Choose music style">
+            <div className="mw-welcome-eyebrow">Your phone deserves a comeback</div>
+            <h1>Repair it.<br /><span>Love it again.</span></h1>
+            <p>Enter the Mega Wireless experience with music made for your language.</p>
+            <div className="mw-music-picker" aria-label="Choose music style">
               {MUSIC_MODES.map((mode) => (
                 <button key={mode.id} className={musicMode === mode.id ? 'active' : ''} onClick={() => selectMusic(mode.id)} aria-pressed={musicMode === mode.id}>
                   <b>{mode.short}</b><span>{mode.label}</span><small>{mode.description}</small>
                 </button>
               ))}
-            </motion.div>
-            <motion.button initial={{ opacity: 0, y: 16 }} animate={{ opacity: 1, y: 0 }} transition={{ delay: .7 }} onClick={enterSite} className="mw-enter-button">
-              <span>Enter Mega Wireless</span><ArrowRight size={19} />
-            </motion.button>
+            </div>
+            <button onClick={enterSite} className="mw-enter-button"><span>Enter Mega Wireless</span><ArrowRight size={19} /></button>
             <button className="mw-enter-silent" onClick={() => { setIntroOpen(false); window.gtag?.('event', 'welcome_enter', { music_enabled: false }) }}>Continue without music</button>
           </div>
-          <div className="mw-welcome-hint" aria-hidden="true"><span /> Interactive 3D experience</div>
-        </motion.section>
+          <div className="mw-welcome-hint" aria-hidden="true"><span /> CINEMATIC SCREEN REPAIR EXPERIENCE</div>
+        </section>
       )}
 
       {!introOpen && (
@@ -523,6 +570,8 @@ function App() {
           </a>
           <nav className="hidden items-center gap-7 text-xs font-bold text-white/55 md:flex">
             <a className="transition hover:text-white" href="#services">Services</a>
+            <a className="transition hover:text-white" href="#plans">Plans</a>
+            <a className="transition hover:text-white" href="#tablet-deal">$179 Tablet</a>
             <a className="transition hover:text-white" href="#phones">Phones</a>
             <a className="transition hover:text-white" href="#ai">Mega AI</a>
             <a className="transition hover:text-white" href="#visit">Visit</a>
@@ -542,18 +591,18 @@ function App() {
               <Zap size={13} /> Nashville tech, upgraded
             </motion.div>
             <motion.h1 initial={{ opacity: 0, y: 24 }} animate={{ opacity: 1, y: 0 }} transition={{ duration: 0.9, delay: 0.08, ease: EASE }} className="mt-7 max-w-[760px] text-[clamp(3.5rem,8vw,8.6rem)] font-extrabold leading-[0.78] tracking-[-0.075em]">
-              Tech help<br />that feels<br /><span className="hero-gradient-text">future.</span>
+              Fix. Connect.<br />Upgrade.<br /><span className="hero-gradient-text">All at Mega.</span>
             </motion.h1>
             <motion.p initial={{ opacity: 0, y: 20 }} animate={{ opacity: 1, y: 0 }} transition={{ duration: 0.8, delay: 0.18, ease: EASE }} className="mt-8 max-w-xl text-sm leading-7 text-white/52 sm:text-base">
-              Repairs, unlocked phones, prepaid service and an AI assistant — all in one local Nashville store. No boring catalog. No guessing what to do next.
+              Same-day phone repair, prepaid plans from $10 a month, unlocked phones and a complete $179.99 tablet bundle — with real local help in Nashville.
             </motion.p>
             <motion.div initial={{ opacity: 0, y: 20 }} animate={{ opacity: 1, y: 0 }} transition={{ duration: 0.8, delay: 0.28, ease: EASE }} className="mt-8 flex flex-wrap gap-3">
               <a data-cta="call-now" href="tel:+16156785849" className="cta-call inline-flex items-center gap-3 rounded-full bg-[#047857] px-6 py-4 text-sm font-extrabold text-white shadow-[0_14px_34px_rgba(4,120,87,.25)] transition hover:-translate-y-0.5 hover:bg-[#065f46]"><Phone size={17} /> Call Now</a>
-              <a data-cta="directions" href="https://www.google.com/maps/search/?api=1&query=4717+Nolensville+Pike+Nashville+TN+37211" className="cta-directions inline-flex items-center gap-3 rounded-full border-2 border-[#0f172a] bg-white px-6 py-4 text-sm font-extrabold text-[#0f172a] transition hover:-translate-y-0.5 hover:bg-[#f1f5f9]"><MapPin size={17} /> Get Directions</a>
-              <a href="#phones" className="cta-shop inline-flex items-center gap-3 rounded-full border border-[#0f172a] bg-[#0f172a] px-6 py-4 text-sm font-extrabold text-white transition hover:-translate-y-0.5 hover:bg-[#1e293b]"><Smartphone size={17} /> Shop Phones</a>
+              <a href="#plans" className="cta-shop inline-flex items-center gap-3 rounded-full border-2 border-[#0f172a] bg-white px-6 py-4 text-sm font-extrabold text-[#0f172a] transition hover:-translate-y-0.5 hover:bg-[#f1f5f9]"><Zap size={17} /> See $10 Plans</a>
+              <a href="#tablet-deal" className="inline-flex items-center gap-3 rounded-full border border-white/20 bg-white/10 px-6 py-4 text-sm font-extrabold text-white transition hover:-translate-y-0.5 hover:bg-white/15"><Smartphone size={17} /> $179.99 Tablet Bundle</a>
             </motion.div>
             <motion.div initial={{ opacity: 0 }} animate={{ opacity: 1 }} transition={{ duration: 1, delay: 0.5 }} className="mt-10 flex flex-wrap gap-x-7 gap-y-3 text-[10px] uppercase tracking-[0.18em] text-white/35">
-              <span>Free initial diagnostics</span><span>Same-day common repairs</span><span>English · Español · العربية</span>
+              <span>No-contract prepaid plans</span><span>Same-day common repairs</span><span>English · Español · العربية</span>
             </motion.div>
           </div>
 
@@ -587,18 +636,91 @@ function App() {
           <Reveal>
             <div className="grid gap-7 lg:grid-cols-12 lg:items-end">
               <div className="lg:col-span-8">
-                <div className="section-kicker text-[10px] font-extrabold uppercase tracking-[0.25em] text-[#065f46]">What we actually do</div>
-                <h2 className="mt-5 text-4xl font-extrabold leading-[0.92] tracking-[-0.055em] sm:text-6xl lg:text-7xl">One store.<br /><span className="text-white/30">Four ways to help.</span></h2>
+                <div className="section-kicker text-[10px] font-extrabold uppercase tracking-[0.25em] text-[#065f46]">Everything your device needs</div>
+                <h2 className="mt-5 text-4xl font-extrabold leading-[0.92] tracking-[-0.055em] sm:text-6xl lg:text-7xl">One local store.<br /><span className="text-white/30">Every next move.</span></h2>
               </div>
-              <p className="max-w-md text-sm leading-7 text-white/45 lg:col-span-4">The page is built around what customers want to do immediately — repair a device, buy a phone, ask AI, or get local help.</p>
+              <p className="max-w-md text-sm leading-7 text-white/45 lg:col-span-4">Walk in with a cracked screen, leave with a working device, a better plan or the right upgrade — without the big-carrier runaround.</p>
             </div>
           </Reveal>
 
-          <div className="mt-12 grid gap-3 md:grid-cols-2 lg:grid-cols-4">
+          <div className="mt-12 grid gap-3 md:grid-cols-2 lg:grid-cols-3 xl:grid-cols-5">
             <ServiceCard icon={Wrench} kicker="Repair" title="Fix it fast." text="Screens, batteries, charging problems and common device repairs with diagnosis before work starts." action="See repair options" href="/phone-screen-repair-nashville.html" delay={0} />
+            <ServiceCard icon={Zap} kicker="Plans" title="Connect from $10." text="Flexible prepaid wireless with no contract, no Social Security number and no ID required." action="Compare plans" href="#plans" delay={0.05} />
             <ServiceCard icon={Smartphone} kicker="Phones" title="Buy unlocked." text="Browse today’s public catalog with model-specific visuals, current pricing and direct contact buttons." action="Browse phones" href="#phones" delay={0.07} />
             <ServiceCard icon={Bot} kicker="AI" title="Ask before you drive." text="Describe a simple phone or computer problem and let Mega AI guide your next step in seconds." action="Try Mega AI" delay={0.14} />
             <ServiceCard icon={Languages} kicker="Local" title="Help in your language." text="English, Spanish and Arabic support for a Nashville store that actually answers real customer questions." action="Visit the store" href="#visit" delay={0.21} />
+          </div>
+        </div>
+      </section>
+
+      <section id="plans" className="mw-plans-section px-4 py-24 sm:px-6 sm:py-32">
+        <div className="mx-auto max-w-[1380px]">
+          <Reveal>
+            <div className="grid gap-8 lg:grid-cols-12 lg:items-end">
+              <div className="lg:col-span-8">
+                <div className="section-kicker text-[10px] font-extrabold uppercase tracking-[0.25em] text-[#7cf7d4]">Prepaid wireless · your way</div>
+                <h2 className="mt-5 text-5xl font-extrabold leading-[0.88] tracking-[-0.06em] sm:text-7xl lg:text-8xl">Lines from<br /><span className="hero-gradient-text">$10 a month.</span></h2>
+              </div>
+              <div className="lg:col-span-4">
+                <p className="text-sm leading-7 text-white/60">Simple prepaid service for customers who want flexibility, clear options and real help choosing a plan.</p>
+                <div className="mw-plan-promises mt-5 flex flex-wrap gap-2">
+                  <span>No contract</span><span>No Social Security number</span><span>No ID required</span>
+                </div>
+              </div>
+            </div>
+          </Reveal>
+
+          <div className="mt-12 grid gap-4 lg:grid-cols-3">
+            {WIRELESS_PLANS.map((plan, index) => (
+              <Reveal key={plan.carrier} delay={index * .07} className="h-full">
+                <article className="mw-plan-card group h-full overflow-hidden rounded-[34px] border border-white/10 bg-[#102235]">
+                  <div className="mw-plan-photo relative h-48 overflow-hidden">
+                    <img src={plan.image} alt={`${plan.carrier} prepaid plan prices`} className="h-full w-full object-cover transition duration-700 group-hover:scale-105" />
+                    <div className="absolute inset-0 bg-gradient-to-t from-[#102235] via-transparent to-transparent" />
+                    <span className="absolute left-5 top-5 rounded-full px-3 py-1.5 text-[10px] font-black uppercase tracking-[.18em] text-black" style={{ backgroundColor: plan.color }}>{plan.carrier}</span>
+                  </div>
+                  <div className="p-6 sm:p-7">
+                    <div className="flex items-end justify-between gap-4">
+                      <div><span className="text-[10px] font-extrabold uppercase tracking-[.2em] text-white/40">Starting at</span><div className="mt-1 text-4xl font-black tracking-[-.06em] text-white">{plan.headline}</div></div>
+                      <Zap size={22} style={{ color: plan.color }} />
+                    </div>
+                    <p className="mt-4 text-sm font-bold text-white/75">{plan.intro}</p>
+                    <div className="mt-6 grid grid-cols-2 gap-2">
+                      {plan.highlights.map((item) => <span key={item} className="rounded-xl border border-white/8 bg-white/[.05] px-3 py-2.5 text-xs font-bold text-white/72">{item}</span>)}
+                    </div>
+                    <p className="mt-5 min-h-[42px] text-[11px] leading-5 text-white/40">{plan.note}</p>
+                    <a href={`https://wa.me/16156785849?text=${encodeURIComponent(`Hello Mega Wireless, I want help choosing a ${plan.carrier} plan.`)}`} className="mt-6 flex items-center justify-between rounded-full bg-white px-5 py-3.5 text-xs font-black text-[#07131c] transition hover:-translate-y-0.5">Choose this plan <ArrowRight size={15} /></a>
+                  </div>
+                </article>
+              </Reveal>
+            ))}
+          </div>
+          <p className="mt-5 text-center text-[10px] leading-5 text-white/35">Plan availability, data speeds and terms may vary. Visit the store to confirm current eligibility, taxes, fees and promotional pricing.</p>
+        </div>
+      </section>
+
+      <section id="tablet-deal" className="px-4 py-14 sm:px-6 sm:py-20">
+        <div className="mw-tablet-deal mx-auto max-w-[1380px] overflow-hidden rounded-[42px] border border-white/10">
+          <div className="grid lg:grid-cols-[1.05fr_.95fr]">
+            <div className="mw-tablet-visual relative min-h-[430px] overflow-hidden sm:min-h-[560px]">
+              <img src="/assets/promos/tablet-bundle.jpeg" alt="Mega Wireless 10.1 inch Android tablet with keyboard bundle" className="absolute inset-0 h-full w-full object-cover object-top" />
+              <div className="absolute inset-0 bg-gradient-to-r from-transparent via-transparent to-[#4d0a54]/85" />
+              <div className="absolute bottom-5 left-5 rounded-full bg-[#ff2d8d] px-4 py-2 text-xs font-black uppercase tracking-[.18em] text-white shadow-2xl">Complete tech bundle</div>
+            </div>
+            <div className="relative flex flex-col justify-center bg-[radial-gradient(circle_at_85%_15%,rgba(255,91,174,.3),transparent_34%),linear-gradient(145deg,#66105e,#251044)] p-7 sm:p-12 lg:p-14">
+              <div className="text-[10px] font-black uppercase tracking-[.28em] text-[#ffd2ec]">Mega Wireless exclusive</div>
+              <h2 className="mt-5 text-4xl font-black leading-[.92] tracking-[-.055em] sm:text-6xl">Your whole setup.<br /><span className="text-[#ff95cf]">One price.</span></h2>
+              <div className="mt-7 flex items-end gap-3"><span className="text-6xl font-black tracking-[-.07em] text-white sm:text-7xl">$179.99</span><span className="pb-2 text-xs font-bold uppercase tracking-[.16em] text-white/45">bundle price</span></div>
+              <p className="mt-6 max-w-lg text-sm leading-7 text-white/65">10.1-inch Android 12 tablet with everything you need to work, learn and create right away.</p>
+              <div className="mw-bundle-items mt-7 grid grid-cols-2 gap-2 sm:grid-cols-4 lg:grid-cols-2 xl:grid-cols-4">
+                {['Wireless keyboard', 'Wireless mouse', 'Protective cover', 'Stylus pen'].map((item) => <span key={item}><Check size={14} />{item}</span>)}
+              </div>
+              <div className="mt-8 flex flex-wrap gap-3">
+                <a href={`https://wa.me/16156785849?text=${encodeURIComponent('Hello Mega Wireless, is the $179.99 tablet bundle available?')}`} className="inline-flex items-center gap-3 rounded-full bg-[#ff2d8d] px-6 py-4 text-sm font-black text-white shadow-[0_16px_40px_rgba(255,45,141,.28)] transition hover:-translate-y-0.5"><MessageCircle size={17} /> Ask about the bundle</a>
+                <a href="tel:+16156785849" className="inline-flex items-center gap-3 rounded-full border border-white/25 bg-white/10 px-6 py-4 text-sm font-black text-white transition hover:bg-white/15"><Phone size={17} /> Call store</a>
+              </div>
+              <p className="mt-5 text-[10px] leading-5 text-white/35">While supplies last. Call or message to confirm color and availability.</p>
+            </div>
           </div>
         </div>
       </section>
@@ -646,10 +768,10 @@ function App() {
             <div className="grid gap-7 lg:grid-cols-12 lg:items-end">
               <div className="lg:col-span-8">
                 <div className="section-kicker text-[10px] font-extrabold uppercase tracking-[0.25em] text-[#065f46]">Today’s phone catalog</div>
-                <h2 className="mt-5 text-4xl font-extrabold leading-[0.92] tracking-[-0.055em] sm:text-6xl lg:text-7xl">Phones that look<br /><span className="text-white/30">like the model listed.</span></h2>
+                <h2 className="mt-5 text-4xl font-extrabold leading-[0.92] tracking-[-0.055em] sm:text-6xl lg:text-7xl">Find the phone<br /><span className="text-white/30">that fits your life.</span></h2>
               </div>
               <div className="lg:col-span-4">
-                <p className="text-sm leading-7 text-white/45">Generic fake phone thumbnails are gone. Each card now renders the correct model family and camera layout. When a real store photo is uploaded in Admin, that real photo takes priority automatically.</p>
+                <p className="text-sm leading-7 text-white/45">Browse current models with real product photography, clear pricing and one-tap access to our store team for today’s availability.</p>
               </div>
             </div>
           </Reveal>
