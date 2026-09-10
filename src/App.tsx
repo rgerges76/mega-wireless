@@ -503,7 +503,7 @@ function App() {
           <div className="mw-times-square" aria-label="Animated screen repair showcase">
             <div className="mw-billboard-crown">
               <span>MEGA WIRELESS</span>
-              <b>LIVE REPAIR</b>
+              <b>REPAIR SHOWCASE</b>
               <i>● NASHVILLE</i>
             </div>
             <div className="mw-billboard-screen">
@@ -577,7 +577,7 @@ function App() {
           <nav className="hidden items-center gap-7 text-xs font-bold text-white/55 md:flex">
             <a className="transition hover:text-white" href="#services">Services</a>
             <a className="transition hover:text-white" href="#plans">Plans</a>
-            <a className="transition hover:text-white" href="#tablet-deal">$179 Tablet</a>
+            <a className="transition hover:text-white" href="#tablet-deal">Tablet Bundle</a>
             <a className="transition hover:text-white" href="#phones">Phones</a>
             <a className="transition hover:text-white" href="#ai">Mega AI</a>
             <a className="transition hover:text-white" href="#visit">Visit</a>
@@ -585,6 +585,13 @@ function App() {
           <button onClick={openAI} className="inline-flex items-center gap-2 rounded-full bg-[#f1efdf] px-4 py-2.5 text-xs font-extrabold text-black transition hover:scale-[1.02]">Ask Mega AI <Sparkles size={14} /></button>
         </div>
       </header>
+
+      <nav className="mw-mobile-navigation" aria-label="Browse services and offers">
+        <a href="#services">Repairs</a>
+        <a href="#plans">$10 Plans</a>
+        <a href="#tablet-deal">Tablet Bundle</a>
+        <a href="#phones">Phones</a>
+      </nav>
 
       <section id="home" className="relative min-h-screen px-4 pb-16 pt-28 sm:px-6 lg:pt-32">
         <div className="pointer-events-none absolute left-[8%] top-[15%] h-[360px] w-[360px] rounded-full bg-[#7cf7d4]/10 blur-[110px]" />
