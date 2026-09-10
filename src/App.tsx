@@ -461,13 +461,19 @@ function App() {
       if (!link) return
       const href = link instanceof HTMLAnchorElement ? link.getAttribute('href') || '' : ''
       const label = (link.textContent || link.getAttribute('aria-label') || '').trim().slice(0, 80)
+      const cta = link.dataset.cta || ''
       let eventName = ''
-      if (href.startsWith('tel:')) eventName = 'phone_call_click'
+      if (cta === 'plan-lead') eventName = 'plan_lead'
+      else if (cta === 'plans-intent') eventName = 'plans_view_intent'
+      else if (cta === 'tablet-intent') eventName = 'tablet_offer_view'
+      else if (cta === 'tablet-whatsapp') eventName = 'tablet_bundle_lead'
+      else if (cta === 'tablet-call') eventName = 'tablet_bundle_call'
+      else if (href.startsWith('tel:')) eventName = 'phone_call_click'
       else if (href.includes('wa.me')) eventName = 'whatsapp_click'
       else if (href.includes('google.com/maps')) eventName = 'directions_click'
       else if (href === '#phones') eventName = 'catalog_open'
       else if (label.includes('Mega AI')) eventName = 'ai_cta_click'
-      if (eventName) window.gtag?.('event', eventName, { link_text: label, link_url: href })
+      if (eventName) window.gtag?.('event', eventName, { link_text: label, link_url: href, offer: link.dataset.carrier || cta || undefined })
     }
     document.addEventListener('click', onClick)
     return () => document.removeEventListener('click', onClick)
@@ -598,8 +604,8 @@ function App() {
             </motion.p>
             <motion.div initial={{ opacity: 0, y: 20 }} animate={{ opacity: 1, y: 0 }} transition={{ duration: 0.8, delay: 0.28, ease: EASE }} className="mt-8 flex flex-wrap gap-3">
               <a data-cta="call-now" href="tel:+16156785849" className="cta-call inline-flex items-center gap-3 rounded-full bg-[#047857] px-6 py-4 text-sm font-extrabold text-white shadow-[0_14px_34px_rgba(4,120,87,.25)] transition hover:-translate-y-0.5 hover:bg-[#065f46]"><Phone size={17} /> Call Now</a>
-              <a href="#plans" className="cta-shop inline-flex items-center gap-3 rounded-full border-2 border-[#0f172a] bg-white px-6 py-4 text-sm font-extrabold text-[#0f172a] transition hover:-translate-y-0.5 hover:bg-[#f1f5f9]"><Zap size={17} /> See $10 Plans</a>
-              <a href="#tablet-deal" className="cta-tablet inline-flex items-center gap-3 rounded-full border border-[#ff2d8d] bg-[#ff2d8d] px-6 py-4 text-sm font-extrabold text-white shadow-[0_14px_34px_rgba(255,45,141,.22)] transition hover:-translate-y-0.5 hover:bg-[#e61979]"><Smartphone size={17} /> $179.99 Tablet Bundle</a>
+              <a data-cta="plans-intent" href="#plans" className="cta-shop inline-flex items-center gap-3 rounded-full border-2 border-[#0f172a] bg-white px-6 py-4 text-sm font-extrabold text-[#0f172a] transition hover:-translate-y-0.5 hover:bg-[#f1f5f9]"><Zap size={17} /> See $10 Plans</a>
+              <a data-cta="tablet-intent" href="#tablet-deal" className="cta-tablet inline-flex items-center gap-3 rounded-full border border-[#ff2d8d] bg-[#ff2d8d] px-6 py-4 text-sm font-extrabold text-white shadow-[0_14px_34px_rgba(255,45,141,.22)] transition hover:-translate-y-0.5 hover:bg-[#e61979]"><Smartphone size={17} /> $179.99 Tablet Bundle</a>
             </motion.div>
             <motion.div initial={{ opacity: 0 }} animate={{ opacity: 1 }} transition={{ duration: 1, delay: 0.5 }} className="mt-10 flex flex-wrap gap-x-7 gap-y-3 text-[10px] uppercase tracking-[0.18em] text-white/35">
               <span>No-contract prepaid plans</span><span>Same-day common repairs</span><span>English · Español · العربية</span>
@@ -689,7 +695,7 @@ function App() {
                       {plan.highlights.map((item) => <span key={item} className="rounded-xl border border-white/8 bg-white/[.05] px-3 py-2.5 text-xs font-bold text-white/72">{item}</span>)}
                     </div>
                     <p className="mt-5 min-h-[42px] text-[11px] leading-5 text-white/40">{plan.note}</p>
-                    <a href={`https://wa.me/16156785849?text=${encodeURIComponent(`Hello Mega Wireless, I want help choosing a ${plan.carrier} plan.`)}`} className="mt-6 flex items-center justify-between rounded-full bg-white px-5 py-3.5 text-xs font-black text-[#07131c] transition hover:-translate-y-0.5">Choose this plan <ArrowRight size={15} /></a>
+                    <a data-cta="plan-lead" data-carrier={plan.carrier} href={`https://wa.me/16156785849?text=${encodeURIComponent(`Hello Mega Wireless, I want help choosing a ${plan.carrier} plan.`)}`} className="mt-6 flex items-center justify-between rounded-full bg-white px-5 py-3.5 text-xs font-black text-[#07131c] transition hover:-translate-y-0.5">Choose this plan <ArrowRight size={15} /></a>
                   </div>
                 </article>
               </Reveal>
@@ -716,8 +722,8 @@ function App() {
                 {['Wireless keyboard', 'Wireless mouse', 'Protective cover', 'Stylus pen'].map((item) => <span key={item}><Check size={14} />{item}</span>)}
               </div>
               <div className="mt-8 flex flex-wrap gap-3">
-                <a href={`https://wa.me/16156785849?text=${encodeURIComponent('Hello Mega Wireless, is the $179.99 tablet bundle available?')}`} className="inline-flex items-center gap-3 rounded-full bg-[#ff2d8d] px-6 py-4 text-sm font-black text-white shadow-[0_16px_40px_rgba(255,45,141,.28)] transition hover:-translate-y-0.5"><MessageCircle size={17} /> Ask about the bundle</a>
-                <a href="tel:+16156785849" className="inline-flex items-center gap-3 rounded-full border border-white/25 bg-white/10 px-6 py-4 text-sm font-black text-white transition hover:bg-white/15"><Phone size={17} /> Call store</a>
+                <a data-cta="tablet-whatsapp" href={`https://wa.me/16156785849?text=${encodeURIComponent('Hello Mega Wireless, is the $179.99 tablet bundle available?')}`} className="inline-flex items-center gap-3 rounded-full bg-[#ff2d8d] px-6 py-4 text-sm font-black text-white shadow-[0_16px_40px_rgba(255,45,141,.28)] transition hover:-translate-y-0.5"><MessageCircle size={17} /> Ask about the bundle</a>
+                <a data-cta="tablet-call" href="tel:+16156785849" className="inline-flex items-center gap-3 rounded-full border border-white/25 bg-white/10 px-6 py-4 text-sm font-black text-white transition hover:bg-white/15"><Phone size={17} /> Call store</a>
               </div>
               <p className="mt-5 text-[10px] leading-5 text-white/35">While supplies last. Call or message to confirm color and availability.</p>
             </div>
