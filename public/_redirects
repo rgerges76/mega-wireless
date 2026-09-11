@@ -2,5 +2,10 @@
 /pos/       /pos.html            200
 /phones     /phones/index.html   200
 /phones/    /phones/index.html   200
+/privacy    /privacy.html        200
+/privacy/   /privacy.html        200
+/privacy-policy /privacy.html    200
+/sms-terms  /sms-terms.html      200
+/sms-terms/ /sms-terms.html      200
 /admin/*    /admin/index.html    200
 /*          /index.html          200
