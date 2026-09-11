@@ -348,7 +348,7 @@ function PhoneCard({ phone, index }: { phone: PhoneItem; index: number }) {
 function App() {
   const [phones, setPhones] = useState<PhoneItem[]>([])
   const [phoneError, setPhoneError] = useState(false)
-  const [introOpen, setIntroOpen] = useState(true)
+  const [introOpen, setIntroOpen] = useState(false)
   const [musicOn, setMusicOn] = useState(false)
   const [musicMode, setMusicMode] = useState<MusicMode>('global')
   const audioRef = useRef<{ context: AudioContext; master: GainNode; timer: number } | null>(null)
@@ -463,17 +463,12 @@ function App() {
       const label = (link.textContent || link.getAttribute('aria-label') || '').trim().slice(0, 80)
       const cta = link.dataset.cta || ''
       let eventName = ''
-      if (cta === 'plan-lead') eventName = 'plan_lead'
-      else if (cta === 'plans-intent') eventName = 'plans_view_intent'
+      if (href.startsWith('tel:') || href.includes('wa.me') || href.includes('google.com/maps')) return
+      if (cta === 'plans-intent') eventName = 'plans_view_intent'
       else if (cta === 'tablet-intent') eventName = 'tablet_offer_view'
-      else if (cta === 'tablet-whatsapp') eventName = 'tablet_bundle_lead'
-      else if (cta === 'tablet-call') eventName = 'tablet_bundle_call'
-      else if (href.startsWith('tel:')) eventName = 'phone_call_click'
-      else if (href.includes('wa.me')) eventName = 'whatsapp_click'
-      else if (href.includes('google.com/maps')) eventName = 'directions_click'
       else if (href === '#phones') eventName = 'catalog_open'
       else if (label.includes('Mega AI')) eventName = 'ai_cta_click'
-      if (eventName) window.gtag?.('event', eventName, { link_text: label, link_url: href, offer: link.dataset.carrier || cta || undefined })
+      if (eventName) window.gtag?.('event', eventName, { placement: cta || 'site', offer: link.dataset.carrier || undefined })
     }
     document.addEventListener('click', onClick)
     return () => document.removeEventListener('click', onClick)
@@ -609,6 +604,7 @@ function App() {
             <motion.p initial={{ opacity: 0, y: 20 }} animate={{ opacity: 1, y: 0 }} transition={{ duration: 0.8, delay: 0.18, ease: EASE }} className="mt-8 max-w-xl text-sm leading-7 text-white/52 sm:text-base">
               Same-day phone repair, prepaid plans from $10 a month, unlocked phones and a complete $179.99 tablet bundle — with real local help in Nashville.
             </motion.p>
+            <button type="button" className="mt-5 min-h-11 rounded-full border border-white/30 px-5 py-3 text-sm font-bold" onClick={() => { setIntroOpen(true); window.gtag?.('event', 'repair_showcase_open') }}>Watch repair showcase</button>
             <motion.div initial={{ opacity: 0, y: 20 }} animate={{ opacity: 1, y: 0 }} transition={{ duration: 0.8, delay: 0.28, ease: EASE }} className="mt-8 flex flex-wrap gap-3">
               <a data-cta="call-now" href="tel:+16156785849" className="cta-call inline-flex items-center gap-3 rounded-full bg-[#047857] px-6 py-4 text-sm font-extrabold text-white shadow-[0_14px_34px_rgba(4,120,87,.25)] transition hover:-translate-y-0.5 hover:bg-[#065f46]"><Phone size={17} /> Call Now</a>
               <a data-cta="plans-intent" href="#plans" className="cta-shop inline-flex items-center gap-3 rounded-full border-2 border-[#0f172a] bg-white px-6 py-4 text-sm font-extrabold text-[#0f172a] transition hover:-translate-y-0.5 hover:bg-[#f1f5f9]"><Zap size={17} /> See $10 Plans</a>
@@ -844,6 +840,10 @@ function App() {
         </div>
       </section>
 
+      {!introOpen && <nav className="mw-contact-bar" aria-label="Contact Mega Wireless">
+        <a data-cta="mobile-call" href="tel:+16156785849"><Phone size={18} /><span>Call Now</span></a>
+        <a data-cta="mobile-repair-quote" href="https://wa.me/16156785849?text=Hello%20Mega%20Wireless%2C%20I%20need%20a%20repair%20quote."><MessageCircle size={18} /><span>Repair quote</span></a>
+      </nav>}
       <footer className="px-4 pb-8 sm:px-6">
         <div className="mx-auto flex max-w-[1380px] flex-col gap-5 border-t border-white/10 pt-7 text-xs text-white/35 sm:flex-row sm:items-center sm:justify-between">
           <div className="flex flex-wrap items-center gap-4"><span className="font-extrabold text-white/70">Mega Wireless</span><span>Open daily 10 AM–8 PM</span><a className="hover:text-white" href="/privacy.html">Privacy</a><a className="hover:text-white" href="/admin/">Secure Admin</a></div>

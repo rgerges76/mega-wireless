@@ -20,8 +20,8 @@
     <meta property="og:type" content="business.business" />
     <meta property="og:url" content="https://megawirelessusa.com/" />
     <script type="application/ld+json">{"@context":"https://schema.org","@type":"MobilePhoneStore","name":"Mega Wireless","url":"https://megawirelessusa.com/","telephone":"+1-615-678-5849","address":{"@type":"PostalAddress","streetAddress":"4717 Nolensville Pike","addressLocality":"Nashville","addressRegion":"TN","postalCode":"37211","addressCountry":"US"},"openingHoursSpecification":[{"@type":"OpeningHoursSpecification","dayOfWeek":["Monday","Tuesday","Wednesday","Thursday","Friday","Saturday","Sunday"],"opens":"10:00","closes":"20:00"}],"availableLanguage":["English","Spanish","Arabic"]}</script>
-    <script async src="https://www.googletagmanager.com/gtag/js?id=G-LR9H4N0S98"></script>
-    <script>window.dataLayer=window.dataLayer||[];function gtag(){dataLayer.push(arguments)}gtag('js',new Date());gtag('config','G-LR9H4N0S98');</script>
+
+    <script src="/assets/analytics.js"></script>
     <script src="https://cdn.botpress.cloud/webchat/v5.0/inject.js"></script>
     <script src="https://files.bpcontent.cloud/2026/08/28/15/20260828155536-V0H9SFBE.js" defer></script>
   </head>
@@ -37,7 +37,7 @@
       (function(){
         var dict={
           es:{
-            'Services':'Servicios','Plans':'Planes','$179 Tablet':'Tableta $179','Phones':'Teléfonos','Mega AI':'Mega AI','Visit':'Visítanos','Ask Mega AI':'Pregunta a Mega AI',
+            'Watch repair showcase':'Ver demostración de reparación','Repair quote':'Cotizar reparación','Tablet Bundle':'Paquete de tableta','Repairs':'Reparaciones','$10 Plans':'Planes de $10','Services':'Servicios','Plans':'Planes','$179 Tablet':'Tableta $179','Phones':'Teléfonos','Mega AI':'Mega AI','Visit':'Visítanos','Ask Mega AI':'Pregunta a Mega AI',
             'Your phone deserves a comeback':'Tu teléfono merece volver','Repair it.':'Repáralo.','Love it again.':'Vuelve a quererlo.','Enter Mega Wireless':'Entrar a Mega Wireless','Continue without music':'Continuar sin música',
             'Prepaid wireless · your way':'Servicio prepago · a tu manera','Lines from':'Líneas desde','$10 a month.':'$10 al mes.','No contract':'Sin contrato','No Social Security number':'Sin Seguro Social','No ID required':'Sin identificación','Starting at':'Desde','Choose this plan':'Elegir este plan',
             'Mega Wireless exclusive':'Exclusivo de Mega Wireless','Your whole setup.':'Todo tu equipo.','One price.':'Un solo precio.','bundle price':'precio del paquete','Wireless keyboard':'Teclado inalámbrico','Wireless mouse':'Mouse inalámbrico','Protective cover':'Funda protectora','Stylus pen':'Lápiz táctil','Ask about the bundle':'Preguntar por el paquete','Call store':'Llamar a la tienda',
@@ -46,7 +46,7 @@
             'What we actually do':'Lo que realmente hacemos','One store.':'Una tienda.','Four ways to help.':'Cuatro formas de ayudarte.','Repair':'Reparación','Fix it fast.':'Repáralo rápido.','Phones':'Teléfonos','Buy unlocked.':'Compra desbloqueado.','AI':'IA','Ask before you drive.':'Pregunta antes de venir.','Local':'Local','Help in your language.':'Ayuda en tu idioma.','See repair options':'Ver reparaciones','Browse phones':'Ver teléfonos','Visit the store':'Visita la tienda','Message':'Mensaje','Call':'Llamar','Unlocked':'Desbloqueado','Today’s phone catalog':'Teléfonos disponibles hoy','Mega AI assistant':'Asistente Mega AI','Your first answer':'Tu primera respuesta','before the counter.':'antes de llegar.'
           },
           ar:{
-            'Services':'الخدمات','Plans':'الخطوط','$179 Tablet':'تابلت $179','Phones':'الهواتف','Mega AI':'Mega AI','Visit':'زورنا','Ask Mega AI':'اسأل Mega AI',
+            'Watch repair showcase':'شاهد عرض الإصلاح','Repair quote':'طلب سعر إصلاح','Tablet Bundle':'باقة التابلت','Repairs':'الصيانة','$10 Plans':'خطوط $10','Services':'الخدمات','Plans':'الخطوط','$179 Tablet':'تابلت $179','Phones':'الهواتف','Mega AI':'Mega AI','Visit':'زورنا','Ask Mega AI':'اسأل Mega AI',
             'Your phone deserves a comeback':'هاتفك يستحق العودة','Repair it.':'نصلحه.','Love it again.':'وترجع تحبه.','Enter Mega Wireless':'ادخل إلى Mega Wireless','Continue without music':'استمر بدون موسيقى',
             'Prepaid wireless · your way':'خطوط مسبقة الدفع على اختيارك','Lines from':'خطوط تبدأ من','$10 a month.':'$10 شهريًا.','No contract':'بدون تعاقد','No Social Security number':'بدون رقم ضمان اجتماعي','No ID required':'بدون هوية','Starting at':'تبدأ من','Choose this plan':'اختر هذا الخط',
             'Mega Wireless exclusive':'عرض حصري من Mega Wireless','Your whole setup.':'كل احتياجاتك.','One price.':'بسعر واحد.','bundle price':'سعر الباقة','Wireless keyboard':'كيبورد وايرلس','Wireless mouse':'ماوس وايرلس','Protective cover':'كفر حماية','Stylus pen':'قلم لمس','Ask about the bundle':'اسأل عن عرض التابلت','Call store':'اتصل بالمحل',
@@ -85,7 +85,8 @@
           if(!a)return;
           e.preventDefault();
           var lang=a.getAttribute('data-mega-lang')||'en';
-          try{history.replaceState(null,'',location.pathname+'?lang='+lang+location.hash)}catch(err){}
+          if(lang!==current)window.gtag&&window.gtag('event','language_change',{language:lang});
+          // Keep campaign parameters and avoid history-generated page views.
           apply(lang);
         });
         var observer=new MutationObserver(function(){apply(current)});

@@ -509,3 +509,12 @@ body.mw-intro-active .mw-language-strip { z-index: 130; top: 18px; }
   .mw-tablet-visual { min-height: 390px; }
   .mw-tablet-visual img { object-position: 50% 0; }
 }
+
+.mw-contact-bar { display:none; }
+@media (max-width:767px) {
+  body { padding-bottom:calc(84px + env(safe-area-inset-bottom)); }
+  .mw-contact-bar { display:grid; grid-template-columns:1fr 1fr; gap:10px; position:fixed; bottom:0; left:0; right:0; z-index:70; padding:10px 12px calc(10px + env(safe-area-inset-bottom)); background:#081523; border-top:1px solid #527082; box-shadow:0 -5px 24px #0004; }
+  .mw-contact-bar a { display:flex; align-items:center; justify-content:center; gap:8px; min-height:48px; border-radius:14px; background:#047857; color:#fff; font-size:13px; font-weight:800; }
+  .mw-contact-bar a:last-child { background:#fff; color:#102235; }
+  .mw-music-dock { bottom:calc(92px + env(safe-area-inset-bottom)); }
+}

@@ -1,6 +1,6 @@
-const CACHE='mega-wireless-v6';
+const CACHE='mega-wireless-v7-analytics';
 const CORE=['/offline.html','/manifest.webmanifest','/privacy.html'];
-const FRESH=new Set(['/phones.json','/repairs.json','/offers.json','/assets/growth.js','/assets/growth.css']);
+const FRESH=new Set(['/phones.json','/repairs.json','/offers.json','/assets/analytics.js','/assets/growth.js','/assets/growth.css']);
 
 self.addEventListener('install',event=>{
   event.waitUntil(caches.open(CACHE).then(cache=>cache.addAll(CORE)).then(()=>self.skipWaiting()));

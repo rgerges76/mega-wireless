@@ -1,5 +1,6 @@
 (function(){
   'use strict';
+  if (window.MegaAnalytics && !window.MegaAnalytics.enabled) return;
 
   var ENDPOINT='/.netlify/functions/track-event';
   var UTM_KEYS=['utm_source','utm_medium','utm_campaign','utm_content','utm_term'];
@@ -203,6 +204,7 @@
     try{saved=JSON.parse(localStorage.getItem('mw_attribution')||'{}')}catch(e){}
     var fresh={};
     UTM_KEYS.forEach(function(key){if(params.get(key))fresh[key]=clean(params.get(key),120)});
+    if(saved.saved_at && Date.now()-saved.saved_at>30*86400000)saved={};
     if(Object.keys(fresh).length){
       fresh.landing_page=location.pathname;fresh.saved_at=Date.now();
       try{localStorage.setItem('mw_attribution',JSON.stringify(fresh))}catch(e){}
@@ -237,7 +239,7 @@
       landing_page:attr.landing_page,
       properties:properties||{}
     };
-    if(typeof window.gtag==='function'){
+    if(name!=='page_view' && typeof window.gtag==='function'){
       window.gtag('event',name,Object.assign({
         event_id:payload.event_id,
         traffic_source:attr.source,
@@ -357,7 +359,7 @@
     result.appendChild(actions);
     result.classList.add('show');
     track('repair_model_viewed',{brand:brand.value,model:model.value,repair:problem.value});
-    track('repair_quote_completed',{repair:repair,price_available:quote.price?'yes':'no'});
+    track('repair_quote_viewed',{repair:repair,price_available:quote.price?'yes':'no'});
   }
 
   if(brand) brand.addEventListener('change',function(){
@@ -403,6 +405,8 @@
   document.addEventListener('click',function(event){
     var target=event.target.closest('[data-growth],[data-promotion],a[href^="tel:"],a[href*="google.com/maps"],a[href*="wa.me"],#mega-ai-chat-button');
     if(!target)return;
+    // The shared listener owns contact events; retain other funnel events here.
+    if(target.href && (/^tel:/.test(target.href)||/wa\.me|google\.com\/maps/.test(target.href)))return;
     var kind=target.dataset.growth||'';
     if(target.dataset.promotion)track('promotion_clicked',{promotion:target.dataset.promotion});
     else if(kind==='phone-interest')track('phone_interest',{phone:target.dataset.phone||''});

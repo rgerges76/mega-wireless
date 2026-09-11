@@ -13,13 +13,8 @@
   <meta property="og:url" content="https://megawirelessusa.com/phones/">
   <meta property="og:type" content="website">
 
-  <script async src="https://www.googletagmanager.com/gtag/js?id=G-LR9H4N0S98"></script>
-  <script>
-    window.dataLayer=window.dataLayer||[];
-    function gtag(){dataLayer.push(arguments)}
-    gtag('js',new Date());
-    gtag('config','G-LR9H4N0S98');
-  </script>
+
+  <script src="/assets/analytics.js"></script>
 
   <script type="application/ld+json">
   {
@@ -166,8 +161,6 @@
     function track(name){
       if(typeof gtag==='function') gtag('event',name,{event_category:'google_ads_landing_page'});
     }
-    document.querySelectorAll('.track-call').forEach(el=>el.addEventListener('click',()=>track('phone_call_click')));
-    document.querySelectorAll('.track-directions').forEach(el=>el.addEventListener('click',()=>track('directions_click')));
 
     fetch('/phones.json',{cache:'no-store'})
       .then(r=>r.ok?r.json():Promise.reject())

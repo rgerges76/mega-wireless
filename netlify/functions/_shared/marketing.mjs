@@ -1,7 +1,7 @@
 import { getStore } from "@netlify/blobs";
 
 export const ALLOWED_EVENTS = new Set([
-  "page_view", "engaged_visitor", "repair_quote_started", "repair_quote_completed",
+  "repair_quote_viewed", "page_view", "engaged_visitor", "repair_quote_started", "repair_quote_completed",
   "repair_booking_started", "repair_booking_completed", "call_clicked", "directions_clicked",
   "contact_clicked", "phone_viewed", "phone_interest", "call_about_phone",
   "availability_request", "repair_model_viewed", "promotion_clicked", "ai_chat_started",
