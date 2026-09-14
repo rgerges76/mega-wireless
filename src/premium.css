@@ -37,7 +37,7 @@ header button {
   box-shadow: 0 12px 34px rgba(70, 105, 255, .3) !important;
 }
 
-.mega-hero {
+#home.mega-hero {
   isolation: isolate;
   background:
     linear-gradient(90deg, rgba(5, 8, 18, .98) 0%, rgba(5, 8, 18, .86) 42%, rgba(5, 8, 18, .22) 78%),
@@ -214,7 +214,7 @@ header button {
 @keyframes mega-step-three { 0%,66% { color:rgba(255,255,255,.48); } 71%,94% { color:#fff; border-color:var(--mega-gold); background:rgba(255,215,104,.13); } 100% { color:rgba(255,255,255,.48); } }
 
 @media (max-width: 1023px) {
-  .mega-hero { padding-bottom: 5rem !important; }
+  #home.mega-hero { padding-bottom: 5rem !important; }
   .mega-repair-stage { min-height: 580px; transform: none; }
   .mega-stage-copy { top: 14%; }
 }
