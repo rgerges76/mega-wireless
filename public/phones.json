@@ -134,6 +134,15 @@
       "name": "NOTE 20 ULTRA",
       "specs": "128 GB UNLOCKED",
       "price": "229.99"
+    },
+    {
+      "condition": "OPEN BOX 90 DAYS WARRANTY ",
+      "availability": "Available",
+      "bundle": true,
+      "active": true,
+      "name": "SAMSUNG S23 ULTRA",
+      "specs": "256 GB UNLOCKED",
+      "price": "339.99"
     }
   ]
 }
