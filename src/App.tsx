@@ -12,12 +12,11 @@ import {
   ShieldCheck,
   Sparkles,
   Smartphone,
-  Volume2,
-  VolumeX,
   Wrench,
   Zap,
 } from 'lucide-react'
 import { motion, useInView } from 'framer-motion'
+import Hero3D from './Hero3D'
 
 const EASE = [0.16, 1, 0.3, 1] as const
 
@@ -32,14 +31,6 @@ type PhoneItem = {
   condition?: string
   brand?: string
 }
-
-type MusicMode = 'global' | 'arabic' | 'latin'
-
-const MUSIC_MODES: Array<{ id: MusicMode; short: string; label: string; description: string }> = [
-  { id: 'global', short: 'EN', label: 'Global Pop', description: 'Modern international pulse' },
-  { id: 'arabic', short: 'AR', label: 'Arabic Electro', description: 'Modern Arabic-inspired rhythm' },
-  { id: 'latin', short: 'ES', label: 'Latin Urban', description: 'Contemporary Latin energy' },
-]
 
 const WIRELESS_PLANS = [
   {
@@ -348,87 +339,6 @@ function PhoneCard({ phone, index }: { phone: PhoneItem; index: number }) {
 function App() {
   const [phones, setPhones] = useState<PhoneItem[]>([])
   const [phoneError, setPhoneError] = useState(false)
-  const [introOpen, setIntroOpen] = useState(false)
-  const [musicOn, setMusicOn] = useState(false)
-  const [musicMode, setMusicMode] = useState<MusicMode>('global')
-  const audioRef = useRef<{ context: AudioContext; master: GainNode; timer: number } | null>(null)
-
-  const stopMusic = () => {
-    const audio = audioRef.current
-    if (!audio) return
-    window.clearInterval(audio.timer)
-    audio.master.gain.setTargetAtTime(0, audio.context.currentTime, 0.08)
-    window.setTimeout(() => audio.context.close().catch(() => undefined), 350)
-    audioRef.current = null
-    setMusicOn(false)
-  }
-
-  const startMusic = (selectedMode: MusicMode = musicMode) => {
-    if (audioRef.current) return
-    const AudioContextClass = window.AudioContext
-    if (!AudioContextClass) return
-    const context = new AudioContextClass()
-    const master = context.createGain()
-    master.gain.setValueAtTime(0.0001, context.currentTime)
-    master.gain.exponentialRampToValueAtTime(0.08, context.currentTime + 1.2)
-    master.connect(context.destination)
-
-    const sound = {
-      global: { notes: [146.83, 185, 220, 277.18, 329.63, 220], pace: 430, wave: 'triangle' as OscillatorType },
-      arabic: { notes: [146.83, 155.56, 185, 196, 220, 233.08, 277.18, 233.08], pace: 390, wave: 'sine' as OscillatorType },
-      latin: { notes: [164.81, 196, 246.94, 293.66, 246.94, 196, 329.63, 246.94], pace: 355, wave: 'triangle' as OscillatorType },
-    }[selectedMode]
-    let step = 0
-    const playNote = () => {
-      const now = context.currentTime
-      const oscillator = context.createOscillator()
-      const gain = context.createGain()
-      const filter = context.createBiquadFilter()
-      oscillator.type = sound.wave
-      oscillator.frequency.setValueAtTime(sound.notes[step % sound.notes.length], now)
-      filter.type = 'lowpass'
-      filter.frequency.setValueAtTime(selectedMode === 'arabic' ? 1250 : 1500, now)
-      gain.gain.setValueAtTime(0.0001, now)
-      gain.gain.exponentialRampToValueAtTime(step % 4 === 0 ? 0.2 : 0.105, now + 0.025)
-      gain.gain.exponentialRampToValueAtTime(0.0001, now + sound.pace / 1000 * .88)
-      oscillator.connect(filter).connect(gain).connect(master)
-      oscillator.start(now)
-      oscillator.stop(now + sound.pace / 1000)
-
-      if (step % 4 === 0 || (selectedMode === 'latin' && step % 4 === 3)) {
-        const kick = context.createOscillator()
-        const kickGain = context.createGain()
-        kick.type = 'sine'
-        kick.frequency.setValueAtTime(105, now)
-        kick.frequency.exponentialRampToValueAtTime(45, now + .14)
-        kickGain.gain.setValueAtTime(.24, now)
-        kickGain.gain.exponentialRampToValueAtTime(.0001, now + .18)
-        kick.connect(kickGain).connect(master)
-        kick.start(now)
-        kick.stop(now + .2)
-      }
-      step += 1
-    }
-    playNote()
-    const timer = window.setInterval(playNote, sound.pace)
-    audioRef.current = { context, master, timer }
-    setMusicOn(true)
-    window.gtag?.('event', 'music_play', { music_style: selectedMode })
-  }
-
-  const selectMusic = (mode: MusicMode) => {
-    const wasPlaying = Boolean(audioRef.current)
-    if (wasPlaying) stopMusic()
-    setMusicMode(mode)
-    if (wasPlaying) window.setTimeout(() => startMusic(mode), 380)
-    window.gtag?.('event', 'music_style_select', { music_style: mode })
-  }
-
-  const enterSite = () => {
-    startMusic(musicMode)
-    setIntroOpen(false)
-    window.gtag?.('event', 'welcome_enter', { music_enabled: true })
-  }
 
   useEffect(() => {
     const controller = new AbortController()
@@ -474,92 +384,8 @@ function App() {
     return () => document.removeEventListener('click', onClick)
   }, [])
 
-  useEffect(() => {
-    document.body.classList.toggle('mw-intro-active', introOpen)
-    return () => document.body.classList.remove('mw-intro-active')
-  }, [introOpen])
-
-  useEffect(() => () => {
-    const audio = audioRef.current
-    if (audio) {
-      window.clearInterval(audio.timer)
-      audio.context.close().catch(() => undefined)
-    }
-  }, [])
-
   return (
     <main className="min-h-screen overflow-hidden bg-[#050506] text-[#f1efdf]">
-      {introOpen && (
-        <section
-          className="mw-welcome"
-          aria-label="Welcome to Mega Wireless"
-        >
-          <div className="mw-welcome-grid" aria-hidden="true" />
-          <div className="mw-times-square" aria-label="Animated screen repair showcase">
-            <div className="mw-billboard-crown">
-              <span>MEGA WIRELESS</span>
-              <b>REPAIR SHOWCASE</b>
-              <i>● NASHVILLE</i>
-            </div>
-            <div className="mw-billboard-screen">
-              <div className="mw-billboard-copy">
-                <span className="mw-billboard-overline">FROM CRACKED</span>
-                <strong>TO<br /><em>LIKE NEW.</em></strong>
-                <p>Watch the screen transformation.</p>
-              </div>
-              <div className="mw-repair-device" aria-hidden="true">
-                <div className="mw-device-frame">
-                  <div className="mw-device-speaker" />
-                  <div className="mw-screen-cracked">
-                    <span className="mw-crack crack-a" /><span className="mw-crack crack-b" />
-                    <span className="mw-crack crack-c" /><span className="mw-crack crack-d" />
-                  </div>
-                  <div className="mw-screen-new"><span>MW</span><small>READY</small></div>
-                  <div className="mw-repair-scan" />
-                </div>
-                <div className="mw-tool-ring"><Wrench size={22} /></div>
-              </div>
-              <div className="mw-repair-timeline" aria-hidden="true">
-                <span className="stage-one"><b>01</b> Diagnose</span>
-                <span className="stage-two"><b>02</b> Replace</span>
-                <span className="stage-three"><b>03</b> Quality check</span>
-              </div>
-            </div>
-            <div className="mw-billboard-ticker"><span>SCREEN REPAIR · BACK GLASS · BATTERY · CHARGING PORT · SAME-DAY SERVICE · </span></div>
-          </div>
-          <div className="mw-welcome-copy">
-            <div className="mw-welcome-eyebrow">Your phone deserves a comeback</div>
-            <h1>Repair it.<br /><span>Love it again.</span></h1>
-            <p>Enter the Mega Wireless experience with music made for your language.</p>
-            <div className="mw-music-picker" aria-label="Choose music style">
-              {MUSIC_MODES.map((mode) => (
-                <button key={mode.id} className={musicMode === mode.id ? 'active' : ''} onClick={() => selectMusic(mode.id)} aria-pressed={musicMode === mode.id}>
-                  <b>{mode.short}</b><span>{mode.label}</span><small>{mode.description}</small>
-                </button>
-              ))}
-            </div>
-            <button onClick={enterSite} className="mw-enter-button"><span>Enter Mega Wireless</span><ArrowRight size={19} /></button>
-            <button className="mw-enter-silent" onClick={() => { setIntroOpen(false); window.gtag?.('event', 'welcome_enter', { music_enabled: false }) }}>Continue without music</button>
-          </div>
-          <div className="mw-welcome-hint" aria-hidden="true"><span /> CINEMATIC SCREEN REPAIR EXPERIENCE</div>
-        </section>
-      )}
-
-      {!introOpen && (
-        <div className="mw-music-dock">
-          <div className="mw-music-dock-styles">
-            {MUSIC_MODES.map((mode) => <button key={mode.id} className={musicMode === mode.id ? 'active' : ''} onClick={() => selectMusic(mode.id)} aria-label={`Use ${mode.label} music`}>{mode.short}</button>)}
-          </div>
-          <button
-            className="mw-sound-toggle"
-            onClick={musicOn ? stopMusic : () => startMusic(musicMode)}
-            aria-label={musicOn ? 'Mute background music' : 'Play background music'}
-            title={musicOn ? 'Mute music' : 'Play music'}
-          >
-            {musicOn ? <Volume2 size={17} /> : <VolumeX size={17} />}
-          </button>
-        </div>
-      )}
       <header className="fixed left-0 right-0 top-0 z-50 px-3 pt-3 sm:px-5 sm:pt-4">
         <div className="mx-auto flex max-w-[1380px] items-center justify-between rounded-full border border-white/10 bg-black/60 px-4 py-3 shadow-[0_12px_40px_rgba(0,0,0,.25)] backdrop-blur-xl sm:px-6">
           <a href="#home" className="flex items-center gap-3">
@@ -588,48 +414,41 @@ function App() {
         <a href="#phones">Phones</a>
       </nav>
 
-      <section id="home" className="relative min-h-screen px-4 pb-16 pt-28 sm:px-6 lg:pt-32">
+      <section id="home" className="mega-hero relative min-h-screen px-4 pb-16 pt-28 sm:px-6 lg:pt-32">
         <div className="pointer-events-none absolute left-[8%] top-[15%] h-[360px] w-[360px] rounded-full bg-[#7cf7d4]/10 blur-[110px]" />
         <div className="pointer-events-none absolute right-[4%] top-[22%] h-[430px] w-[430px] rounded-full bg-[#8b5cf6]/12 blur-[130px]" />
         <div className="pointer-events-none absolute bottom-[4%] left-[38%] h-[300px] w-[300px] rounded-full bg-[#ff9d5c]/8 blur-[110px]" />
 
-        <div className="mx-auto grid min-h-[760px] max-w-[1380px] items-center gap-10 lg:grid-cols-[1.05fr_.95fr]">
+        <div className="mx-auto grid min-h-[760px] max-w-[1380px] items-center gap-10 lg:grid-cols-[.92fr_1.08fr]">
           <div className="relative z-10 pt-8 lg:pt-0">
             <motion.div initial={{ opacity: 0, y: 14 }} animate={{ opacity: 1, y: 0 }} transition={{ duration: 0.7, ease: EASE }} className="hero-kicker inline-flex items-center gap-2 rounded-full border border-[#86c9b3] bg-[#ecfdf5] px-4 py-2 text-[10px] font-extrabold uppercase tracking-[0.2em] text-[#065f46]">
-              <Zap size={13} /> Nashville tech, upgraded
+              <Zap size={13} /> Same-day repair · Nashville
             </motion.div>
             <motion.h1 initial={{ opacity: 0, y: 24 }} animate={{ opacity: 1, y: 0 }} transition={{ duration: 0.9, delay: 0.08, ease: EASE }} className="mt-7 max-w-[760px] text-[clamp(3.5rem,8vw,8.6rem)] font-extrabold leading-[0.78] tracking-[-0.075em]">
-              Fix. Connect.<br />Upgrade.<br /><span className="hero-gradient-text">All at Mega.</span>
+              Cracked today.<br /><span className="hero-gradient-text">Back today.</span>
             </motion.h1>
             <motion.p initial={{ opacity: 0, y: 20 }} animate={{ opacity: 1, y: 0 }} transition={{ duration: 0.8, delay: 0.18, ease: EASE }} className="mt-8 max-w-xl text-sm leading-7 text-white/52 sm:text-base">
-              Same-day phone repair, prepaid plans from $10 a month, unlocked phones and a complete $179.99 tablet bundle — with real local help in Nashville.
+              Fast phone repair, honest answers and real technicians. Plus prepaid plans from $10/month, unlocked phones and a complete $179.99 tablet bundle.
             </motion.p>
-            <button type="button" className="mt-5 min-h-11 rounded-full border border-white/30 px-5 py-3 text-sm font-bold" onClick={() => { setIntroOpen(true); window.gtag?.('event', 'repair_showcase_open') }}>Watch repair showcase</button>
             <motion.div initial={{ opacity: 0, y: 20 }} animate={{ opacity: 1, y: 0 }} transition={{ duration: 0.8, delay: 0.28, ease: EASE }} className="mt-8 flex flex-wrap gap-3">
-              <a data-cta="call-now" href="tel:+16156785849" className="cta-call inline-flex items-center gap-3 rounded-full bg-[#047857] px-6 py-4 text-sm font-extrabold text-white shadow-[0_14px_34px_rgba(4,120,87,.25)] transition hover:-translate-y-0.5 hover:bg-[#065f46]"><Phone size={17} /> Call Now</a>
-              <a data-cta="plans-intent" href="#plans" className="cta-shop inline-flex items-center gap-3 rounded-full border-2 border-[#0f172a] bg-white px-6 py-4 text-sm font-extrabold text-[#0f172a] transition hover:-translate-y-0.5 hover:bg-[#f1f5f9]"><Zap size={17} /> See $10 Plans</a>
-              <a data-cta="tablet-intent" href="#tablet-deal" className="cta-tablet inline-flex items-center gap-3 rounded-full border border-[#ff2d8d] bg-[#ff2d8d] px-6 py-4 text-sm font-extrabold text-white shadow-[0_14px_34px_rgba(255,45,141,.22)] transition hover:-translate-y-0.5 hover:bg-[#e61979]"><Smartphone size={17} /> $179.99 Tablet Bundle</a>
+              <a data-cta="repair-quote" href="https://wa.me/16156785849?text=Hello%20Mega%20Wireless%2C%20I%20need%20a%20repair%20quote." className="cta-call inline-flex items-center gap-3 rounded-full px-6 py-4 text-sm font-extrabold transition"><MessageCircle size={17} /> Get repair quote <ArrowRight size={16} /></a>
+              <a data-cta="call-now" href="tel:+16156785849" className="cta-shop inline-flex items-center gap-3 rounded-full px-6 py-4 text-sm font-extrabold transition"><Phone size={17} /> Call (615) 678-5849</a>
             </motion.div>
             <motion.div initial={{ opacity: 0 }} animate={{ opacity: 1 }} transition={{ duration: 1, delay: 0.5 }} className="mt-10 flex flex-wrap gap-x-7 gap-y-3 text-[10px] uppercase tracking-[0.18em] text-white/35">
-              <span>No-contract prepaid plans</span><span>Same-day common repairs</span><span>English · Español · العربية</span>
+              <span>Open daily 10–8</span><span>Warranty-backed repairs</span><span>English · Español · العربية</span>
             </motion.div>
           </div>
 
-          <motion.div initial={{ opacity: 0, scale: 0.92, x: 30 }} animate={{ opacity: 1, scale: 1, x: 0 }} transition={{ duration: 1.1, delay: 0.12, ease: EASE }} className="relative min-h-[520px] [perspective:1300px] sm:min-h-[620px]">
-            <div className="absolute left-1/2 top-1/2 h-[70%] w-[75%] -translate-x-1/2 -translate-y-1/2 rounded-full border border-white/10 bg-white/[0.02] shadow-[inset_0_0_80px_rgba(255,255,255,.02)]" />
-            <div className="absolute left-1/2 top-1/2 h-[54%] w-[54%] -translate-x-1/2 -translate-y-1/2 rounded-full border border-[#7cf7d4]/15" />
-            <div className="absolute left-1/2 top-1/2 h-[36%] w-[36%] -translate-x-1/2 -translate-y-1/2 rounded-full bg-[#7cf7d4]/10 blur-3xl" />
-            <div className="absolute left-1/2 top-[47%] w-full -translate-x-1/2 -translate-y-1/2">
-              <PhoneRender name="iPhone 15 Pro" specs="Titanium" hero />
+          <motion.div id="repair-showcase" initial={{ opacity: 0, scale: 0.94, x: 30 }} animate={{ opacity: 1, scale: 1, x: 0 }} transition={{ duration: 1.1, delay: 0.12, ease: EASE }} className="mega-repair-stage relative min-h-[500px] sm:min-h-[620px]">
+            <div className="mega-stage-topline"><span>MEGA WIRELESS</span><b>LIVE REPAIR STUDIO</b><i>● NASHVILLE</i></div>
+            <Hero3D />
+            <div className="mega-stage-copy" aria-hidden="true"><span>FROM CRACKED</span><strong>TO<br /><em>LIKE NEW.</em></strong></div>
+            <div className="mega-stage-steps" aria-label="iPhone screen repair stages">
+              <span className="step-1"><b>01</b> Diagnose</span>
+              <span className="step-2"><b>02</b> Replace</span>
+              <span className="step-3"><b>03</b> Test</span>
             </div>
-            <motion.div animate={{ y: [0, -10, 0], rotateZ: [3, 1, 3] }} transition={{ duration: 5, repeat: Infinity, ease: 'easeInOut' }} className="absolute right-[2%] top-[15%] rounded-2xl border border-white/10 bg-black/45 px-4 py-3 backdrop-blur-xl sm:right-[7%]">
-              <div className="flex items-center gap-2 text-[10px] font-bold uppercase tracking-[0.16em] text-[#7cf7d4]"><Bot size={14} /> Mega AI</div>
-              <div className="mt-2 max-w-[170px] text-xs leading-5 text-white/65">“My phone won’t charge.”</div>
-            </motion.div>
-            <motion.div animate={{ y: [0, 11, 0], rotateZ: [-3, -1, -3] }} transition={{ duration: 5.8, repeat: Infinity, ease: 'easeInOut' }} className="absolute bottom-[16%] left-[1%] rounded-2xl border border-white/10 bg-black/45 px-4 py-3 backdrop-blur-xl sm:left-[6%]">
-              <div className="text-[10px] uppercase tracking-[0.16em] text-white/35">Unlocked phones</div>
-              <div className="mt-1 text-sm font-extrabold text-white">Live pricing</div>
-            </motion.div>
+            <div className="mega-stage-ticker"><span>SCREEN REPAIR · BACK GLASS · BATTERY · CHARGING PORT · SAME-DAY SERVICE · </span></div>
           </motion.div>
         </div>
       </section>
@@ -840,10 +659,10 @@ function App() {
         </div>
       </section>
 
-      {!introOpen && <nav className="mw-contact-bar" aria-label="Contact Mega Wireless">
+      <nav className="mw-contact-bar" aria-label="Contact Mega Wireless">
         <a data-cta="mobile-call" href="tel:+16156785849"><Phone size={18} /><span>Call Now</span></a>
         <a data-cta="mobile-repair-quote" href="https://wa.me/16156785849?text=Hello%20Mega%20Wireless%2C%20I%20need%20a%20repair%20quote."><MessageCircle size={18} /><span>Repair quote</span></a>
-      </nav>}
+      </nav>
       <footer className="px-4 pb-8 sm:px-6">
         <div className="mx-auto flex max-w-[1380px] flex-col gap-5 border-t border-white/10 pt-7 text-xs text-white/35 sm:flex-row sm:items-center sm:justify-between">
           <div className="flex flex-wrap items-center gap-4"><span className="font-extrabold text-white/70">Mega Wireless</span><span>Open daily 10 AM–8 PM</span><a className="hover:text-white" href="/privacy.html">Privacy</a><a className="hover:text-white" href="/admin/">Secure Admin</a></div>
