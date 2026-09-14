@@ -125,6 +125,15 @@
       "bundle": true,
       "active": true,
       "availability": "Call to confirm"
+    },
+    {
+      "condition": "open box warranty 90 days",
+      "availability": "Call to confirm",
+      "bundle": true,
+      "active": true,
+      "name": "NOTE 20 ULTRA",
+      "specs": "128 GB UNLOCKED",
+      "price": "229.99"
     }
   ]
 }
