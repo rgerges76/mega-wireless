@@ -53,6 +53,63 @@ header button {
   box-shadow: 0 0 34px rgba(101, 246, 220, .09);
 }
 
+.week-deal {
+  position: relative;
+  display: grid;
+  grid-template-columns: auto minmax(0, 1fr) auto auto;
+  align-items: center;
+  gap: 14px;
+  width: min(100%, 650px);
+  margin-top: 18px;
+  padding: 12px 13px 12px 15px;
+  overflow: hidden;
+  border: 1px solid rgba(255, 215, 104, .5);
+  border-radius: 18px;
+  background: linear-gradient(110deg, rgba(255, 215, 104, .16), rgba(255, 79, 163, .14) 58%, rgba(67, 97, 255, .18));
+  box-shadow: 0 18px 52px rgba(0, 0, 0, .28), inset 0 1px rgba(255,255,255,.1);
+  color: #fff;
+  backdrop-filter: blur(18px);
+  transition: transform .25s ease, border-color .25s ease, box-shadow .25s ease;
+}
+.week-deal::before {
+  content: '';
+  position: absolute;
+  inset: 0;
+  pointer-events: none;
+  background: linear-gradient(110deg, transparent 15%, rgba(255,255,255,.11) 43%, transparent 68%);
+  transform: translateX(-110%);
+  animation: week-deal-shine 5s ease-in-out infinite;
+}
+.week-deal:hover {
+  transform: translateY(-3px);
+  border-color: var(--mega-gold);
+  box-shadow: 0 24px 65px rgba(255, 79, 163, .16), 0 0 30px rgba(255, 215, 104, .09);
+}
+.week-deal-live {
+  display: inline-flex;
+  align-items: center;
+  gap: 7px;
+  color: var(--mega-gold);
+  font-size: .56rem;
+  font-weight: 950;
+  letter-spacing: .13em;
+  white-space: nowrap;
+}
+.week-deal-live i {
+  width: 7px;
+  height: 7px;
+  border-radius: 50%;
+  background: #ff4f75;
+  box-shadow: 0 0 0 5px rgba(255,79,117,.12), 0 0 18px #ff4f75;
+  animation: week-deal-pulse 1.6s ease-in-out infinite;
+}
+.week-deal-copy { display: flex; min-width: 0; flex-direction: column; gap: 2px; }
+.week-deal-copy b { overflow: hidden; font-size: .82rem; font-weight: 900; text-overflow: ellipsis; white-space: nowrap; }
+.week-deal-copy em { color: rgba(232,240,250,.55); font-size: .64rem; font-style: normal; font-weight: 700; }
+.week-deal > strong { color: #fff; font-size: 2.15rem; font-weight: 950; letter-spacing: -.08em; line-height: .85; text-shadow: 0 0 25px rgba(255,215,104,.2); }
+.week-deal > strong sup { margin-right: 2px; color: var(--mega-gold); font-size: .8rem; vertical-align: top; }
+.week-deal-action { display: inline-flex; align-items: center; gap: 6px; padding: 9px 11px; border-radius: 999px; background: #fff; color: #080c16; font-size: .68rem; font-weight: 950; white-space: nowrap; }
+
 #home h1 {
   max-width: 680px;
   color: #fff !important;
@@ -209,6 +266,8 @@ header button {
 .marquee-track { color: rgba(213,230,245,.45) !important; }
 
 @keyframes mega-stage-shine { 0%, 55% { transform: translateX(-120%); } 78%, 100% { transform: translateX(140%); } }
+@keyframes week-deal-shine { 0%, 60% { transform: translateX(-110%); } 82%, 100% { transform: translateX(120%); } }
+@keyframes week-deal-pulse { 0%,100% { opacity: .55; transform: scale(.8); } 50% { opacity: 1; transform: scale(1.08); } }
 @keyframes mega-step-one { 0%, 29% { color:#fff; border-color:var(--mega-cyan); background:rgba(101,246,220,.13); } 34%,100% { color:rgba(255,255,255,.48); } }
 @keyframes mega-step-two { 0%,32% { color:rgba(255,255,255,.48); } 37%,62% { color:#fff; border-color:var(--mega-pink); background:rgba(255,79,163,.14); } 68%,100% { color:rgba(255,255,255,.48); } }
 @keyframes mega-step-three { 0%,66% { color:rgba(255,255,255,.48); } 71%,94% { color:#fff; border-color:var(--mega-gold); background:rgba(255,215,104,.13); } 100% { color:rgba(255,255,255,.48); } }
@@ -222,6 +281,11 @@ header button {
 @media (max-width: 640px) {
   #home h1 { font-size: clamp(3.25rem, 17vw, 5rem) !important; }
   #home p { font-size: .92rem; line-height: 1.75; }
+  .week-deal { grid-template-columns: 1fr auto; gap: 8px 12px; padding: 12px; }
+  .week-deal-live { grid-column: 1; }
+  .week-deal-copy { grid-column: 1; }
+  .week-deal > strong { grid-column: 2; grid-row: 1 / span 2; font-size: 2.45rem; }
+  .week-deal-action { grid-column: 1 / -1; justify-content: center; margin-top: 2px; }
   .mega-repair-stage { min-height: 455px; border-width: 4px; border-radius: 22px; }
   .mega-stage-topline { height: 39px; padding: 0 10px; font-size: .45rem; letter-spacing: .1em; }
   .mega-repair-stage .hero3d-layer { inset: 18px -22% 20px -16% !important; }
@@ -237,4 +301,6 @@ header button {
   .mega-repair-stage::after,
   .mega-stage-steps span,
   .mega-stage-ticker span { animation: none !important; }
+  .week-deal::before,
+  .week-deal-live i { animation: none !important; }
 }

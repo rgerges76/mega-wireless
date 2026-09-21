@@ -376,6 +376,7 @@ function App() {
       if (href.startsWith('tel:') || href.includes('wa.me') || href.includes('google.com/maps')) return
       if (cta === 'plans-intent') eventName = 'plans_view_intent'
       else if (cta === 'tablet-intent') eventName = 'tablet_offer_view'
+      else if (cta === 'iphone-11-weekly-offer') eventName = 'iphone_11_weekly_offer_click'
       else if (href === '#phones') eventName = 'catalog_open'
       else if (label.includes('Mega AI')) eventName = 'ai_cta_click'
       if (eventName) window.gtag?.('event', eventName, { placement: cta || 'site', offer: link.dataset.carrier || undefined })
@@ -424,7 +425,21 @@ function App() {
             <motion.div initial={{ opacity: 0, y: 14 }} animate={{ opacity: 1, y: 0 }} transition={{ duration: 0.7, ease: EASE }} className="hero-kicker inline-flex items-center gap-2 rounded-full border border-[#86c9b3] bg-[#ecfdf5] px-4 py-2 text-[10px] font-extrabold uppercase tracking-[0.2em] text-[#065f46]">
               <Zap size={13} /> Same-day repair · Nashville
             </motion.div>
-            <motion.h1 initial={{ opacity: 0, y: 24 }} animate={{ opacity: 1, y: 0 }} transition={{ duration: 0.9, delay: 0.08, ease: EASE }} className="mt-7 max-w-[760px] text-[clamp(3.5rem,8vw,8.6rem)] font-extrabold leading-[0.78] tracking-[-0.075em]">
+            <motion.a
+              data-cta="iphone-11-weekly-offer"
+              href="https://wa.me/16156785849?text=Hello%20Mega%20Wireless%2C%20I%20want%20the%20%2450%20iPhone%2011%20screen%20repair%20deal."
+              initial={{ opacity: 0, y: 16 }}
+              animate={{ opacity: 1, y: 0 }}
+              transition={{ duration: 0.75, delay: 0.06, ease: EASE }}
+              className="week-deal"
+              aria-label="Claim the $50 iPhone 11 screen repair offer"
+            >
+              <span className="week-deal-live" aria-hidden="true"><i /> THIS WEEK ONLY</span>
+              <span className="week-deal-copy"><b>iPhone 11 screen repair</b><em>Limited time · Ends Sep 27</em></span>
+              <strong><sup>$</sup>50</strong>
+              <span className="week-deal-action">Claim deal <ArrowRight size={15} /></span>
+            </motion.a>
+            <motion.h1 initial={{ opacity: 0, y: 24 }} animate={{ opacity: 1, y: 0 }} transition={{ duration: 0.9, delay: 0.08, ease: EASE }} className="mt-5 max-w-[760px] text-[clamp(3.5rem,8vw,8.6rem)] font-extrabold leading-[0.78] tracking-[-0.075em]">
               Cracked today.<br /><span className="hero-gradient-text">Back today.</span>
             </motion.h1>
             <motion.p initial={{ opacity: 0, y: 20 }} animate={{ opacity: 1, y: 0 }} transition={{ duration: 0.8, delay: 0.18, ease: EASE }} className="mt-8 max-w-xl text-sm leading-7 text-white/52 sm:text-base">
@@ -455,7 +470,7 @@ function App() {
 
       <div className="marquee-shell border-y border-white/8 bg-white/[0.025] py-4">
         <div className="marquee-track whitespace-nowrap text-[10px] font-extrabold uppercase tracking-[0.26em] text-white/30">
-          REPAIRS · UNLOCKED PHONES · MEGA AI · PREPAID SERVICE · SCREEN REPAIR · BATTERY · CHARGING PORT · NASHVILLE · REPAIRS · UNLOCKED PHONES · MEGA AI · PREPAID SERVICE · SCREEN REPAIR · BATTERY · CHARGING PORT · NASHVILLE ·
+          THIS WEEK: iPHONE 11 SCREEN REPAIR $50 · LIMITED TIME · REPAIRS · UNLOCKED PHONES · MEGA AI · PREPAID SERVICE · SCREEN REPAIR · BATTERY · CHARGING PORT · NASHVILLE · THIS WEEK: iPHONE 11 SCREEN REPAIR $50 · LIMITED TIME ·
         </div>
       </div>
 
