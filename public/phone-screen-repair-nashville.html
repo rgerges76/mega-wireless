@@ -187,7 +187,7 @@ h1 em,.kicker{color:var(--accent-ink);transition:color .4s}
         <select id="model" disabled><option value="">Choose model</option></select></label>
       <label class="field"><span class="label">03 · Problem</span>
         <select id="problem"><option value="">Choose problem</option><option>Cracked Screen</option><option>Battery</option><option>Charging</option><option>Water Damage</option><option>Camera</option><option>Other</option></select></label>
-      <a class="go" id="quoteLink" href="#" target="_blank" rel="noopener" aria-disabled="true"><span id="goText">Fill in all three to get a quote</span><span aria-hidden="true">→</span></a>
+      <a class="go" id="quoteLink" href="#" target="_blank" rel="noopener" aria-disabled="true"><span id="goText">Fill in all three to get a quote</span><span aria-hidden="true">→</span></a><a id="smsQuoteLink" href="sms:+16156785849" style="display:inline-flex;align-items:center;justify-content:center;min-height:48px;padding:12px 18px;border:2px solid #075bfa;border-radius:14px;color:#075bfa;font-weight:800;text-decoration:none">Prefer text? Send SMS quote →</a>
       </div>
       <p class="fine">We confirm the exact part, price and repair time before any work begins. Nothing is fixed without your OK. <a href="tel:+16156785849">Prefer to talk? Call 615-678-5849</a></p>
     </form>
@@ -253,7 +253,7 @@ h1 em,.kicker{color:var(--accent-ink);transition:color .4s}
     if(!brand.value||!model.value||!problem.value){link.setAttribute('aria-disabled','true');link.href='#';goText.textContent='Fill in all three to get a quote';return}
     var repair=brand.value+' '+model.value+' '+problem.value;
     link.href='https://wa.me/16156785849?text='+encodeURIComponent('Hello Mega Wireless, I need a repair quote for '+repair+'.');
-    link.setAttribute('aria-disabled','false');link.dataset.repair=repair;goText.textContent='Get my quote on WhatsApp';
+    $('smsQuoteLink').href='sms:+16156785849?body='+encodeURIComponent('Hello Mega Wireless, I need a repair quote for '+repair+'.');link.setAttribute('aria-disabled','false');link.dataset.repair=repair;goText.textContent='Get my quote on WhatsApp';
   }
   brand.addEventListener('change',setModels);model.addEventListener('change',refresh);
   problem.addEventListener('change',function(){refresh();if(S[problem.value]){show(problem.value,true);history.replaceState(null,'','?problem='+encodeURIComponent(problem.value))}});
