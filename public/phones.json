@@ -3,7 +3,7 @@
     {
       "name": "BLU C5L Max",
       "specs": "64GB / Dual SIM",
-      "price": "$59.99",
+      "price": "$49.99",
       "image": "/assets/phones/blu-c5l-max.jpg",
       "bundle": false,
       "active": true,
@@ -12,7 +12,7 @@
     {
       "name": "iPhone 11",
       "specs": "64GB",
-      "price": "$199.99",
+      "price": "$189.99",
       "image": "/assets/phones/iphone-11.jpg",
       "bundle": true,
       "active": true,
