@@ -252,13 +252,18 @@ h1 em,.kicker{color:var(--accent-ink);transition:color .4s}
   function refresh(){
     if(!brand.value||!model.value||!problem.value){link.setAttribute('aria-disabled','true');link.href='#';goText.textContent='Fill in all three to get a quote';return}
     var repair=brand.value+' '+model.value+' '+problem.value;
-    link.href='https://wa.me/16156785849?text='+encodeURIComponent('Hello Mega Wireless, I need a repair quote for '+repair+'.');
-    $('smsQuoteLink').href='sms:+16156785849?body='+encodeURIComponent('Hello Mega Wireless, I need a repair quote for '+repair+'.');link.setAttribute('aria-disabled','false');link.dataset.repair=repair;goText.textContent='Get my quote on WhatsApp';
+    var qp=new URLSearchParams(location.search);
+    var source=(qp.get('utm_source')||qp.get('source')||'website').replace(/[^a-zA-Z0-9_-]/g,'').slice(0,32);
+    var campaign=(qp.get('utm_campaign')||'repair').replace(/[^a-zA-Z0-9_-]/g,'').slice(0,32);
+    var message='Hello Mega Wireless, I need a repair quote for '+repair+'. Source: '+source+' / '+campaign+'.';
+    link.href='https://wa.me/16156785849?text='+encodeURIComponent(message);
+    $('smsQuoteLink').href='sms:+16156785849?body='+encodeURIComponent(message);link.setAttribute('aria-disabled','false');link.dataset.repair=repair;goText.textContent='Get my quote on WhatsApp';
   }
   brand.addEventListener('change',setModels);model.addEventListener('change',refresh);
   problem.addEventListener('change',function(){refresh();if(S[problem.value]){show(problem.value,true);history.replaceState(null,'','?problem='+encodeURIComponent(problem.value))}});
   $('index').addEventListener('click',function(e){var a=e.target.closest('a');if(!a)return;e.preventDefault();problem.value=a.dataset.k;show(a.dataset.k,true);refresh();history.replaceState(null,'','?problem='+encodeURIComponent(a.dataset.k));window.scrollTo({top:0,behavior:'smooth'})});
-  link.addEventListener('click',function(){track('contact_clicked',{placement:'repair-ticket',repair:link.dataset.repair||''})});
+  link.addEventListener('click',function(e){if(link.getAttribute('aria-disabled')==='true'){e.preventDefault();return}track('repair_contact_whatsapp',{placement:'repair-ticket',repair:link.dataset.repair||''})});
+  $('smsQuoteLink').addEventListener('click',function(){track('repair_contact_sms',{placement:'repair-ticket',repair:link.dataset.repair||''})});
   brand.addEventListener('change',function once(){track('repair_quote_started',{page:location.pathname});brand.removeEventListener('change',once)});
 
   var q=new URLSearchParams(location.search).get('problem');
