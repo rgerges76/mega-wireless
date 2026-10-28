@@ -239,7 +239,7 @@ h1 em,.kicker{color:var(--accent-ink);transition:color .4s}
     var d=S[key]||S['Cracked Screen'],i=order.indexOf(key);if(i<0)i=0;
     $('kicker').textContent=d.k;$('headline').innerHTML=d.h;$('lede').textContent=d.l;
     $('facts').innerHTML=d.f.map(function(x,j){return '<li><span>0'+(j+1)+'</span>'+x+'</li>'}).join('');
-    $('metaNum').textContent='Repair bench · No. 0'+(i+1);var sl=slug[order[i]];document.body.dataset.s=sl;var im=$('visImg');im.src='/images/repair/'+sl+'.webp';im.alt=alts[sl];im.className=sl==='water'?'soft':'';$('visNum').textContent='0'+(i+1);
+    $('metaNum').textContent='Repair bench · No. 0'+(i+1);var sl=slug[order[i]];document.body.dataset.s=sl;var im=$('visImg');im.src='/images/repair/'+sl+'.webp';im.alt=alts[sl];$('visNum').textContent='0'+(i+1);
     document.title=d.t+' | Mega Wireless';
     [].forEach.call($('index').children,function(a){a.dataset.k===key?a.setAttribute('aria-current','page'):a.removeAttribute('aria-current')});
     if(animate){var c=$('copy');c.classList.remove('swap');void c.offsetWidth;c.classList.add('swap')}
