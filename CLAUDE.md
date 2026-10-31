@@ -23,4 +23,5 @@ Read this first in every session. It is the persistent memory for this repo.
 
 ## Memory log
 Add short dated notes here for decisions, fixes and preferences worth keeping (newest first).
+- 2026-10-31: Homepage conversion update from combined AI site reviews: hero CTAs (text/call/directions), "how it works", repair prices (prerendered from public/repairs.json by scripts/prerender.cjs at build), Netlify form "repair-request" (#book), Visit us + map, FAQ + LocalBusiness/FAQ schema, sticky mobile call/text/directions bar. Removed localStorage-only offer box. New static service pages: battery-, water-damage-, camera-, charging-port-repair-nashville.html. Phones page grid + "from $X" prerendered from phones.json. Address standardized to "4717 Nolensville Pike" (no "B") — confirm it matches Google Business Profile. Source of truth for prices/warranty/claims: public/ai-knowledge.html (30-day warranty on standard screens, no repair-time promises).
 - 2026-10-31: Created this file as phone-friendly memory instead of claude-mem (claude-mem needs a persistent local machine).

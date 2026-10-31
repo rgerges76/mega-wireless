@@ -1,5 +1,5 @@
 [build]
-  command = "npm run build && node scripts/inject-auth-callback-router.cjs"
+  command = "npm run build && node scripts/prerender.cjs dist && node scripts/inject-auth-callback-router.cjs"
   publish = "dist"
   functions = "netlify/functions"
 
