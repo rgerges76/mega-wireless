@@ -72,6 +72,6 @@ test("SEO pages are useful and included in sitemap", async () => {
     const source = await readFile(path.join(root, `public/${page}.html`), "utf8");
     assert.match(source, /canonical/);
     assert.match(source, /application\/ld\+json/);
-    assert.match(source, /4717 Nolensville Pike/);
+    assert.match(source, /4717 (B )?Nolensville Pike/);
   }
 });

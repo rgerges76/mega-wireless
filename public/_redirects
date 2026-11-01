@@ -10,4 +10,8 @@
 /sms-terms  /sms-terms.html      200
 /sms-terms/ /sms-terms.html      200
 /admin/*    /admin/index.html    200
+/contest      /contest.html  200
+/win          /contest.html?utm_source=flyer&utm_medium=print&utm_campaign=contest_nov26   302
+/window       /?utm_source=window_poster&utm_medium=print&utm_campaign=launch_nov26   302
+/scan         /?utm_source=counter_qr&utm_medium=print&utm_campaign=launch_nov26   302
 /*          /index.html          200

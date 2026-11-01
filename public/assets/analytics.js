@@ -2,7 +2,7 @@
   'use strict';
   if (window.MegaAnalytics) return;
   var id = 'G-LR9H4N0S98';
-  var paths = ['/', '/index.html', '/phones', '/phones/', '/phones/index.html', '/iphone-repair-nashville.html', '/samsung-repair-nashville.html', '/phone-screen-repair-nashville.html', '/used-phones-nashville.html'];
+  var paths = ['/', '/index.html', '/phones', '/phones/', '/phones/index.html', '/iphone-repair-nashville.html', '/samsung-repair-nashville.html', '/phone-screen-repair-nashville.html', '/used-phones-nashville.html', '/battery-replacement-nashville.html', '/water-damage-repair-nashville.html', '/camera-repair-nashville.html', '/charging-port-repair-nashville.html', '/contest', '/contest.html'];
   var staff = false;
   try { staff = localStorage.getItem('mw_analytics_excluded') === '1'; } catch (_) {}
   var enabled = /^(www\.)?megawirelessusa\.com$/.test(location.hostname) && paths.indexOf(location.pathname) !== -1 && !staff;
