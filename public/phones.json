@@ -4,7 +4,7 @@
       "name": "BLU C5L Max",
       "specs": "64GB / Dual SIM",
       "price": "$49.99",
-      "image": "/assets/phones/blu-c5l-max.jpg",
+      "image": "/images/phones3d/blu-c5l-max.webp",
       "bundle": false,
       "active": true,
       "availability": "Available"
@@ -13,7 +13,7 @@
       "name": "iPhone 11",
       "specs": "64GB",
       "price": "$189.99",
-      "image": "/assets/phones/iphone-11.jpg",
+      "image": "/images/phones3d/iphone-11.webp",
       "bundle": true,
       "active": true,
       "availability": "Available"
@@ -22,7 +22,7 @@
       "name": "iPhone 12",
       "specs": "64GB",
       "price": "$229.99",
-      "image": "/assets/phones/iphone-12.jpg",
+      "image": "/images/phones3d/iphone-12.webp",
       "bundle": true,
       "availability": "In stock · Unlocked",
       "active": true
@@ -31,7 +31,7 @@
       "name": "Samsung Galaxy S21",
       "specs": "128GB",
       "price": "$249.99",
-      "image": "/assets/phones/samsung-s21.jpg",
+      "image": "/images/phones3d/samsung-s21.webp",
       "bundle": true,
       "active": true,
       "availability": "Call to confirm"
@@ -40,7 +40,7 @@
       "name": "iPhone 13",
       "specs": "128GB",
       "price": "$299.00",
-      "image": "/assets/phones/iphone-13.jpg",
+      "image": "/images/phones3d/iphone-13.webp",
       "bundle": true,
       "availability": "In stock · Unlocked",
       "active": true
@@ -49,7 +49,7 @@
       "name": "Samsung S20 Ultra",
       "specs": "128GB",
       "price": "$329.99",
-      "image": "/assets/phones/samsung-s20-ultra.jpg",
+      "image": "/images/phones3d/samsung-s20-ultra.webp",
       "bundle": true,
       "active": true,
       "availability": "Sold"
@@ -58,7 +58,7 @@
       "name": "iPhone 12 Pro Max",
       "specs": "128GB",
       "price": "$329.99",
-      "image": "/assets/phones/iphone-12-pro-max.jpg",
+      "image": "/images/phones3d/iphone-12-pro-max.webp",
       "bundle": true,
       "availability": "In stock · Unlocked",
       "active": true
@@ -67,7 +67,7 @@
       "name": "iPhone 14",
       "specs": "128GB / Blue",
       "price": "$349.99",
-      "image": "/assets/phones/iphone-14.jpg",
+      "image": "/images/phones3d/iphone-14.webp",
       "bundle": true,
       "availability": "In stock · Unlocked",
       "active": true
